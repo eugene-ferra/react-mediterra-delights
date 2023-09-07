@@ -1,0 +1,42 @@
+@use "scss-reset/reset";
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+@import "./vars";
+@import "./mixins";
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: $light;
+  text-decoration: none;
+}
+
+body {
+  height: 100%;
+  font-family: "Montserrat";
+}
+
+body[data-state="inactive"] {
+  overflow-y: hidden;
+}
+
+#root {
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: stretch;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+.footer {
+  margin-top: auto;
+  flex: 0 0 auto;
+}
