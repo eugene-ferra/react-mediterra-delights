@@ -1,12 +1,15 @@
 import Header from "../Header/Header";
 import "./App.scss";
 import Footer from "../Footer/Footer";
+import Promo from "../Promo/Promo";
 
 function App() {
   return (
     <>
       <Header />
-      <div>main</div>
+      <div>
+        <Promo />
+      </div>
       <Footer />
     </>
   );
