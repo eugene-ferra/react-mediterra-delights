@@ -4,7 +4,7 @@ function Button({ text, classes, icon }) {
   return (
     <button className={`button ${classes}`}>
       {text}
-      <img src={icon} alt={text} />
+      <img className="button__img" src={icon} alt={text} />
     </button>
   );
 }
