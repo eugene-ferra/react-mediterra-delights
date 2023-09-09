@@ -3,6 +3,7 @@ import "./App.scss";
 import Footer from "../Footer/Footer";
 import Promo from "../Promo/Promo";
 import About from "../About/About";
+import Dish from "../Dish/Dish";
 
 function App() {
   return (
@@ -11,6 +12,8 @@ function App() {
       <div>
         <Promo />
         <About />
+
+        <Dish />
       </div>
       <Footer />
     </>
