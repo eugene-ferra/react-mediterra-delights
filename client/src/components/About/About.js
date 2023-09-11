@@ -6,7 +6,7 @@ function About() {
   return (
     <div className="about">
       <div className="container">
-        <HeadBlock link={"#"} />
+        <HeadBlock link={"#"} text={"Про нас"} />
         <AboutInner />
       </div>
     </div>
