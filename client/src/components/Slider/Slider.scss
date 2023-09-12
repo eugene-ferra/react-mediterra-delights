@@ -3,6 +3,9 @@
 .swiper {
   overflow-y: visible;
   width: 100%;
+  img {
+    border-radius: $border;
+  }
   .swiper-pagination {
     bottom: -50px;
     z-index: 0;
