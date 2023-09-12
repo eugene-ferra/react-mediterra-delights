@@ -30,7 +30,7 @@ function App() {
             modifier={"head-block--dark"}
             linkText={"Усе меню"}
           />
-          <Slider slidesMob={1} slides={2}>
+          <Slider slidesMob={2} slides={2}>
             <SwiperSlide>
               <Dish />
             </SwiperSlide>
@@ -50,7 +50,7 @@ function App() {
 
         <Gallery>
           <HeadBlock text={"Фотогалерея"} modifier={"head-block--dark"} />
-          <Slider slides={4} slidesMob={1}>
+          <Slider slides={4} slidesMob={2} slidesTablet={3}>
             <SwiperSlide>
               <picture>
                 <source srcSet={workersWebp} type="image/webp" />
@@ -77,8 +77,11 @@ function App() {
             </SwiperSlide>
             <SwiperSlide>
               <picture>
-                <source srcSet={workersWebp} type="image/webp" />
-                <img src={workers} alt="photo" />
+                {/* <source srcSet={workersWebp} type="image/webp" /> */}
+                <img
+                  src="https://images.unsplash.com/photo-1593780694266-3456175f9007?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8&w=1000&q=80"
+                  alt="photo"
+                />
               </picture>
             </SwiperSlide>
           </Slider>

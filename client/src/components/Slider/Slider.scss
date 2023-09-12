@@ -3,8 +3,18 @@
 .swiper {
   overflow-y: visible;
   width: 100%;
+  .swiper-wrapper {
+    align-items: center;
+  }
+  picture {
+    width: 100%;
+  }
   img {
     border-radius: $border;
+    max-height: 200px;
+    min-height: 100%;
+    width: 100%;
+    object-fit: cover;
   }
   .swiper-pagination {
     bottom: -50px;
