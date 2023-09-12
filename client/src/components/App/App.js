@@ -50,7 +50,7 @@ function App() {
 
         <Gallery>
           <HeadBlock text={"Фотогалерея"} modifier={"head-block--dark"} />
-          <Slider slides={4} slidesMob={2}>
+          <Slider slides={4} slidesMob={1}>
             <SwiperSlide>
               <picture>
                 <source srcSet={workersWebp} type="image/webp" />
