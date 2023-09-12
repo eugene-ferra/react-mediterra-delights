@@ -8,6 +8,7 @@ import Gallery from "../Gallery/Gallery";
 import HeadBlock from "../HeadBlock/HeadBlock";
 import { SwiperSlide } from "swiper/react";
 import Slider from "../Slider/Slider";
+import AboutWorkers from "../AboutWorkers/AboutWorkers";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             text={"Наші страви"}
             link={"#"}
             modifier={"head-block--dark"}
+            linkText={"Усе меню"}
           />
           <Slider>
             <SwiperSlide>
@@ -38,6 +40,8 @@ function App() {
             </SwiperSlide>
           </Slider>
         </Gallery>
+
+        <AboutWorkers />
       </div>
       <Footer />
     </>

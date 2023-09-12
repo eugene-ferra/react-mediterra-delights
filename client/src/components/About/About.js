@@ -6,7 +6,11 @@ function About() {
   return (
     <div className="about">
       <div className="container">
-        <HeadBlock link={"#"} text={"Про нас"} />
+        <HeadBlock
+          link={"#"}
+          text={"Про нас"}
+          linkText={"Більше інформації "}
+        />
         <AboutInner />
       </div>
     </div>

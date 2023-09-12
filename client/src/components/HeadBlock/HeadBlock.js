@@ -2,13 +2,15 @@ import "./HeadBlock.scss";
 
 import React from "react";
 
-function HeadBlock({ text, link, modifier }) {
+function HeadBlock({ text, link, linkText, modifier }) {
   return (
-    <div className={`head-block ${modifier}`}>
+    <div className={`head-block ${modifier ? modifier : ""}`}>
       <h2 className="head-block__title">{text}</h2>
-      <a href={link} className="head-block__link">
-        Більше інформації
-      </a>
+      {link && linkText ? (
+        <a href={link} className="head-block__link">
+          {linkText}
+        </a>
+      ) : null}
     </div>
   );
 }
