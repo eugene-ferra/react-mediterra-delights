@@ -17,6 +17,9 @@
     border-radius: $border;
     background-color: $dark;
     transition: 0.2s all ease-in-out;
+    &:hover {
+      box-shadow: -2px 3px 5px rgba($dark, 0.3);
+    }
     &::after {
       position: absolute;
       top: 50%;
@@ -31,6 +34,9 @@
   }
   .swiper-button-prev {
     left: 0;
+    &:hover {
+      box-shadow: 2px 3px 5px rgba($dark, 0.4);
+    }
     &::after {
       content: "";
       background-image: url("../../images/prev.svg");
@@ -38,6 +44,9 @@
   }
   .swiper-button-next {
     right: 0;
+    &:hover {
+      box-shadow: -2px 3px 5px rgba($dark, 0.4);
+    }
     &::after {
       content: "";
       background-image: url("../../images/next.svg");

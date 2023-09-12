@@ -6,17 +6,17 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./Slider.scss";
 
-function Slider({ children }) {
+function Slider({ slides, slidesMob, children }) {
   return (
     <Swiper
       modules={[Pagination, Navigation]}
       spaceBetween={20}
-      slidesPerView={1}
+      slidesPerView={slidesMob}
       pagination={{ clickable: true }}
       navigation={true}
       grabCursor={true}
       breakpoints={{
-        576: { slidesPerView: 2 },
+        576: { slidesPerView: slides },
       }}
     >
       {children}

@@ -10,12 +10,17 @@ import { SwiperSlide } from "swiper/react";
 import Slider from "../Slider/Slider";
 import AboutWorkers from "../AboutWorkers/AboutWorkers";
 
+//temporary
+import workersWebp from "../../images/workers.webp";
+import workers from "../../images/workers.jpg";
+
 function App() {
   return (
     <>
       <Header />
       <div>
         <Promo />
+
         <About />
 
         <Gallery>
@@ -25,7 +30,7 @@ function App() {
             modifier={"head-block--dark"}
             linkText={"Усе меню"}
           />
-          <Slider>
+          <Slider slidesMob={1} slides={2}>
             <SwiperSlide>
               <Dish />
             </SwiperSlide>
@@ -42,6 +47,42 @@ function App() {
         </Gallery>
 
         <AboutWorkers />
+
+        <Gallery>
+          <HeadBlock text={"Фотогалерея"} modifier={"head-block--dark"} />
+          <Slider slides={4} slidesMob={2}>
+            <SwiperSlide>
+              <picture>
+                <source srcSet={workersWebp} type="image/webp" />
+                <img src={workers} alt="p1" />
+              </picture>
+            </SwiperSlide>
+            <SwiperSlide>
+              <picture>
+                <source srcSet={workersWebp} type="image/webp" />
+                <img src={workers} alt="photo" />
+              </picture>
+            </SwiperSlide>
+            <SwiperSlide>
+              <picture>
+                <source srcSet={workersWebp} type="image/webp" />
+                <img src={workers} alt="photo" />
+              </picture>
+            </SwiperSlide>
+            <SwiperSlide>
+              <picture>
+                <source srcSet={workersWebp} type="image/webp" />
+                <img src={workers} alt="photo" />
+              </picture>
+            </SwiperSlide>
+            <SwiperSlide>
+              <picture>
+                <source srcSet={workersWebp} type="image/webp" />
+                <img src={workers} alt="photo" />
+              </picture>
+            </SwiperSlide>
+          </Slider>
+        </Gallery>
       </div>
       <Footer />
     </>
