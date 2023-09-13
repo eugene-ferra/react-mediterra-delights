@@ -19,39 +19,29 @@ import { useState } from "react";
 //temporary
 import workersWebp from "../../images/workers.webp";
 import workers from "../../images/workers.jpg";
-import HeaderContent from "../Header/HeaderContent";
-import HeaderSign from "../Header/HeaderSign";
-import Burger from "../Header/Burger";
 import Main from "../Main/Main";
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  function handleClick() {
-    setIsOpen((isOpen) => !isOpen);
-  }
   return (
     <>
-      <Header>
-        <Logo className="header__logo" />
-        <HeaderContent isOpen={isOpen}>
-          <Navbar className="header__navbar" />
-          <HeaderSign>
+      <Header
+        logo={<Logo className={"header__logo"} />}
+        content={<Navbar className="header__navbar" />}
+        sign={
+          <>
             <Button
               text={"Реєстрація"}
               classes={"button--mini button--outline"}
               icon={signUp}
             />
-
             <Button
               text={"Вхід"}
               classes={"button button--mini"}
               icon={login}
             />
-          </HeaderSign>
-        </HeaderContent>
-        <Burger isOpen={isOpen} handleClick={handleClick} />
-      </Header>
+          </>
+        }
+      />
 
       <Main>
         <Promo />
