@@ -9,19 +9,60 @@ import HeadBlock from "../HeadBlock/HeadBlock";
 import { SwiperSlide } from "swiper/react";
 import Slider from "../Slider/Slider";
 import AboutWorkers from "../AboutWorkers/AboutWorkers";
+import Logo from "../Logo/Logo";
+import Navbar from "../Navbar/Navbar";
+import Button from "../Button/Button";
+import signUp from "../../images/sign_up.svg";
+import login from "../../images/login.svg";
+import { useState } from "react";
 
 //temporary
 import workersWebp from "../../images/workers.webp";
 import workers from "../../images/workers.jpg";
+import HeaderContent from "../Header/HeaderContent";
+import HeaderSign from "../Header/HeaderSign";
+import Burger from "../Header/Burger";
+import Main from "../Main/Main";
 
 function App() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleClick() {
+    setIsOpen((isOpen) => !isOpen);
+  }
   return (
     <>
-      <Header />
-      <div>
+      <Header>
+        <Logo className="header__logo" />
+        <HeaderContent isOpen={isOpen}>
+          <Navbar className="header__navbar" />
+          <HeaderSign>
+            <Button
+              text={"Реєстрація"}
+              classes={"button--mini button--outline"}
+              icon={signUp}
+            />
+
+            <Button
+              text={"Вхід"}
+              classes={"button button--mini"}
+              icon={login}
+            />
+          </HeaderSign>
+        </HeaderContent>
+        <Burger isOpen={isOpen} handleClick={handleClick} />
+      </Header>
+
+      <Main>
         <Promo />
 
-        <About />
+        <About>
+          <HeadBlock
+            link={"#"}
+            text={"Про нас"}
+            linkText={"Більше інформації "}
+          />
+        </About>
 
         <Gallery>
           <HeadBlock
@@ -46,7 +87,9 @@ function App() {
           </Slider>
         </Gallery>
 
-        <AboutWorkers />
+        <AboutWorkers>
+          <HeadBlock text={"Персонал"} link={"#"} linkText={"Всі працівники"} />
+        </AboutWorkers>
 
         <Gallery>
           <HeadBlock text={"Фотогалерея"} modifier={"head-block--dark"} />
@@ -77,17 +120,17 @@ function App() {
             </SwiperSlide>
             <SwiperSlide>
               <picture>
-                {/* <source srcSet={workersWebp} type="image/webp" /> */}
-                <img
-                  src="https://images.unsplash.com/photo-1593780694266-3456175f9007?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE0fHx8ZW58MHx8fHx8&w=1000&q=80"
-                  alt="photo"
-                />
+                <source srcSet={workersWebp} type="image/webp" />
+                <img src={workers} alt="workers" />
               </picture>
             </SwiperSlide>
           </Slider>
         </Gallery>
-      </div>
-      <Footer />
+      </Main>
+      <Footer>
+        <Logo className={"footer__logo"} />
+        <Navbar className={"footer__navbar"} />
+      </Footer>
     </>
   );
 }

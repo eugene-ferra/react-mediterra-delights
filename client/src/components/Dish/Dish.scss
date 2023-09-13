@@ -2,6 +2,7 @@
 @import "../../scss/vars";
 
 .card {
+  display: block;
   background-color: $dark;
   border-radius: $border;
   padding: 10px;

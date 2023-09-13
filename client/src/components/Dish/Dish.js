@@ -4,14 +4,14 @@ import dish from "../../images/dish.jpg";
 
 function Dish() {
   return (
-    <div className="card">
+    <a href="#" className="card">
       <div className="card__inner">
         <picture className="card__picture">
           <source className="card__img" srcSet={dishWebp} type="image/webp" />
           <img className="card__img" src={dish} alt="name" />
         </picture>
         <div className="card__data">
-          <div className="card__title">Шакшука</div>
+          <h3 className="card__title">Шакшука</h3>
           <div className="card__rating">
             <div className="card__stars">
               <div
@@ -33,7 +33,7 @@ function Dish() {
           </p>
         </div>
       </div>
-    </div>
+    </a>
   );
 }
 

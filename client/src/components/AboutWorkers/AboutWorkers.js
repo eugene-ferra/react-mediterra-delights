@@ -1,14 +1,13 @@
 import React from "react";
-import HeadBlock from "../HeadBlock/HeadBlock";
 import "./AboutWorkers.scss";
 import workersWebp from "../../images/workers.webp";
 import workers from "../../images/workers.jpg";
 
-function AboutWorkers() {
+function AboutWorkers({ children }) {
   return (
     <section className="about-workers">
       <div className="container">
-        <HeadBlock text={"Персонал"} link={"#"} linkText={"Всі працівники"} />
+        {children}
         <div className="about-workers__inner">
           <picture className="about-workers__picture">
             <source

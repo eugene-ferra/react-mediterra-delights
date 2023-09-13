@@ -19,15 +19,15 @@ function Promo() {
             <a href="#" className="button promo__button">
               Переглянути меню
             </a>
+            <picture>
+              <source
+                className="promo__img"
+                srcSet={promoWebp}
+                type="image/webp"
+              />
+              <img className="promo__img" src={promo} alt="promo" />
+            </picture>
           </div>
-          <picture>
-            <source
-              className="promo__img"
-              srcSet={promoWebp}
-              type="image/webp"
-            />
-            <img className="promo__img" src={promo} alt="promo" />
-          </picture>
         </div>
       </div>
     </div>
