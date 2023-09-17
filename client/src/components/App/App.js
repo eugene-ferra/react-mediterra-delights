@@ -14,12 +14,15 @@ import Navbar from "../Navbar/Navbar";
 import Button from "../Button/Button";
 import signUp from "../../images/sign_up.svg";
 import login from "../../images/login.svg";
+import Map from "../Map/Map";
 import { useState } from "react";
 
 //temporary
 import workersWebp from "../../images/workers.webp";
 import workers from "../../images/workers.jpg";
 import Main from "../Main/Main";
+import ContactUs from "../ContactUs/ContactUs";
+import ContactUsBlock from "../ContactUsBlock/ContactUsBlock";
 
 function App() {
   return (
@@ -116,6 +119,21 @@ function App() {
             </SwiperSlide>
           </Slider>
         </Gallery>
+
+        <ContactUs
+          top={
+            <HeadBlock text={"Чекаємо на вас"} modifier={"contact-us__head"} />
+          }
+          map={<Map />}
+          block={
+            <ContactUsBlock classes={"contact-us__block"}>
+              <Button
+                text={"Передзвоніть мені"}
+                classes={"contact-us-block__btn"}
+              />
+            </ContactUsBlock>
+          }
+        />
       </Main>
       <Footer>
         <Logo className={"footer__logo"} />

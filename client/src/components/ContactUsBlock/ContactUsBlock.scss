@@ -1,0 +1,35 @@
+@import "../../scss/vars";
+@import "../../scss/mixins";
+
+.contact-us-block {
+  height: 100%;
+  border: 1px solid $light;
+  padding: 20px;
+  border-radius: $border;
+  @include flexSpaceBetween;
+  flex-direction: column;
+  &__title {
+    @include textMediumBold;
+    color: $light;
+    margin-bottom: 12px;
+  }
+  &__text {
+    @include textArticle;
+    color: $light;
+    margin-bottom: 40px;
+  }
+  &__input {
+    border-radius: 8px;
+    height: 35px;
+    @include textSmallRegular;
+    width: 100%;
+    background: #d9d9d9;
+    border: none;
+    margin-bottom: 20px;
+    padding: 10px;
+    caret-color: $accent;
+  }
+  &__btn {
+    width: 100%;
+  }
+}
