@@ -1,6 +1,5 @@
 import React from "react";
 import "./ContactUs.scss";
-import contact from "../../images/contact.jpg";
 
 function ContactUs({ top, map, block }) {
   return (
