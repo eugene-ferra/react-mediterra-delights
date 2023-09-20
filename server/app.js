@@ -6,6 +6,9 @@ import ExpressMongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
 import hpp from "hpp";
 import compression from "compression";
+import productRouter from "./routers/ProductRouter.js";
+import AppError from "./utils/appError.js";
+import * as globalErrorHandler from "./controllers/errorController.js";
 
 const app = express();
 
@@ -31,5 +34,18 @@ app.use(xss());
 app.use(hpp());
 
 app.use(compression());
+
+app.use("/api/products", productRouter);
+
+app.all("*", (req, res, next) => {
+  next(
+    new AppError(
+      `Can't proceed ${req.method} method on ${req.originalUrl} on this server!`,
+      404
+    )
+  );
+});
+
+app.use(globalErrorHandler.default);
 
 export default app;
