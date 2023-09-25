@@ -7,7 +7,7 @@ export const getProducts = catchAsync(async (req, res, next) => {
   let queryObj = { ...req.query };
 
   //deleting unnecesarry words from query string
-  const exludedValues = ["sort", "select"];
+  const exludedValues = ["sort", "select", "page", "limit"];
   exludedValues.forEach((el) => delete queryObj[el]);
 
   //enable range filtering
@@ -29,6 +29,17 @@ export const getProducts = catchAsync(async (req, res, next) => {
     let selectStr = req.query.select;
     selectStr = selectStr.replace(",", " ");
     query.select(selectStr);
+  }
+
+  if (req.query.page) {
+    const page = req.query.page;
+    const limit = req.query.limit || 3;
+    console.log(page, limit);
+
+    if (page < 1) return next(new AppError("Invalid page provided!", 404));
+    if (limit < 1) return next(new AppError("Invalid limiting!", 400));
+
+    query.skip((page - 1) * limit).limit(limit);
   }
 
   //executing query
