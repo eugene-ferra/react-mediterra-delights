@@ -9,6 +9,7 @@ import compression from "compression";
 import productRouter from "./routers/ProductRouter.js";
 import AppError from "./utils/appError.js";
 import * as globalErrorHandler from "./controllers/errorController.js";
+import reviewRouter from "./routers/reviewRouter.js";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(hpp());
 app.use(compression());
 
 app.use("/api/products", productRouter);
+app.use("/api/reviews", reviewRouter);
 
 app.all("*", (req, res, next) => {
   next(

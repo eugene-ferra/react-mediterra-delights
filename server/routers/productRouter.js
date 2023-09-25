@@ -1,5 +1,6 @@
 import express from "express";
 import * as productController from "../controllers/ProductController.js";
+import reviewRouter from "./reviewRouter.js";
 
 const productRouter = express.Router();
 
@@ -13,5 +14,7 @@ productRouter
   .get(productController.getProduct)
   .patch(productController.updateProduct)
   .delete(productController.deleteProduct);
+
+productRouter.use("/:id/reviews", reviewRouter);
 
 export default productRouter;
