@@ -15,6 +15,6 @@ productRouter
   .patch(productController.updateProduct)
   .delete(productController.deleteProduct);
 
-productRouter.use("/:id/reviews", reviewRouter);
+productRouter.use("/:productID/reviews", reviewRouter);
 
 export default productRouter;

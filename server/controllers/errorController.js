@@ -32,6 +32,8 @@ const sendError = (err, req, res) => {
 export default function (err, req, res, next) {
   let error;
 
+  console.log(err);
+
   if (err instanceof mongoose.Error.CastError) error = handleCastErrorDB(err);
   if (err instanceof mongoose.Error.ValidationError)
     error = handleValidationErrorDB(err);

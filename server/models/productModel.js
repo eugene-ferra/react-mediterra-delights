@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import reviewModel from "./reviewModel.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -110,6 +111,15 @@ productSchema.virtual("reviews", {
   ref: "Review",
   localField: "_id",
   foreignField: "productID",
+});
+
+productSchema.pre("findOneAndDelete", async function (next) {
+  this.r = await this.clone().findOne();
+  next();
+});
+
+productSchema.post("findOneAndDelete", async function () {
+  if (this.r) await reviewModel.deleteMany({ productID: this.r._id });
 });
 
 const productModel = mongoose.model("Product", productSchema);

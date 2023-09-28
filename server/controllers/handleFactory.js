@@ -12,6 +12,7 @@ export const getAll = (Model, populateObject) =>
     //enable range filtering
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
     const query = Model.find(JSON.parse(queryStr));
 
     //sorting
@@ -26,6 +27,7 @@ export const getAll = (Model, populateObject) =>
       let selectStr = req.query.select;
       selectStr = selectStr.replace(",", " ");
       query.select(selectStr);
+    } else {
     }
 
     //pagination
@@ -41,6 +43,7 @@ export const getAll = (Model, populateObject) =>
 
     //executing query
     query.populate(populateObject);
+    if (req.params.productID) query.find({ productID: req.params.productID });
     const data = await Model.find(query);
 
     if (!data || data.length === 0) {

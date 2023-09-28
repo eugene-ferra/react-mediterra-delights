@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import productModel from "./productModel.js";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -44,6 +45,46 @@ reviewSchema.virtual("product", {
   ref: "Product",
   localField: "productID",
   foreignField: "_id",
+});
+
+reviewSchema.statics.calcAvgRating = async function (productId) {
+  const stats = await this.aggregate([
+    {
+      $match: { productID: productId },
+    },
+    {
+      $group: {
+        _id: "$productID",
+        ratingCount: { $sum: 1 },
+        avgRating: { $avg: "$rating" },
+      },
+    },
+  ]);
+
+  if (stats[0]) {
+    await productModel.findByIdAndUpdate(productId, {
+      avgRating: stats[0].avgRating,
+      reviewCount: stats[0].ratingCount,
+    });
+  } else {
+    await productModel.findByIdAndUpdate(productId, {
+      avgRating: 0,
+      reviewCount: 0,
+    });
+  }
+};
+
+reviewSchema.post("save", function () {
+  this.constructor.calcAvgRating(this.productID);
+});
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.r = await this.clone().findOne();
+  next();
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  if (this.r) await this.r.constructor.calcAvgRating(this.r.productID);
 });
 
 const reviewModel = mongoose.model("Review", reviewSchema);
