@@ -10,6 +10,8 @@ import productRouter from "./routers/ProductRouter.js";
 import AppError from "./utils/appError.js";
 import * as globalErrorHandler from "./controllers/errorController.js";
 import reviewRouter from "./routers/reviewRouter.js";
+import articleRouter from "./routers/articleRouter.js";
+import commentRouter from "./routers/commentRouter.js";
 
 const app = express();
 
@@ -38,6 +40,8 @@ app.use(compression());
 
 app.use("/api/products", productRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("/api/articles", articleRouter);
+app.use("/api/comments", commentRouter);
 
 app.all("*", (req, res, next) => {
   next(

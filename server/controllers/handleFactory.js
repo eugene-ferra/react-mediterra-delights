@@ -44,6 +44,7 @@ export const getAll = (Model, populateObject) =>
     //executing query
     query.populate(populateObject);
     if (req.params.productID) query.find({ productID: req.params.productID });
+    if (req.params.articleID) query.find({ articleID: req.params.articleID });
     const data = await Model.find(query);
 
     if (!data || data.length === 0) {
