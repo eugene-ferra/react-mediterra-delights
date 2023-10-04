@@ -7,7 +7,7 @@ const articleRouter = express.Router();
 articleRouter
   .route("/")
   .get(articleController.getArticles)
-  .post(articleController.addArticle);
+  .post(articleController.setViews, articleController.addArticle);
 
 articleRouter
   .route("/:id")
