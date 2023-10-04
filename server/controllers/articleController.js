@@ -3,7 +3,7 @@ import * as factory from "./handleFactory.js";
 import catchAsync from "../utils/catchAsync.js";
 
 export const getArticles = factory.getAll(articleModel, { path: "comments" });
-// export const addArticle = factory.addOne(articleModel);
+export const addArticle = factory.addOne(articleModel);
 
 export const getArticle = catchAsync(async (req, res, next) => {
   const doc = await articleModel
