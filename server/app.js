@@ -12,6 +12,7 @@ import * as globalErrorHandler from "./controllers/errorController.js";
 import reviewRouter from "./routers/reviewRouter.js";
 import articleRouter from "./routers/articleRouter.js";
 import commentRouter from "./routers/commentRouter.js";
+import authRouter from "./routers/authRouter.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(
 );
 
 app.use(express.json({ limit: "10kb" }));
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
@@ -42,6 +44,7 @@ app.use("/api/products", productRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/articles", articleRouter);
 app.use("/api/comments", commentRouter);
+app.use("/api/auth", authRouter);
 
 app.all("*", (req, res, next) => {
   next(
