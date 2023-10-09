@@ -13,6 +13,7 @@ import reviewRouter from "./routers/reviewRouter.js";
 import articleRouter from "./routers/articleRouter.js";
 import commentRouter from "./routers/commentRouter.js";
 import authRouter from "./routers/authRouter.js";
+import userRouter from "./routers/userRouter.js";
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/articles", articleRouter);
 app.use("/api/comments", commentRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
 
 app.all("*", (req, res, next) => {
   next(

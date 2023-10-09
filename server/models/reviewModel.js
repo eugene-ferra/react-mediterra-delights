@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import productModel from "./productModel.js";
+import userModel from "./userModel.js";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -47,6 +48,8 @@ reviewSchema.virtual("product", {
   foreignField: "_id",
 });
 
+reviewSchema.index({ userID: 1, productID: 1 }, { unique: true });
+
 reviewSchema.statics.calcAvgRating = async function (productId) {
   const stats = await this.aggregate([
     {
@@ -78,8 +81,25 @@ reviewSchema.post("save", function () {
   this.constructor.calcAvgRating(this.productID);
 });
 
+reviewSchema.post("save", async function (doc) {
+  await userModel.findByIdAndUpdate(doc.userID, {
+    $push: {
+      addedReviews: doc._id,
+    },
+  });
+});
+
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.clone().findOne();
+  next();
+});
+
+reviewSchema.pre("findOneAndDelete", async function (next) {
+  this.r = await this.clone().findOne();
+  await userModel.updateOne(
+    { _id: this.r.userID },
+    { $pull: { addedReviews: this.r._id } }
+  );
   next();
 });
 

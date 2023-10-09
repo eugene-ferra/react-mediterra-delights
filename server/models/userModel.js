@@ -53,7 +53,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    likedProducts: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Product",
+      },
+    ],
+    likedArticles: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Article",
+      },
+    ],
+    addedReviews: [{ type: mongoose.Schema.ObjectId, ref: "Review" }],
+    addedComments: [{ type: mongoose.Schema.ObjectId, ref: "Comment" }],
   },
+
   {
     toJSON: {
       virtuals: true,
@@ -63,6 +78,12 @@ const userSchema = new mongoose.Schema(
     },
   }
 );
+
+// userSchema.virtual("addedComments", {
+//   ref: "Product",
+//   localField: "_id",
+//   foreignField: "userID",
+// });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

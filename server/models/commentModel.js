@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import userModel from "./userModel.js";
+import AppError from "../utils/appError.js";
 
 const commentSchema = new mongoose.Schema(
   {
@@ -36,6 +38,23 @@ commentSchema.virtual("article", {
   ref: "Article",
   localField: "articleID",
   foreignField: "_id",
+});
+
+commentSchema.post("save", async function (doc) {
+  await userModel.findByIdAndUpdate(doc.userID, {
+    $push: {
+      addedComments: doc._id,
+    },
+  });
+});
+
+commentSchema.pre("findOneAndDelete", async function (next) {
+  this.r = await this.clone().findOne();
+  await userModel.updateOne(
+    { _id: this.r.userID },
+    { $pull: { addedComments: this.r._id } }
+  );
+  next();
 });
 
 const commentModel = mongoose.model("Comment", commentSchema);

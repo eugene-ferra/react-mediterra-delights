@@ -3,8 +3,7 @@ import * as factory from "./handleFactory.js";
 
 export const setReviewsIds = (req, res, next) => {
   if (!req.body.productID) req.body.productID = req.params.productID;
-  //FIXME: TEMPORARY!!! MUST BE REAL USER ID FROM DB
-  if (!req.body.userID) req.body.userID = "650ae6b6cb7174a9a959fe51";
+  if (!req.body.userID) req.body.userID = req.user._id;
   next();
 };
 
