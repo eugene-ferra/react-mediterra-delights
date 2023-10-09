@@ -53,13 +53,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    likedProducts: [
+    savedProducts: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "Product",
       },
     ],
     likedArticles: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Article",
+      },
+    ],
+    savedArticles: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "Article",

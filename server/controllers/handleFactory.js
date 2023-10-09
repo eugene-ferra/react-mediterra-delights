@@ -1,5 +1,6 @@
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
+import userModel from "../models/userModel.js";
 
 export const getAll = (Model, populateObject) =>
   catchAsync(async (req, res, next) => {
@@ -108,5 +109,31 @@ export const deleteOne = (Model) =>
     res.status(204).json({
       status: "success",
       data: [],
+    });
+  });
+
+export const userAction = (Model, field) =>
+  catchAsync(async (req, res, next) => {
+    const id = req.body.id;
+    const userID = req.params.userID;
+
+    const user = await userModel.findById(userID);
+
+    if (!user) return next(new AppError("Invalid user!", 400));
+
+    if (user[field].includes(id)) {
+      return next(new AppError("Entity already added to liked!", 400));
+    }
+
+    const testDoc = await Model.findById(id);
+    if (!testDoc) return next(new AppError("Invalid id!", 400));
+
+    const doc = await userModel.findByIdAndUpdate(userID, {
+      $push: { [field]: id },
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: doc,
     });
   });
