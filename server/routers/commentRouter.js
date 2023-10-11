@@ -11,13 +11,23 @@ commentRouter
     protect,
     restrictTo("user"),
     commentController.setArticlesIds,
+    commentController.presetStatus,
     commentController.addComment
   );
 
 commentRouter
   .route("/:id")
   .get(commentController.getComment)
-  .patch(protect, restrictTo("user"), commentController.updateComment)
-  .delete(protect, restrictTo("user"), commentController.deleteComment);
+  .patch(
+    protect,
+    commentController.checkUpdate,
+    commentController.presetStatus,
+    commentController.updateComment
+  )
+  .delete(
+    protect,
+    commentController.checkUpdate,
+    commentController.deleteComment
+  );
 
 export default commentRouter;

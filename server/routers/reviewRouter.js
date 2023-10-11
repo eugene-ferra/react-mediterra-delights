@@ -11,13 +11,19 @@ reviewRouter
     protect,
     restrictTo("user"),
     reviewController.setReviewsIds,
+    reviewController.presetStatus,
     reviewController.addReview
   );
 
 reviewRouter
   .route("/:id")
   .get(reviewController.getReview)
-  .patch(protect, restrictTo("user"), reviewController.updateReview)
-  .delete(protect, restrictTo("user"), reviewController.deleteReview);
+  .patch(protect, reviewController.checkUpdate, reviewController.updateReview)
+  .delete(
+    protect,
+    reviewController.checkUpdate,
+    reviewController.presetStatus,
+    reviewController.deleteReview
+  );
 
 export default reviewRouter;

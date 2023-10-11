@@ -2,13 +2,16 @@ import articleModel from "../models/articleModel.js";
 import * as factory from "./handleFactory.js";
 import catchAsync from "../utils/catchAsync.js";
 
-export const getArticles = factory.getAll(articleModel, { path: "comments" });
+export const getArticles = factory.getAll(articleModel, {
+  path: "comments",
+  match: { isModerated: true },
+});
 export const addArticle = factory.addOne(articleModel);
 
 export const getArticle = catchAsync(async (req, res, next) => {
   const doc = await articleModel
     .findById(req.params.id)
-    .populate({ path: "comments" })
+    .populate({ path: "comments", match: { isModerated: true } })
     .select("+viewsArr")
     .lean();
 

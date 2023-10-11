@@ -31,6 +31,10 @@ const reviewSchema = new mongoose.Schema(
       },
       required: [true, "Review must contain a rating!"],
     },
+    isModerated: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: {
@@ -53,7 +57,7 @@ reviewSchema.index({ userID: 1, productID: 1 }, { unique: true });
 reviewSchema.statics.calcAvgRating = async function (productId) {
   const stats = await this.aggregate([
     {
-      $match: { productID: productId },
+      $match: { productID: productId, isModerated: true },
     },
     {
       $group: {

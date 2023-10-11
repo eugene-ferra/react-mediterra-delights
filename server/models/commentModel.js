@@ -23,6 +23,10 @@ const commentSchema = new mongoose.Schema(
       maxLenght: [300, "Comment must not contain more than 300 characters!"],
       required: [true, "Comment must have a text!"],
     },
+    isModerated: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: {
