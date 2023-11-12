@@ -1,6 +1,14 @@
 import express from "express";
 import * as commentController from "../controllers/commentController.js";
-import { protect, restrictTo } from "../controllers/authController.js";
+import restrictTo from "../middlewares/restrictTo.js";
+import protect from "../middlewares/protect.js";
+import prefillReqBody from "../middlewares/prefillReqBody.js";
+import {
+  commentValidationSchema,
+  postCommentValidationSchema,
+} from "../validations/commentValidator.js";
+import { idValidationSchema } from "../validations/idValidation.js";
+import { checkSchema } from "express-validator";
 
 const commentRouter = express.Router({ mergeParams: true });
 
@@ -8,26 +16,24 @@ commentRouter
   .route("/")
   .get(commentController.getAllComments)
   .post(
-    protect,
+    protect(),
     restrictTo("user"),
-    commentController.setArticlesIds,
-    commentController.presetStatus,
+    prefillReqBody({
+      userID: (req) => req.user._id,
+      articleID: (req) => req.params.articleID,
+    }),
+    checkSchema(postCommentValidationSchema),
     commentController.addComment
   );
 
 commentRouter
   .route("/:id")
-  .get(commentController.getComment)
+  .get(checkSchema(idValidationSchema), commentController.getComment)
   .patch(
-    protect,
-    commentController.checkUpdate,
-    commentController.presetStatus,
+    protect(),
+    checkSchema(commentValidationSchema),
     commentController.updateComment
   )
-  .delete(
-    protect,
-    commentController.checkUpdate,
-    commentController.deleteComment
-  );
+  .delete(protect(), checkSchema(idValidationSchema), commentController.deleteComment);
 
 export default commentRouter;

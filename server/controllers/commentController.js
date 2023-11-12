@@ -1,44 +1,104 @@
-import commentModel from "../models/commentModel.js";
-import AppError from "../utils/appError.js";
-import * as factory from "./handleFactory.js";
+import { commentService } from "../services/commentService.js";
+import { getQueryData } from "../utils/getQueryData.js";
+import { validationResult } from "express-validator";
 
-export const setArticlesIds = (req, res, next) => {
-  if (!req.body.articleID) req.body.articleID = req.params.articleID;
-  if (!req.body.userID) req.body.userID = req.user._id;
-  next();
+export const addComment = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
+    const newComment = {
+      articleID: req.body.articleID,
+      userID: req.body.userID,
+      comment: req.body.comment,
+    };
+
+    const data = await commentService.addOne(newComment);
+
+    res.status(201).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-export const presetStatus = (req, res, next) => {
-  req.body.isModerated = false;
-  next();
+export const getAllComments = async (req, res, next) => {
+  try {
+    let { filterObj, sortObj, page, limit } = getQueryData(req);
+    if (req.params.articleID) {
+      filterObj = { ...filterObj, articleID: req.params.articleID, isModerated: true };
+    }
+
+    const data = await commentService.getAll({ filterObj, sortObj, page, limit });
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+export const getComment = async (req, res, next) => {
+  try {
+    const data = await commentService.getOne({ id: req.params.id });
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-export const checkUpdate = (req, res, next) => {
-  const keys = Object.keys(req.body);
+export const updateComment = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
 
-  if (req.user.role === "user" && keys.includes("isModerated")) {
-    return next(
-      new AppError("You don't have permissions to perform this action!", 403)
-    );
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
+    let updatedDoc;
+    if (req.user.role === "admin") {
+      updatedDoc = {
+        isModerated: req.body.isModerated,
+      };
+    } else {
+      updatedDoc = {
+        comment: req.body.comment,
+        isModerated: false,
+      };
+    }
+
+    const data = await commentService.updateOne(req.params.id, updatedDoc);
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    next(err);
   }
-
-  if (req.user.role === "admin" && keys.length > 1) {
-    return next(
-      new AppError("You don't have permissions to perform this action!", 403)
-    );
-  }
-
-  if (!keys.includes("isModerated") && req.user.role === "admin") {
-    return next(
-      new AppError("You don't have permissions to perform this action!", 403)
-    );
-  }
-
-  next();
 };
-
-export const addComment = factory.addOne(commentModel);
-export const getAllComments = factory.getAll(commentModel);
-export const getComment = factory.getOne(commentModel);
-export const updateComment = factory.updateOne(commentModel);
-export const deleteComment = factory.deleteOne(commentModel);
+export const deleteComment = async (req, res, next) => {
+  try {
+    await commentService.deleteOne(req.params.id);
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (error) {
+    next(err);
+  }
+};

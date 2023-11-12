@@ -20,7 +20,7 @@ const reviewSchema = new mongoose.Schema(
     review: {
       type: String,
       trim: true,
-      maxLenght: [300, "Review must not contain more than 300 characters!"],
+      maxLenght: [500, "Review must not contain more than 300 characters!"],
     },
     rating: {
       type: Number,
@@ -104,6 +104,11 @@ reviewSchema.pre("findOneAndDelete", async function (next) {
     { _id: this.r.userID },
     { $pull: { addedReviews: this.r._id } }
   );
+  await productModel.updateOne(
+    { _id: this.r.productID },
+    { $pull: { reviews: this.r._id } }
+  );
+
   next();
 });
 
@@ -113,4 +118,5 @@ reviewSchema.post(/^findOneAnd/, async function () {
 
 const reviewModel = mongoose.model("Review", reviewSchema);
 
+export const Review = reviewSchema;
 export default reviewModel;

@@ -16,6 +16,14 @@ const handleCastErrorDB = (err) => {
   return new AppError(`Invalid type of ${err.path}!`, 400);
 };
 
+const handleJWTError = (err) => {
+  return new AppError("Invalid authorization token!", 400);
+};
+
+const handleTokenExpiredError = (err) => {
+  return new AppError("Authorization token has been expired!", 401);
+};
+
 const sendError = (err, req, res) => {
   if (err.isOperational) {
     return res.status(err.statusCode).json({
@@ -30,10 +38,11 @@ const sendError = (err, req, res) => {
 };
 
 export default function (err, req, res, next) {
+  console.log(err);
   let error;
 
-  console.log(err);
-
+  if (err.name === "JsonWebTokenError") error = handleJWTError(err);
+  if (err.name === "TokenExpiredError") error = handleTokenExpiredError(err);
   if (err instanceof mongoose.Error.CastError) error = handleCastErrorDB(err);
   if (err instanceof mongoose.Error.ValidationError)
     error = handleValidationErrorDB(err);

@@ -1,53 +1,95 @@
-import articleModel from "../models/articleModel.js";
-import * as factory from "./handleFactory.js";
-import catchAsync from "../utils/catchAsync.js";
+import { articleService } from "../services/articleService.js";
+import { getArticleData } from "../utils/getArticleData.js";
+import { getQueryData } from "../utils/getQueryData.js";
+import { validationResult } from "express-validator";
 
-export const getArticles = factory.getAll(articleModel, {
-  path: "comments",
-  match: { isModerated: true },
-});
-export const addArticle = factory.addOne(articleModel);
+export const getArticles = async (req, res, next) => {
+  try {
+    const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-export const getArticle = catchAsync(async (req, res, next) => {
-  const doc = await articleModel
-    .findById(req.params.id)
-    .populate({ path: "comments", match: { isModerated: true } })
-    .select("+viewsArr")
-    .lean();
+    const data = await articleService.getAll({
+      filterObj,
+      sortObj,
+      page,
+      limit,
+      populateObj: { path: "comments", match: { isModerated: true } },
+    });
 
-  if (!doc)
-    return next(new AppError("There aren't documents with this id!", 404));
-
-  const viewsIps = doc.viewsArr.map((item) => item.ip);
-  const viewsUserAgents = doc.viewsArr.map((item) => item.userAgent);
-
-  if (
-    !(
-      viewsIps.includes(req.ip) &&
-      viewsUserAgents.includes(req.headers["user-agent"])
-    )
-  ) {
-    articleModel.addView(req.params.id, req.ip, req.headers["user-agent"]);
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
   }
+};
+export const addArticle = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
 
-  const viewsArrData = doc;
-  delete viewsArrData.viewsArr;
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
-  res.status(201).json({
-    status: "success",
-    data: viewsArrData,
-  });
-});
+    const newArticleData = getArticleData(req);
 
-export const updateArticle = factory.updateOne(articleModel);
-export const deleteArticle = factory.deleteOne(articleModel);
+    const data = await articleService.addOne(newArticleData);
 
-export const setViews = (req, res, next) => {
-  if (req.method === "GET") {
-    req.body.viewsArr = {
+    res.status(201).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+export const getArticle = async (req, res, next) => {
+  try {
+    const data = await articleService.getOne({
+      id: req.params.id,
+      populateObj: { path: "comments", match: { isModerated: true } },
       ip: req.ip,
       userAgent: req.headers["user-agent"],
-    };
+    });
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    next(err);
   }
-  next();
+};
+export const updateArticle = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
+    const updatedObj = getArticleData(req);
+
+    const data = await articleService.updateOne(req.params.id, updatedObj);
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+export const deleteArticle = async (req, res, next) => {
+  try {
+    await articleService.deleteOne(req.params.id);
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (err) {
+    next(err);
+  }
 };

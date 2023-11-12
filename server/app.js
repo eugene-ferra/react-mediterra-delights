@@ -14,9 +14,11 @@ import articleRouter from "./routers/articleRouter.js";
 import commentRouter from "./routers/commentRouter.js";
 import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
-
+import morgan from "morgan";
 const app = express();
 
+app.set("trust proxy", 1);
+app.use(morgan("dev"));
 app.use(helmet());
 
 app.use(
@@ -29,21 +31,18 @@ app.use(
 );
 
 app.use(express.json({ limit: "10kb" }));
-app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
-
-app.use(ExpressMongoSanitize());
-
-app.use(xss());
 
 app.use(hpp());
 
 app.use(compression());
+app.use(ExpressMongoSanitize());
 
+app.use("/api/articles", articleRouter);
+app.use(xss());
 app.use("/api/products", productRouter);
 app.use("/api/reviews", reviewRouter);
-app.use("/api/articles", articleRouter);
 app.use("/api/comments", commentRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);

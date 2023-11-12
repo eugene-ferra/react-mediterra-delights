@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import userModel from "./userModel.js";
-import AppError from "../utils/appError.js";
+import articleModel from "./articleModel.js";
 
 const commentSchema = new mongoose.Schema(
   {
@@ -20,7 +20,7 @@ const commentSchema = new mongoose.Schema(
     comment: {
       type: String,
       trim: true,
-      maxLenght: [300, "Comment must not contain more than 300 characters!"],
+      maxLenght: [500, "Comment must not contain more than 500 characters!"],
       required: [true, "Comment must have a text!"],
     },
     isModerated: {
@@ -38,12 +38,6 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-commentSchema.virtual("article", {
-  ref: "Article",
-  localField: "articleID",
-  foreignField: "_id",
-});
-
 commentSchema.post("save", async function (doc) {
   await userModel.findByIdAndUpdate(doc.userID, {
     $push: {
@@ -58,9 +52,14 @@ commentSchema.pre("findOneAndDelete", async function (next) {
     { _id: this.r.userID },
     { $pull: { addedComments: this.r._id } }
   );
+  await articleModel.updateOne(
+    { _id: this.r.articleID },
+    { $pull: { comments: this.r._id } }
+  );
   next();
 });
 
 const commentModel = mongoose.model("Comment", commentSchema);
 
+export const Comment = commentSchema;
 export default commentModel;

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import commentModel from "./commentModel.js";
+import userModel from "./userModel.js";
 
 const articleSchema = new mongoose.Schema(
   {
@@ -8,13 +9,30 @@ const articleSchema = new mongoose.Schema(
       required: [true, "Article must have a title!"],
       unique: [true, "Article with this title has already axists!"],
       trim: true,
-      minLength: [3, "Article must have at least 3 characters!"],
-      maxLenght: [200, "Article must not have more than 200 characters!"],
+      minLength: [1, "Article must have at least 1 characters!"],
+      maxLenght: [100, "Article must not have more than 200 characters!"],
+    },
+    topic: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["Рецепти", "Поради", "Новини", "Інше"],
+        message: "{VALUE} is not supported!",
+      },
     },
     imgCover: {
-      type: String,
-      required: [true, "Article must have an image!"],
-      trim: true,
+      jpg: {
+        type: String,
+        required: true,
+      },
+      webp: {
+        type: String,
+        required: true,
+      },
+      avif: {
+        type: String,
+        required: true,
+      },
     },
     createdAt: {
       type: Date,
@@ -40,7 +58,6 @@ const articleSchema = new mongoose.Schema(
           },
         },
       ],
-      select: false,
     },
     markup: {
       type: String,
@@ -51,7 +68,7 @@ const articleSchema = new mongoose.Schema(
       trim: true,
       required: [true, "Article must have preview text!"],
       minLength: [3, "Article must have at least 3 characters!"],
-      maxLenght: [500, "Article must not have more than 500 characters!"],
+      maxLenght: [200, "Article must not have more than 500 characters!"],
     },
   },
   {
@@ -70,24 +87,26 @@ articleSchema.virtual("comments", {
   foreignField: "articleID",
 });
 
-articleSchema.statics.addView = async function (id, ip, userAgent) {
-  await this.findByIdAndUpdate(id, {
-    $push: { viewsArr: { ip, userAgent } },
-    $inc: { views: 1 },
-  });
-};
-
-articleSchema.post("findOne", async function (doc) {});
-
 articleSchema.pre("findOneAndDelete", async function (next) {
   this.r = await this.clone().findOne();
   next();
 });
 
 articleSchema.post("findOneAndDelete", async function () {
-  if (this.r) await commentModel.deleteMany({ articleID: this.r._id });
+  if (this.r) {
+    await commentModel.deleteMany({ articleID: this.r._id });
+    await userModel.updateMany(
+      { likedArticles: { $in: [this.r._id] } },
+      { $pull: { likedArticles: this.r._id } }
+    );
+    await userModel.updateMany(
+      { savedArticles: { $in: [this.r._id] } },
+      { $pull: { savedArticles: this.r._id } }
+    );
+  }
 });
 
 const articleModel = mongoose.model("Article", articleSchema);
 
+export const Article = articleSchema;
 export default articleModel;
