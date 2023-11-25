@@ -2,12 +2,14 @@ import { articleService } from "../services/articleService.js";
 import { getArticleData } from "../utils/getArticleData.js";
 import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
+import addLinks from "../utils/addLinks.js";
+import addLinksToMarkup from "../utils/addLinksToMarkup.js";
 
 export const getArticles = async (req, res, next) => {
   try {
     const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-    const data = await articleService.getAll({
+    let data = await articleService.getAll({
       filterObj,
       sortObj,
       page,
@@ -15,7 +17,10 @@ export const getArticles = async (req, res, next) => {
       populateObj: { path: "comments", match: { isModerated: true } },
     });
 
-    res.status(200).json(data);
+    data = data.map((doc) => addLinks(req, doc, ["imgCover"]));
+    data = data.map((doc) => addLinksToMarkup(req, doc, "markup"));
+
+    res.status(200).json({ status: "success", data });
   } catch (err) {
     next(err);
   }
@@ -33,7 +38,9 @@ export const addArticle = async (req, res, next) => {
 
     const newArticleData = getArticleData(req);
 
-    const data = await articleService.addOne(newArticleData);
+    let data = await articleService.addOne(newArticleData, req?.files?.imgCover);
+    data = addLinks(req, data[0], ["imgCover"]);
+    data = addLinksToMarkup(req, data, "markup");
 
     res.status(201).json({
       status: "success",
@@ -45,13 +52,15 @@ export const addArticle = async (req, res, next) => {
 };
 export const getArticle = async (req, res, next) => {
   try {
-    const data = await articleService.getOne({
+    let data = await articleService.getOne({
       id: req.params.id,
       populateObj: { path: "comments", match: { isModerated: true } },
       ip: req.ip,
       userAgent: req.headers["user-agent"],
     });
 
+    data = addLinks(req, data[0], ["imgCover"]);
+    data = addLinksToMarkup(req, data, "markup");
     res.status(200).json({
       status: "success",
       data,
@@ -73,7 +82,10 @@ export const updateArticle = async (req, res, next) => {
 
     const updatedObj = getArticleData(req);
 
-    const data = await articleService.updateOne(req.params.id, updatedObj);
+    let data = await articleService.updateOne(req.params.id, updatedObj, imgCover);
+    data = addLinks(req, data[0], ["imgCover"]);
+    data = addLinksToMarkup(req, data, "markup");
+
     res.status(200).json({
       status: "success",
       data,

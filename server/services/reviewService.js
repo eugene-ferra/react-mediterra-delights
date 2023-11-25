@@ -35,8 +35,20 @@ export class reviewService {
     return [new ReviewDTO(doc)];
   }
 
-  static async updateOne(id, data) {
-    const doc = await reviewModel.findByIdAndUpdate(id, data, {
+  static async updateOne(id, data, role) {
+    let updatedDoc;
+
+    if (role === "admin") {
+      updatedDoc = {
+        isModerated: data.isModerated,
+      };
+    } else {
+      updatedDoc = {
+        review: data.review,
+        rating: data.rating,
+      };
+    }
+    const doc = await reviewModel.findByIdAndUpdate(id, updatedDoc, {
       new: true,
       runValidators: true,
     });

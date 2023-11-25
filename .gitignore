@@ -3,3 +3,7 @@ client/package-lock.json
 server/node_modules
 server/package-lock.json
 server/.env
+server/public/products/*
+server/public/articles/*
+!server/public/products/.gitkeep
+!server/public/articles/.gitkeep

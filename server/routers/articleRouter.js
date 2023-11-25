@@ -9,6 +9,7 @@ import {
 } from "../validations/articleValidator.js";
 import { idValidationSchema } from "../validations/idValidation.js";
 import { checkSchema } from "express-validator";
+import { imageUpload } from "../middlewares/imageUpload.js";
 
 const articleRouter = express.Router();
 
@@ -18,6 +19,7 @@ articleRouter
   .post(
     protect(),
     restrictTo("admin"),
+    imageUpload.fields([{ name: "imgCover", maxCount: 1 }]),
     checkSchema(articleValidationStrictSchema),
     articleController.addArticle
   );
@@ -28,6 +30,7 @@ articleRouter
   .patch(
     protect(),
     restrictTo("admin"),
+    imageUpload.fields([{ name: "imgCover", maxCount: 1 }]),
     checkSchema(articleValidationSchema),
     articleController.updateArticle
   )

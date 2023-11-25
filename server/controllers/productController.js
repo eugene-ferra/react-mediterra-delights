@@ -1,4 +1,5 @@
 import { productService } from "../services/productService.js";
+import addLinks from "../utils/addLinks.js";
 import { getProductData } from "../utils/getProductData.js";
 import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
@@ -7,7 +8,7 @@ export const getProducts = async (req, res, next) => {
   try {
     const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-    const data = await productService.getAll({
+    let data = await productService.getAll({
       filterObj,
       sortObj,
       page,
@@ -17,6 +18,8 @@ export const getProducts = async (req, res, next) => {
         match: { isModerated: true },
       },
     });
+
+    data = data.map((doc) => addLinks(req, doc, ["imgCover", "images"]));
 
     res.status(200).json({
       status: "success",
@@ -28,13 +31,15 @@ export const getProducts = async (req, res, next) => {
 };
 export const getProduct = async (req, res, next) => {
   try {
-    const data = await productService.getOne({
+    let data = await productService.getOne({
       id: req.params.id,
       populateObj: {
         path: "reviews",
         match: { isModerated: true },
       },
     });
+
+    data = addLinks(req, data[0], ["imgCover", "images"]);
 
     res.status(200).json({
       status: "success",
@@ -55,9 +60,15 @@ export const addProduct = async (req, res, next) => {
       });
     }
 
-    const newProd = getProductData(req);
+    let textData = getProductData(req);
 
-    const data = await productService.addOne(newProd);
+    let data = await productService.addOne(
+      textData,
+      req.files?.imgCover?.[0]?.buffer,
+      req.files?.images?.map((item) => item?.buffer)
+    );
+
+    data = addLinks(req, data[0], ["imgCover", "images"]);
 
     res.status(201).json({
       status: "success",
@@ -80,7 +91,14 @@ export const updateProduct = async (req, res, next) => {
 
     const updateProd = getProductData(req);
 
-    const data = await productService.updateOne(req.params.id, updateProd);
+    let data = await productService.updateOne(
+      req.params.id,
+      updateProd,
+      req.files?.imgCover?.[0]?.buffer,
+      req.files?.images?.map((item) => item?.buffer)
+    );
+
+    data = addLinks(req, data[0], ["imgCover", "images"]);
 
     res.status(200).json({
       status: "success",

@@ -70,21 +70,17 @@ export const updateReview = async (req, res, next) => {
       });
     }
 
-    let updateReview;
+    let updateReview = {
+      review: req.body.review,
+      rating: req.body.rating,
+      isModerated: req.body.rating,
+    };
 
-    if (req.user.role === "admin") {
-      updateReview = {
-        isModerated: req.body.isModerated,
-      };
-    } else {
-      updateReview = {
-        review: req.body.review,
-        rating: req.body.rating,
-        isModerated: false,
-      };
-    }
-
-    const data = await reviewService.updateOne(req.params.id, updateReview);
+    const data = await reviewService.updateOne(
+      req.params.id,
+      updateReview,
+      req.user.role
+    );
 
     res.status(200).json({
       status: "success",

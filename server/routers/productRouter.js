@@ -9,6 +9,7 @@ import {
   productValidationStrictSchema,
 } from "../validations/productValidation.js";
 import { idValidationSchema } from "../validations/idValidation.js";
+import { imageUpload } from "../middlewares/imageUpload.js";
 
 const productRouter = express.Router();
 
@@ -18,6 +19,10 @@ productRouter
   .post(
     protect(),
     restrictTo("admin"),
+    imageUpload.fields([
+      { name: "imgCover", maxCount: 1 },
+      { name: "images", maxCount: 10 },
+    ]),
     checkSchema(productValidationStrictSchema),
     productController.addProduct
   );
@@ -28,6 +33,10 @@ productRouter
   .patch(
     protect(),
     restrictTo("admin"),
+    imageUpload.fields([
+      { name: "imgCover", maxCount: 1 },
+      { name: "images", maxCount: 10 },
+    ]),
     checkSchema(productValidationSchema),
     productController.updateProduct
   )

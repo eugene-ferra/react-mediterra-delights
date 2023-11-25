@@ -36,8 +36,20 @@ export class commentService {
     return [new CommentDTO(doc)];
   }
 
-  static async updateOne(id, data) {
-    const doc = await commentModel.findByIdAndUpdate(id, data, {
+  static async updateOne(id, data, role) {
+    let updatedDoc;
+
+    if (role === "admin") {
+      updatedDoc = {
+        isModerated: data.isModerated,
+      };
+    } else {
+      updatedDoc = {
+        comment: data.comment,
+      };
+    }
+
+    const doc = await commentModel.findByIdAndUpdate(id, updatedDoc, {
       new: true,
       runValidators: true,
     });

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import reviewModel from "./reviewModel.js";
+import userModel from "./userModel.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -94,7 +95,7 @@ const productSchema = new mongoose.Schema(
       min: [0, "Product's discount must be more than 0!"],
       validate: {
         validator: function (v) {
-          return v < this.price;
+          return v < this.get("price");
         },
         message: (props) => `${props.value} must be less than price!`,
       },

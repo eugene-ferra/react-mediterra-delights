@@ -15,11 +15,18 @@ import commentRouter from "./routers/commentRouter.js";
 import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
 import morgan from "morgan";
+import cors from "cors";
 const app = express();
 
 app.set("trust proxy", 1);
+app.use(cors({ origin: true }));
+
 app.use(morgan("dev"));
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 
 app.use(
   "/api",
@@ -30,7 +37,7 @@ app.use(
   })
 );
 
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "10000kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
@@ -46,6 +53,8 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/comments", commentRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+
+app.use(express.static("public"));
 
 app.all("*", (req, res, next) => {
   next(

@@ -90,54 +90,7 @@ export const productValidationSchema = {
       errorMessage: "Weight should be an integer and be greater than 0!",
     },
   },
-  imgCover: {
-    isObject: {
-      if: body("imgCover").exists(),
-      errorMessage: "imageCover should be an object!",
-    },
-  },
-  "imgCover.jpg": {
-    isURL: {
-      if: body("imgCover").exists(),
-      errorMessage: "jpg image should be a correct URL!",
-    },
-  },
-  "imgCover.webp": {
-    isURL: {
-      if: body("imgCover").exists(),
-      errorMessage: "webp image should be a correct URL!",
-    },
-  },
-  "imgCover.avif": {
-    isURL: {
-      if: body("imgCover").exists(),
-      errorMessage: "avif image should be a correct URL!",
-    },
-  },
-  images: {
-    isArray: {
-      if: body("images").exists(),
-      errorMessage: "Images should be an array!",
-    },
-  },
-  "images.*.jpg": {
-    isURL: {
-      if: body("images").exists(),
-      errorMessage: "jpg images should be correct URLs!",
-    },
-  },
-  "images.*.webp": {
-    isURL: {
-      if: body("images").exists(),
-      errorMessage: "webp images should be correct URLs!",
-    },
-  },
-  "images.*.avif": {
-    isURL: {
-      if: body("images").exists(),
-      errorMessage: "avif images should be  correct URLs!",
-    },
-  },
+
   price: {
     isFloat: {
       if: body("price").exists(),
@@ -155,9 +108,10 @@ export const productValidationSchema = {
       if: body("discountPrice").exists(),
       options: async (value, { req }) => {
         const price = req.body.price;
+
         if (!price) return true;
 
-        if (value > price) {
+        if (+value > +price) {
           throw new Error("DiscountPrice cannot be greater than the regular price!");
         }
         return true;
@@ -273,13 +227,6 @@ export const productValidationStrictSchema = {
       bail: true,
     },
     ...productValidationSchema.weight,
-  },
-  imgCover: {
-    exists: {
-      errorMessage: "ImgCover is required",
-      bail: true,
-    },
-    ...productValidationSchema.imgCover,
   },
   price: {
     exists: {

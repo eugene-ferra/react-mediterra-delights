@@ -1,3 +1,4 @@
+import multer from "multer";
 import AppError from "../utils/appError.js";
 import mongoose from "mongoose";
 
@@ -24,6 +25,13 @@ const handleTokenExpiredError = (err) => {
   return new AppError("Authorization token has been expired!", 401);
 };
 
+const handleMulterError = (err) => {
+  return new AppError(
+    `${err.field ? err.field + " : " : ""}${err.message.toLowerCase()}`,
+    400
+  );
+};
+
 const sendError = (err, req, res) => {
   if (err.isOperational) {
     return res.status(err.statusCode).json({
@@ -47,6 +55,7 @@ export default function (err, req, res, next) {
   if (err instanceof mongoose.Error.ValidationError)
     error = handleValidationErrorDB(err);
   if (err.code === 11000) error = handleDublicateKeysErrorDB(err);
+  if (err instanceof multer.MulterError) error = handleMulterError(err);
 
   error ? sendError(error, req, res) : sendError(err, req, res);
 }

@@ -69,20 +69,13 @@ export const updateComment = async (req, res, next) => {
         errors: errors.array(),
       });
     }
+    const updatedDoc = { comment: req.body.comment, isModerated: req.body.isModerated };
 
-    let updatedDoc;
-    if (req.user.role === "admin") {
-      updatedDoc = {
-        isModerated: req.body.isModerated,
-      };
-    } else {
-      updatedDoc = {
-        comment: req.body.comment,
-        isModerated: false,
-      };
-    }
-
-    const data = await commentService.updateOne(req.params.id, updatedDoc);
+    const data = await commentService.updateOne(
+      req.params.id,
+      updatedDoc,
+      req.user.role
+    );
     res.status(200).json({
       status: "success",
       data,
