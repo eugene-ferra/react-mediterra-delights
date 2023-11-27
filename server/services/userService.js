@@ -4,7 +4,9 @@ import AppError from "../utils/appError.js";
 import { authService } from "./authService.js";
 import bcrypt from "bcrypt";
 import { AuthDTO } from "../dto/authDTO.js";
+import { fileService } from "./fileService.js";
 
+const folder = "users";
 export default class userService {
   static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
     const data = await userModel
@@ -86,21 +88,110 @@ export default class userService {
     return { user: new UserDTO(user), ...tokens };
   }
 
-  static async userInteractionAdd(id, arrName, data) {
-    const user = await userModel.findByIdAndUpdate(
+  static async addToArray(id, arrName, data, dataModel) {
+    const itemId = data?.id || data;
+    const addedItem = await dataModel.findById(itemId);
+    if (!addedItem) throw new AppError("Item with this id does not exists!", 404);
+
+    const user = await userModel.findById(id);
+    if (!user) throw new AppError("User with this id does not exists!", 404);
+
+    const foundItem = user[arrName].find((item) => {
+      if (item?.id) {
+        return item.id.toString() === itemId.toString();
+      } else {
+        return item.toString() === itemId.toString();
+      }
+    });
+
+    if (foundItem) throw new AppError("Item already added!", 409);
+
+    const updatedUser = await userModel.findByIdAndUpdate(
       id,
-      { $addToSet: { [arrName]: data } },
+      { $push: { [arrName]: data } },
       { new: true }
     );
-    return [new UserDTO(user)];
+    return [new UserDTO(updatedUser)];
   }
 
-  static async userInteractionDelete(id, arrName, data) {
-    const user = await userModel.findByIdAndUpdate(
+  static async deleteFromArray(id, arrName, itemId) {
+    const user = await userModel.findById(id);
+    if (!user) throw new AppError("User with this id does not exists!", 404);
+
+    const foundItem = user[arrName].find((item) => {
+      if (item && item.id) {
+        return item.id.toString() === itemId.toString() ? item : false;
+      } else {
+        return item.toString() === itemId.toString() ? item : false;
+      }
+    });
+
+    if (!foundItem) throw new AppError("This item does not exist!", 404);
+
+    const updatedUser = await userModel.findByIdAndUpdate(
       id,
-      { $pull: { [arrName]: data } },
+      { $pull: { [arrName]: { _id: foundItem?.id || foundItem } } },
       { new: true }
     );
-    return [new UserDTO(user)];
+    return [new UserDTO(updatedUser)];
+  }
+  static async updateCart(userId, itemId, quantity) {
+    const user = await userModel.findById(userId);
+    const foundItemIndex = user.cart.findIndex(
+      (item) => item.id.toString() === itemId.toString()
+    );
+
+    if (foundItemIndex === -1) throw new AppError("This item does not exist!", 404);
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $set: { [`cart.${foundItemIndex}.quantity`]: quantity },
+      },
+      { runValidators: true, new: true }
+    );
+
+    return [new UserDTO(updatedUser)];
+  }
+
+  static async updateOne(id, data, avatar) {
+    const doc = await userModel.findById(id);
+    if (!doc) throw new AppError(`There aren't users with this id!`, 404);
+    const payload = `${data?.name || doc.name}-${data?.lastName || doc.lastName}`;
+
+    const savedAvatar = await fileService.saveOneImage(avatar, folder, payload, 300);
+
+    if (savedAvatar) data["avatar"] = savedAvatar;
+
+    if (data?.oldPassword || data?.password) {
+      if (!data?.oldPassword) throw new AppError("Provide oldPassword!", 400);
+      if (!data?.password) throw new AppError("Provide password!", 400);
+      if (!(await bcrypt.compare(data.oldPassword, doc.password)))
+        throw new AppError("Invalid oldPassword", 400);
+    }
+
+    try {
+      const updatedDoc = await userModel.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+
+      if (savedAvatar) await fileService.deleteFiles(doc.avatar);
+
+      return [new UserDTO(updatedDoc)];
+    } catch (err) {
+      await fileService.deleteFiles(savedAvatar);
+      throw err;
+    }
+  }
+
+  static async deleteOne(id) {
+    const doc = await userModel.findById(id);
+
+    if (!doc) throw new AppError(`There aren't users with this id!`, 404);
+
+    await fileService.deleteFiles(doc?.avatar);
+
+    await userModel.findByIdAndDelete(id);
   }
 }

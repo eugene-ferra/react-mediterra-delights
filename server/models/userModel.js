@@ -68,8 +68,14 @@ const userSchema = new mongoose.Schema(
     addedComments: [{ type: mongoose.Schema.ObjectId, ref: "Comment" }],
     cart: [
       {
-        type: mongoose.Schema.ObjectId,
-        ref: "Product",
+        id: {
+          type: mongoose.Schema.ObjectId,
+          ref: "Product",
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
       },
     ],
   },

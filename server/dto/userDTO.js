@@ -18,6 +18,7 @@ export class UserDTO {
     this.id = userResponse._id;
     this.name = userResponse.name;
     this.lastName = userResponse.lastName;
+    this.phone = userResponse?.phone || null;
     this.email = userResponse.email;
     this.role = userResponse.role;
     this.password = userResponse.password;
@@ -31,6 +32,10 @@ export class UserDTO {
     this.savedArticles = userResponse.savedArticles || [];
     this.addedReviews = userResponse.addedReviews || [];
     this.addedComments = userResponse.addedComments || [];
-    this.cart = userResponse.cart || [];
+    this.cart = userResponse?.cart
+      ? userResponse.cart.map((item) => {
+          return { id: item.id, quantity: item.quantity };
+        })
+      : [];
   }
 }
