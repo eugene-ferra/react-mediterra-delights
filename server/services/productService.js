@@ -96,4 +96,12 @@ export class productService {
 
     await productModel.findByIdAndDelete(id);
   }
+
+  static getOptions() {
+    const options = {
+      categories: productModel.schema.path("category").enumValues,
+    };
+
+    return options;
+  }
 }

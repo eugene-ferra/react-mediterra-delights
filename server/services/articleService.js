@@ -167,4 +167,12 @@ export class articleService {
     await fileService.deleteFiles(links);
     await articleModel.findByIdAndDelete(id);
   }
+
+  static getOptions() {
+    const options = {
+      topic: articleModel.schema.path("topic").enumValues,
+    };
+
+    return options;
+  }
 }

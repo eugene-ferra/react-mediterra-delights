@@ -17,8 +17,8 @@ productRouter
   .route("/")
   .get(productController.getProducts)
   .post(
-    // protect(),
-    // restrictTo("admin"),
+    protect(),
+    restrictTo("admin"),
     imageUpload.fields([
       { name: "imgCover", maxCount: 1 },
       { name: "images", maxCount: 10 },
@@ -26,6 +26,8 @@ productRouter
     checkSchema(productValidationStrictSchema),
     productController.addProduct
   );
+
+productRouter.route("/options").get(productController.getOptions);
 
 productRouter
   .route("/:id")

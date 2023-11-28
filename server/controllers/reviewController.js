@@ -101,3 +101,17 @@ export const deleteReview = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getOptions = (req, res, next) => {
+  try {
+    const data = reviewService.getOptions();
+    console.log(data);
+
+    res.status(200).json({
+      status: "succes",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

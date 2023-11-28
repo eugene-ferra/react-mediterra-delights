@@ -105,3 +105,15 @@ export const deleteArticle = async (req, res, next) => {
     next(err);
   }
 };
+export const getOptions = (req, res, next) => {
+  try {
+    const data = articleService.getOptions();
+
+    res.status(200).json({
+      status: "succes",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

@@ -26,6 +26,8 @@ reviewRouter
     reviewController.addReview
   );
 
+reviewRouter.route("/options").get(reviewController.getOptions);
+
 reviewRouter
   .route("/:id")
   .get(checkSchema(idValidationSchema), reviewController.getReview)

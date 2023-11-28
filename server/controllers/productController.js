@@ -119,3 +119,15 @@ export const deleteProduct = async (req, res, next) => {
     next(err);
   }
 };
+export const getOptions = (req, res, next) => {
+  try {
+    const data = productService.getOptions();
+
+    res.status(200).json({
+      status: "succes",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

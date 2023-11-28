@@ -63,4 +63,12 @@ export class reviewService {
 
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
   }
+
+  static getOptions() {
+    const options = {
+      rating: reviewModel.schema.path("rating").options.enum.values,
+    };
+
+    return options;
+  }
 }

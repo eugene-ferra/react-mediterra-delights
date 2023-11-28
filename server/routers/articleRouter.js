@@ -24,6 +24,8 @@ articleRouter
     articleController.addArticle
   );
 
+articleRouter.route("/options").get(articleController.getOptions);
+
 articleRouter
   .route("/:id")
   .get(checkSchema(idValidationSchema), articleController.getArticle)
