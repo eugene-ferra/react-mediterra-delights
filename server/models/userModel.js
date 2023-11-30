@@ -78,6 +78,12 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpiresAt: {
+      type: Date,
+    },
   },
 
   {

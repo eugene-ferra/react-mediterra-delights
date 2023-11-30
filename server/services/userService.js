@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import { AuthDTO } from "../dto/authDTO.js";
 import { fileService } from "./fileService.js";
 import Mailer from "./mailerService.js";
+import crypto from "crypto";
 
 const folder = "users";
 export default class userService {
@@ -94,6 +95,52 @@ export default class userService {
 
     await authService.saveToken(payload.id, tokens.refreshToken, device);
     return { user: new UserDTO(user), ...tokens };
+  }
+
+  static async sendResetToken(email) {
+    const user = await userModel.findOne({ email });
+    if (!user) throw new AppError("User with this e-mail does not exists!", 404);
+
+    const plainResetToken = crypto.randomBytes(32).toString("hex");
+    const hashedResetToken = crypto
+      .createHash("sha256")
+      .update(plainResetToken)
+      .digest("hex");
+
+    const hours = 2;
+
+    await userModel.findOneAndUpdate(
+      { email },
+      {
+        resetToken: hashedResetToken,
+        resetTokenExpiresAt: Date.now() + hours * 60 * 60 * 1000,
+      }
+    );
+
+    await Mailer.sendMail(email, "Запит на скидання пароля", "resetPassEmail.ejs", {
+      name: user.name,
+      link: `${process.env.CLIENT_URL}/reset-password/${plainResetToken}?email=${email}`,
+      time: `${hours} години`,
+    });
+  }
+
+  static async resetPassword(token, email, password) {
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await userModel.findOne({ email: email, resetToken: hashedToken });
+    if (!user) throw new AppError("Invalid token", 404);
+    if (user.resetTokenExpiresAt < Date.now())
+      throw new AppError("Reset token has been expired!", 400);
+
+    await userModel.findByIdAndUpdate(
+      user._id,
+      {
+        password: password,
+        resetToken: null,
+        resetTokenExpiresAt: null,
+      },
+      { runValidators: true, new: true }
+    );
   }
 
   static async addToArray(id, arrName, data, dataModel) {

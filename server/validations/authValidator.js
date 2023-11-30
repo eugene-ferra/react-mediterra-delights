@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const loginValidationSchema = {
+export const emailValidationSchema = {
   email: {
     exists: {
       errorMessage: "Email is required!",
@@ -11,6 +11,9 @@ export const loginValidationSchema = {
     },
     normalizeEmail: true,
   },
+};
+
+export const passwordValidationSchema = {
   password: {
     exists: {
       errorMessage: "Password is required!",
@@ -20,6 +23,11 @@ export const loginValidationSchema = {
       errorMessage: "Password should be a string!",
     },
   },
+};
+
+export const loginValidationSchema = {
+  ...emailValidationSchema,
+  ...passwordValidationSchema,
 };
 
 export const registerValidationSchema = {
