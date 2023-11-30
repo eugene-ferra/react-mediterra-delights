@@ -5,6 +5,7 @@ import { authService } from "./authService.js";
 import bcrypt from "bcrypt";
 import { AuthDTO } from "../dto/authDTO.js";
 import { fileService } from "./fileService.js";
+import Mailer from "./mailerService.js";
 
 const folder = "users";
 export default class userService {
@@ -47,6 +48,13 @@ export default class userService {
     const payload = new AuthDTO(user);
     const tokens = authService.generateTokens({ ...payload });
     await authService.saveToken(payload.id, tokens.refreshToken, device);
+
+    await Mailer.sendMail(
+      user.email,
+      "Ваш аккаунт успішно створено!",
+      "welcomeEmail.ejs",
+      { name: user.name, link: `${process.env.CLIENT_URL}/account` }
+    );
 
     return { user: new UserDTO(user), ...tokens };
   }
