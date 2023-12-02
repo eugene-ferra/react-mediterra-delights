@@ -220,6 +220,7 @@ export const updateUserInfo = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
   try {
     await userService.deleteOne(req.user._id);
+    res.status(204).json({ status: "success" });
   } catch (err) {
     next(err);
   }

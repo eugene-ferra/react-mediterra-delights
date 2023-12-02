@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import tokenModel from "./tokenModel.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -96,8 +97,16 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-export const User = userSchema;
+userSchema.pre("findOneAndDelete", async function (next) {
+  this.r = await this.clone().findOne();
+  next();
+});
 
+userSchema.post("findOneAndDelete", async function () {
+  if (this.r) await tokenModel.deleteMany({ user: this.r._id });
+});
+
+export const User = userSchema;
 const userModel = mongoose.model("User", userSchema);
 
 export default userModel;

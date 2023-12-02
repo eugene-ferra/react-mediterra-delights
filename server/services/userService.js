@@ -135,12 +135,18 @@ export default class userService {
     await userModel.findByIdAndUpdate(
       user._id,
       {
-        password: password,
+        password: await bcrypt.hash(password, 12),
         resetToken: null,
         resetTokenExpiresAt: null,
       },
       { runValidators: true, new: true }
     );
+
+    const tokensData = await authService.findUserTokens(user._id);
+
+    tokensData.refreshTokens.forEach(async (item) => {
+      this.logout(item.refreshToken, item.device);
+    });
   }
 
   static async addToArray(id, arrName, data, dataModel) {
