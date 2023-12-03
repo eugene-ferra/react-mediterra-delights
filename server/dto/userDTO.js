@@ -12,6 +12,7 @@ export class UserDTO {
   savedArticles;
   addedReviews;
   addedComments;
+  orders;
   cart;
 
   constructor(userResponse) {
@@ -32,6 +33,7 @@ export class UserDTO {
     this.savedArticles = userResponse.savedArticles || [];
     this.addedReviews = userResponse.addedReviews || [];
     this.addedComments = userResponse.addedComments || [];
+    this.orders = userResponse.orders || [];
     this.cart = userResponse?.cart
       ? userResponse.cart.map((item) => {
           return { id: item.id, quantity: item.quantity };

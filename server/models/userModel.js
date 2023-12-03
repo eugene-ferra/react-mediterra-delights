@@ -79,6 +79,12 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    orders: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Order",
+      },
+    ],
     resetToken: {
       type: String,
     },

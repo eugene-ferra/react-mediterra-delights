@@ -14,6 +14,7 @@ import articleRouter from "./routers/articleRouter.js";
 import commentRouter from "./routers/commentRouter.js";
 import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
+import orderRouter from "./routers/orderRouter.js";
 import morgan from "morgan";
 import cors from "cors";
 const app = express();
@@ -53,6 +54,7 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/comments", commentRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/orders", orderRouter);
 
 app.use(express.static("public"));
 
