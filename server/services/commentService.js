@@ -37,19 +37,9 @@ export class commentService {
   }
 
   static async updateOne(id, data, role) {
-    let updatedDoc;
+    if (role === "user") delete data["isModerated"];
 
-    if (role === "admin") {
-      updatedDoc = {
-        isModerated: data.isModerated,
-      };
-    } else {
-      updatedDoc = {
-        comment: data.comment,
-      };
-    }
-
-    const doc = await commentModel.findByIdAndUpdate(id, updatedDoc, {
+    const doc = await commentModel.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     });

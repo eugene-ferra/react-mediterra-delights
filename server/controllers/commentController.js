@@ -1,17 +1,10 @@
 import { commentService } from "../services/commentService.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { validationResult } from "express-validator";
+import { checkBodyErrors } from "../utils/checkBodyErrors.js";
 
 export const addComment = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     const newComment = {
       articleID: req.body.articleID,
@@ -61,14 +54,8 @@ export const getComment = async (req, res, next) => {
 
 export const updateComment = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    checkBodyErrors(req, res);
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
     const updatedDoc = { comment: req.body.comment, isModerated: req.body.isModerated };
 
     const data = await commentService.updateOne(

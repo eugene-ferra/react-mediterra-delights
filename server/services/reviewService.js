@@ -36,19 +36,9 @@ export class reviewService {
   }
 
   static async updateOne(id, data, role) {
-    let updatedDoc;
+    if (role === "user") delete data["isModerated"];
 
-    if (role === "admin") {
-      updatedDoc = {
-        isModerated: data.isModerated,
-      };
-    } else {
-      updatedDoc = {
-        review: data.review,
-        rating: data.rating,
-      };
-    }
-    const doc = await reviewModel.findByIdAndUpdate(id, updatedDoc, {
+    const doc = await reviewModel.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     });

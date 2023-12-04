@@ -1,16 +1,10 @@
 import { reviewService } from "../services/reviewService.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { validationResult } from "express-validator";
+import { checkBodyErrors } from "../utils/checkBodyErrors.js";
 
 export const addReview = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     const newReview = {
       productID: req.body.productID,
@@ -61,14 +55,7 @@ export const getReview = async (req, res, next) => {
 
 export const updateReview = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     let updateReview = {
       review: req.body.review,
@@ -105,7 +92,6 @@ export const deleteReview = async (req, res, next) => {
 export const getOptions = (req, res, next) => {
   try {
     const data = reviewService.getOptions();
-    console.log(data);
 
     res.status(200).json({
       status: "succes",

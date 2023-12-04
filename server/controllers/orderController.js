@@ -1,18 +1,11 @@
 import { orderService } from "../services/orderService.js";
 import { getOrderData } from "../utils/getOrderData.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { validationResult } from "express-validator";
+import { checkBodyErrors } from "../utils/checkBodyErrors.js";
 
 export const addOrder = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     const data = getOrderData(req);
 
@@ -46,14 +39,7 @@ export const getAllOrders = async (req, res, next) => {
 
 export const getOrder = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     let data = await orderService.getOne(req.params.id);
 
@@ -78,14 +64,7 @@ export const getOptions = (req, res, next) => {
 
 export const updateOrder = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     const data = getOrderData(req);
 
@@ -99,14 +78,7 @@ export const updateOrder = async (req, res, next) => {
 
 export const proceedOrder = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     const order = await orderService.proceedOrder(
       req.params.id,

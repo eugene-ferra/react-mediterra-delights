@@ -1,9 +1,9 @@
 import { articleService } from "../services/articleService.js";
 import { getArticleData } from "../utils/getArticleData.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { validationResult } from "express-validator";
 import addLinks from "../utils/addLinks.js";
 import addLinksToMarkup from "../utils/addLinksToMarkup.js";
+import { checkBodyErrors } from "../utils/checkBodyErrors.js";
 
 export const getArticles = async (req, res, next) => {
   try {
@@ -27,14 +27,7 @@ export const getArticles = async (req, res, next) => {
 };
 export const addArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     const newArticleData = getArticleData(req);
 
@@ -71,14 +64,7 @@ export const getArticle = async (req, res, next) => {
 };
 export const updateArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     const updatedObj = getArticleData(req);
 

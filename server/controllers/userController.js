@@ -1,11 +1,9 @@
 import userService from "../services/userService.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { productService } from "../services/productService.js";
-import { articleService } from "../services/articleService.js";
-import { validationResult } from "express-validator";
 import addLinks from "../utils/addLinks.js";
 import productModel from "../models/productModel.js";
 import articleModel from "../models/articleModel.js";
+import { checkBodyErrors } from "../utils/checkBodyErrors.js";
 
 export const getUsers = async (req, res, next) => {
   try {
@@ -228,14 +226,7 @@ export const deleteUser = async (req, res, next) => {
 
 export const changeRole = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     let data = await userService.updateOne(req.params.id, { role: req.body.role });
 

@@ -2,7 +2,7 @@ import { productService } from "../services/productService.js";
 import addLinks from "../utils/addLinks.js";
 import { getProductData } from "../utils/getProductData.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { validationResult } from "express-validator";
+import { checkBodyErrors } from "../utils/checkBodyErrors.js";
 
 export const getProducts = async (req, res, next) => {
   try {
@@ -51,14 +51,7 @@ export const getProduct = async (req, res, next) => {
 };
 export const addProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    checkBodyErrors(req, res);
 
     let textData = getProductData(req);
 
@@ -80,15 +73,7 @@ export const addProduct = async (req, res, next) => {
 };
 export const updateProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
+    checkBodyErrors(req, res);
     const updateProd = getProductData(req);
 
     let data = await productService.updateOne(
