@@ -98,4 +98,48 @@ export class orderService {
 
     return options;
   }
+
+  static async updateOne(id, data) {
+    data.products = await Promise.all(
+      data.products.map(async (item) => {
+        const product = await productService.getOne({ id: item.id });
+        if (!product) throw new AppError("incorrect products!", 400);
+
+        return {
+          id: item.id,
+          quantity: item.quantity,
+          price: product[0]?.discountPrice || product[0].price * item.quantity,
+        };
+      })
+    );
+
+    data.totalSum = data.products.reduce((acc, product) => acc + product.price, 0);
+
+    switch (data.deliveryType) {
+      case "Самовивіз":
+        data.deliveryAddress = {};
+        break;
+      case "Доставка кур'єром": {
+        data.pickupLocation = null;
+      }
+      default:
+        break;
+    }
+
+    const order = await orderModel.findByIdAndUpdate(id, data);
+
+    if (!order) throw new AppError("There aren't documents with this id!", 404);
+
+    return [new OrderDTO(order)];
+  }
+
+  static async proceedOrder(id, status, isPayed) {
+    const order = await orderModel.findByIdAndUpdate(
+      id,
+      { status, isPayed },
+      { runValidators: true, new: true }
+    );
+
+    return [new OrderDTO(order)];
+  }
 }

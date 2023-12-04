@@ -1,4 +1,5 @@
 import { orderService } from "../services/orderService.js";
+import { getOrderData } from "../utils/getOrderData.js";
 import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
 
@@ -13,18 +14,7 @@ export const addOrder = async (req, res, next) => {
       });
     }
 
-    const data = {
-      name: req.body.name,
-      lastName: req.body.lastName,
-      phone: req.body.phone,
-      email: req.body.email,
-      products: req.body.products,
-      deliveryType: req.body.deliveryType,
-      deliveryAddress: req.body.deliveryAddress,
-      pickupLocation: req.body.pickupLocation,
-      deliveryTime: req.body.deliveryTime,
-      paymentType: req.body.paymentType,
-    };
+    const data = getOrderData(req);
 
     const order = await orderService.addOrder(
       data,
@@ -83,5 +73,49 @@ export const getOptions = (req, res, next) => {
     });
   } catch (err) {
     next(err);
+  }
+};
+
+export const updateOrder = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
+    const data = getOrderData(req);
+
+    const order = await orderService.updateOne(req.params.id, data);
+
+    res.status(200).json({ status: "success", data: order });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const proceedOrder = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
+    const order = await orderService.proceedOrder(
+      req.params.id,
+      req.body?.status,
+      req.body?.status
+    );
+
+    res.status(200).json({ status: "success", data: order });
+  } catch (error) {
+    next(error);
   }
 };

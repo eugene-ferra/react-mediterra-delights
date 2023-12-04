@@ -1,16 +1,39 @@
 import { body } from "express-validator";
 
+export const orderProceedValidation = {
+  isPayed: {
+    isBoolean: {
+      if: body("isPayed").exists(),
+      errorMessage: "isPayed should be a boolean value!",
+    },
+  },
+  status: {
+    isIn: {
+      if: body("status").exists(),
+      options: [
+        [
+          "Замовлення в обробці",
+          "Замволення скасовано",
+          "Замовлення підтверджено",
+          "Замовлення готове",
+          "Замовлення прямує до вас",
+          "Замовлення отримано",
+        ],
+      ],
+      errorMessage: "This value is not allowed!",
+    },
+  },
+};
+
 export const orderValidationSchema = {
   name: {
-    exists: {
-      errorMessage: "Name is required!",
-      bail: true,
-    },
     matches: {
+      if: body("name").exists(),
       options: [/^[-'\p{L}]*$/u],
       errorMessage: "Name can contain only letters, ' and - symbols!",
     },
     isLength: {
+      if: body("name").exists(),
       options: {
         min: 3,
         max: 20,
@@ -20,38 +43,30 @@ export const orderValidationSchema = {
     toLowerCase: true,
   },
   lastName: {
-    exists: {
-      errorMessage: "LastName is required!",
-      bail: true,
-    },
     matches: {
+      if: body("lastName").exists(),
       options: [/^[-'\p{L}]*$/u],
       errorMessage: "LastName can contain only letters, ' and - symbols!",
     },
     isLength: {
+      if: body("lastName").exists(),
       options: {
         min: 3,
         max: 20,
       },
-      errorMessage: "Name should contain 3-20 characters",
+      errorMessage: "lastName should contain 3-20 characters",
     },
     toLowerCase: true,
   },
   phone: {
-    exists: {
-      errorMessage: "Phone is required!",
-      bail: true,
-    },
     isMobilePhone: {
+      if: body("phone").exists(),
       options: ["uk-UA", { strictMode: false }],
     },
   },
   email: {
-    exists: {
-      errorMessage: "Email is required!",
-      bail: true,
-    },
     isEmail: {
+      if: body("email").exists(),
       errorMessage: "Email should be correct!",
     },
     normalizeEmail: true,
@@ -88,10 +103,6 @@ export const orderValidationSchema = {
     },
   },
   deliveryType: {
-    exists: {
-      errorMessage: "DeliveryType is required!",
-      bail: true,
-    },
     isIn: {
       if: body("deliveryType").exists(),
       options: [["Самовивіз", "Доставка кур'єром"]],
@@ -99,11 +110,8 @@ export const orderValidationSchema = {
     },
   },
   deliveryAddress: {
-    exists: {
-      if: body("deliveryType").equals("Доставка кур'єром"),
-      errorMessage: "DeliveryAddres is required!",
-    },
     isObject: {
+      if: body("deliveryAddress").exists(),
       errorMessage: "DeliveryAddress should be an object!",
     },
   },
@@ -135,20 +143,15 @@ export const orderValidationSchema = {
     },
   },
   pickupLocation: {
-    exists: {
-      if: body("deliveryType").equals("Самовивіз"),
-      errorMessage: "pickupLocation is required!",
-    },
     isIn: {
+      if: body("pickupLocation").exists(),
       options: [["Харків, вул. Сумська, 123", "Харків, вул. Пушкінська 55"]],
       errorMessage: "This value is not allowed!",
     },
   },
   deliveryTime: {
-    exists: {
-      errorMessage: "deliveryTime is required!",
-    },
     isISO8601: {
+      if: body("deliveryTime").exists(),
       options: {
         strictMode: true,
       },
@@ -175,12 +178,75 @@ export const orderValidationSchema = {
     },
   },
   paymentType: {
-    exists: {
-      errorMessage: "paymentType is required!",
-    },
     isIn: {
+      if: body("paymentType").exists(),
       options: [["При отриманні", "Карткою на сайті"]],
       errorMessage: "This value is not allowed!",
     },
+  },
+};
+
+export const orderValidationStrictSchema = {
+  ...orderValidationSchema,
+  name: {
+    exists: {
+      errorMessage: "Name is required!",
+      bail: true,
+    },
+    ...orderValidationSchema.name,
+  },
+  lastName: {
+    exists: {
+      errorMessage: "LastName is required!",
+      bail: true,
+    },
+    ...orderValidationSchema.lastName,
+  },
+  phone: {
+    exists: {
+      errorMessage: "Phone is required!",
+      bail: true,
+    },
+    ...orderValidationSchema.phone,
+  },
+  email: {
+    exists: {
+      errorMessage: "Email is required!",
+      bail: true,
+    },
+    ...orderValidationSchema.email,
+  },
+  deliveryType: {
+    exists: {
+      errorMessage: "DeliveryType is required!",
+      bail: true,
+    },
+    ...orderValidationSchema.deliveryType,
+  },
+  deliveryAddress: {
+    exists: {
+      if: body("deliveryType").equals("Доставка кур'єром"),
+      errorMessage: "DeliveryAddres is required!",
+    },
+    ...orderValidationSchema.deliveryAddress,
+  },
+  pickupLocation: {
+    exists: {
+      if: body("deliveryType").equals("Самовивіз"),
+      errorMessage: "pickupLocation is required!",
+    },
+    ...orderValidationSchema.pickupLocation,
+  },
+  deliveryTime: {
+    exists: {
+      errorMessage: "deliveryTime is required!",
+    },
+    ...orderValidationSchema.deliveryTime,
+  },
+  paymentType: {
+    exists: {
+      errorMessage: "paymentType is required!",
+    },
+    ...orderValidationSchema.paymentType,
   },
 };
