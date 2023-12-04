@@ -2,6 +2,7 @@ import AppError from "../utils/appError.js";
 import productModel from "../models/productModel.js";
 import { ProductDTO } from "../dto/productDTO.js";
 import { fileService } from "./fileService.js";
+import slugify from "slugify";
 
 const folder = "products";
 export class productService {
@@ -29,9 +30,16 @@ export class productService {
   }
 
   static async addOne(textData, imgCover, images = []) {
-    const testDoc = await productModel.findOne({ title: textData.title });
+    textData["slug"] = slugify(textData.title, { lower: true });
+
+    const testDoc = await productModel.findOne({
+      title: textData.title,
+      slug: textData.slug,
+    });
+
     if (testDoc) throw new AppError("This product already exist!", 409);
-    const payload = textData.title;
+
+    const payload = textData.slug;
 
     const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
     const savedImages = await fileService.saveManyImages(images, folder, payload, 700);
@@ -54,10 +62,14 @@ export class productService {
     let doc = await productModel.findById(id);
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
+    if (data["title"]) {
+      data["slug"] = slugify(data.title, { lower: true });
+    }
+
     const oldCover = JSON.parse(JSON.stringify(doc.imgCover));
     const oldImages = JSON.parse(JSON.stringify(doc.images));
 
-    const payload = data?.title || doc.title;
+    const payload = data?.slug || doc.slug;
 
     const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
     const savedImages = await fileService.saveManyImages(images, folder, payload, 700);

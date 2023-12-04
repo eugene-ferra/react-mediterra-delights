@@ -3,6 +3,7 @@ import { CommentDTO } from "./commentDTO.js";
 export class ArticleDTO {
   id;
   title;
+  slug;
   topic;
   imgCover;
   createdAt;
@@ -16,6 +17,7 @@ export class ArticleDTO {
   constructor(responseArticle) {
     this.id = responseArticle._id;
     this.title = responseArticle.title;
+    this.slug = responseArticle.slug;
     this.topic = responseArticle.topic;
     this.imgCover = {
       jpg: responseArticle.imgCover.jpg,

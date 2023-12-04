@@ -12,6 +12,9 @@ const productSchema = new mongoose.Schema(
       minLength: [3, "Product must have at least 3 characters!"],
       maxLenght: [60, "Product must not have more than 60 characters!"],
     },
+    slug: {
+      type: String,
+    },
     category: {
       type: String,
       required: [true, "Product must have a category!"],

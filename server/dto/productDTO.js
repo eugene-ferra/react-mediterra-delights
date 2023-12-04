@@ -3,6 +3,7 @@ import { ReviewDTO } from "./reviewDTO.js";
 export class ProductDTO {
   id;
   title;
+  slug;
   category;
   description;
   fullText;
@@ -23,6 +24,7 @@ export class ProductDTO {
   constructor(responseProduct) {
     this.id = responseProduct._id;
     this.title = responseProduct.title;
+    this.slug = responseProduct.slug;
     this.category = responseProduct.category;
     this.description = responseProduct.description;
     this.fullText = responseProduct.fullText || null;

@@ -12,6 +12,9 @@ const articleSchema = new mongoose.Schema(
       minLength: [1, "Article must have at least 1 characters!"],
       maxLenght: [100, "Article must not have more than 200 characters!"],
     },
+    slug: {
+      type: String,
+    },
     topic: {
       type: String,
       required: true,

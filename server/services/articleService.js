@@ -3,6 +3,7 @@ import { ArticleDTO } from "../dto/articleDTO.js";
 import AppError from "../utils/appError.js";
 import { fileService } from "./fileService.js";
 import * as cheerio from "cheerio";
+import slugify from "slugify";
 
 const folder = "articles";
 export class articleService {
@@ -42,10 +43,12 @@ export class articleService {
   }
 
   static async addOne(data, imgCover) {
-    const testDoc = await articleModel.findOne({ title: data.title });
+    data["slug"] = slugify(data.title, { lower: true });
+
+    const testDoc = await articleModel.findOne({ title: data.title, slug: data.slug });
     if (testDoc) throw new AppError("This article already exist!", 409);
 
-    const payload = data.title;
+    const payload = data.slug;
     const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
     let savedImages = [];
     const promises = [];
@@ -92,10 +95,14 @@ export class articleService {
     const doc = await articleModel.findById(id);
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
+    if (data[title]) {
+      data["slug"] = slugify(data.title, { lower: true });
+    }
+
     const oldCover = doc.imgCover;
     let oldImages = [];
 
-    const payload = data?.title || doc.title;
+    const payload = data?.slug || doc.slug;
 
     const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
     let savedImages = [];
@@ -148,8 +155,8 @@ export class articleService {
 
       return [new ArticleDTO(doc)];
     } catch (err) {
-      await fileService.deleteFiles(oldCover);
-      await fileService.deleteFiles(oldImages);
+      await fileService.deleteFiles(savedCover);
+      await fileService.deleteFiles(savedImages);
     }
   }
 
