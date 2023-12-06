@@ -2,7 +2,7 @@ import { productService } from "../services/productService.js";
 import addLinks from "../utils/addLinks.js";
 import { getProductData } from "../utils/getProductData.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { checkBodyErrors } from "../utils/checkBodyErrors.js";
+import { validationResult } from "express-validator";
 
 export const getProducts = async (req, res, next) => {
   try {
@@ -31,6 +31,15 @@ export const getProducts = async (req, res, next) => {
 };
 export const getProduct = async (req, res, next) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
     let data = await productService.getOne({
       id: req.params.id,
       populateObj: {
@@ -51,7 +60,14 @@ export const getProduct = async (req, res, next) => {
 };
 export const addProduct = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     let textData = getProductData(req);
 
@@ -73,7 +89,14 @@ export const addProduct = async (req, res, next) => {
 };
 export const updateProduct = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
     const updateProd = getProductData(req);
 
     let data = await productService.updateOne(
@@ -95,6 +118,14 @@ export const updateProduct = async (req, res, next) => {
 };
 export const deleteProduct = async (req, res, next) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
     await productService.deleteOne(req.params.id);
     res.status(204).json({
       status: "success",

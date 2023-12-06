@@ -9,9 +9,11 @@ import {
   orderValidationSchema,
   orderValidationStrictSchema,
 } from "../validations/orderValidation.js";
+import multer from "multer";
 
 const orderRouter = express.Router();
 
+orderRouter.use(multer({ storage: multer.memoryStorage() }).none());
 orderRouter
   .route("/")
   .post(checkSchema(orderValidationStrictSchema), orderController.addOrder)
@@ -31,8 +33,8 @@ orderRouter
 
 orderRouter.patch(
   "/:id/proceed",
-  // protect(),
-  // restrictTo("admin"),
+  protect(),
+  restrictTo("admin"),
   checkSchema(orderProceedValidation),
   orderController.proceedOrder
 );

@@ -30,12 +30,9 @@ export class productService {
   }
 
   static async addOne(textData, imgCover, images = []) {
-    textData["slug"] = slugify(textData.title, { lower: true });
+    textData["slug"] = slugify(textData.title, { lower: true, strict: true });
 
-    const testDoc = await productModel.findOne({
-      title: textData.title,
-      slug: textData.slug,
-    });
+    const testDoc = await productModel.findOne({ slug: textData.slug });
 
     if (testDoc) throw new AppError("This product already exist!", 409);
 
@@ -63,7 +60,11 @@ export class productService {
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
     if (data["title"]) {
-      data["slug"] = slugify(data.title, { lower: true });
+      const newSlug = slugify(data.title, { lower: true });
+      if (await productModel.findOne({ slug: newSlug }))
+        throw new AppError("this product already exist!", 409);
+
+      data["slug"] = newSlug;
     }
 
     const oldCover = JSON.parse(JSON.stringify(doc.imgCover));
@@ -74,8 +75,16 @@ export class productService {
     const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
     const savedImages = await fileService.saveManyImages(images, folder, payload, 700);
 
-    data["imgCover"] = savedCover;
+    if (Object.keys(savedCover).length === 0) {
+      data["imgCover"] = doc.imgCover;
+    } else {
+      data["imgCover"] = savedCover;
+      await fileService.deleteFiles(oldCover);
+    }
+
     data["images"] = savedImages;
+    await fileService.deleteFiles(oldImages);
+
     data["price"] = data?.price || doc.price;
 
     try {
@@ -83,9 +92,6 @@ export class productService {
         runValidators: true,
         new: true,
       });
-
-      await fileService.deleteFiles(oldCover);
-      await fileService.deleteFiles(oldImages);
 
       return [new ProductDTO(updatedDoc)];
     } catch (err) {

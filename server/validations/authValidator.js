@@ -22,12 +22,25 @@ export const passwordValidationSchema = {
     isString: {
       errorMessage: "Password should be a string!",
     },
+    isStrongPassword: {
+      options: { minLowercase: 0, minUppercase: 0 },
+      errorMessage:
+        "Password should contain at least 8 characters including numbers and letters and symbols",
+    },
   },
 };
 
 export const loginValidationSchema = {
   ...emailValidationSchema,
-  ...passwordValidationSchema,
+  password: {
+    exists: {
+      errorMessage: "Password is required!",
+      bail: true,
+    },
+    isString: {
+      errorMessage: "Password should be a string!",
+    },
+  },
 };
 
 export const registerValidationSchema = {

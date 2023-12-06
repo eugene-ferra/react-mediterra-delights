@@ -2,6 +2,7 @@ import AppError from "../utils/appError.js";
 import reviewModel from "../models/reviewModel.js";
 import { ReviewDTO } from "../dto/reviewDTO.js";
 import productModel from "../models/productModel.js";
+import userService from "./userService.js";
 
 export class reviewService {
   static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
@@ -12,19 +13,23 @@ export class reviewService {
       .limit(limit)
       .populate(populateObj);
 
-    if (!data.length) {
+    if (!data.length || data.length === 0) {
       throw new AppError("No documents match the current filters!", 404);
     }
 
     return data.map((item) => new ReviewDTO(item));
   }
 
-  static async getOne({ id, populateObj }) {
-    const doc = await reviewModel.findById(id).populate(populateObj).exec();
+  static async getOne({ id, productID, populateObj }) {
+    const doc = await reviewModel
+      .find({ _id: id, productID: productID || { $exists: true } })
+      .populate(populateObj)
+      .exec();
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (doc.length === 0)
+      throw new AppError("There aren't documents with this id!", 404);
 
-    return [new ReviewDTO(doc)];
+    return [new ReviewDTO(doc[0])];
   }
 
   static async addOne(data) {
@@ -35,8 +40,17 @@ export class reviewService {
     return [new ReviewDTO(doc)];
   }
 
-  static async updateOne(id, data, role) {
-    if (role === "user") delete data["isModerated"];
+  static async updateOne(id, data, userId, role) {
+    if (role === "user") {
+      const user = await userService.getOne({ id: userId });
+      if (!user[0].addedReviews.includes(id))
+        throw new AppError("You can't change other reviews!", 403);
+
+      data["isModerated"] = false;
+    } else {
+      delete data["review"];
+      delete data["rating"];
+    }
 
     const doc = await reviewModel.findByIdAndUpdate(id, data, {
       new: true,
@@ -48,7 +62,12 @@ export class reviewService {
     return [new ReviewDTO(doc)];
   }
 
-  static async deleteOne(id) {
+  static async deleteOne(id, role, userId) {
+    if (role === "user") {
+      const user = await userService.getOne({ id: userId });
+      if (!user[0].addedReviews.includes(id))
+        throw new AppError("You can't delete other reviews!", 403);
+    }
     const doc = await reviewModel.findByIdAndDelete(id);
 
     if (!doc) throw new AppError("There aren't documents with this id!", 404);

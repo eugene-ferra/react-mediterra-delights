@@ -7,6 +7,7 @@ import { AuthDTO } from "../dto/authDTO.js";
 import { fileService } from "./fileService.js";
 import Mailer from "./mailerService.js";
 import crypto from "crypto";
+import productModel from "../models/productModel.js";
 
 const folder = "users";
 export default class userService {
@@ -87,7 +88,7 @@ export default class userService {
     if (!userData) throw new AppError("Invalid refresh token", 400);
 
     const tokenFromDb = await authService.findUserTokens(userData.id, refreshToken);
-    if (!tokenFromDb) throw new AppError("You are not log in", 401);
+    if (!tokenFromDb) throw new AppError("You are not log in!", 401);
 
     const user = await userModel.findById(userData.id);
     const payload = new AuthDTO(user);
@@ -128,7 +129,7 @@ export default class userService {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await userModel.findOne({ email: email, resetToken: hashedToken });
-    if (!user) throw new AppError("Invalid token", 404);
+    if (!user) throw new AppError("Invalid token", 400);
     if (user.resetTokenExpiresAt < Date.now())
       throw new AppError("Reset token has been expired!", 400);
 
@@ -145,31 +146,23 @@ export default class userService {
     const tokensData = await authService.findUserTokens(user._id);
 
     tokensData.refreshTokens.forEach(async (item) => {
-      this.logout(item.refreshToken, item.device);
+      await authService.removeOldTokens(user._id, item.refreshToken, item.device);
     });
+    return;
   }
 
-  static async addToArray(id, arrName, data, dataModel) {
-    const itemId = data?.id || data;
+  static async addToArray(id, arrName, itemId, dataModel) {
     const addedItem = await dataModel.findById(itemId);
     if (!addedItem) throw new AppError("Item with this id does not exists!", 404);
 
     const user = await userModel.findById(id);
     if (!user) throw new AppError("User with this id does not exists!", 404);
 
-    const foundItem = user[arrName].find((item) => {
-      if (item?.id) {
-        return item.id.toString() === itemId.toString();
-      } else {
-        return item.toString() === itemId.toString();
-      }
-    });
-
-    if (foundItem) throw new AppError("Item already added!", 409);
+    if (user[arrName].includes(itemId)) throw new AppError("Item already added!", 409);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
-      { $push: { [arrName]: data } },
+      { $push: { [arrName]: itemId } },
       { new: true }
     );
     return [new UserDTO(updatedUser)];
@@ -179,25 +172,59 @@ export default class userService {
     const user = await userModel.findById(id);
     if (!user) throw new AppError("User with this id does not exists!", 404);
 
-    const foundItem = user[arrName].find((item) => {
-      if (item && item.id) {
-        return item.id.toString() === itemId.toString() ? item : false;
-      } else {
-        return item.toString() === itemId.toString() ? item : false;
-      }
-    });
-
-    if (!foundItem) throw new AppError("This item does not exist!", 404);
+    if (!user[arrName].includes(itemId)) throw new AppError("item not found!", 404);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
-      { $pull: { [arrName]: { _id: foundItem?.id || foundItem } } },
+      { $pull: { [arrName]: itemId } },
       { new: true }
     );
     return [new UserDTO(updatedUser)];
   }
+
+  static async addToCart(id, product, quantity) {
+    const addedItem = await productModel.findById(product);
+    if (!addedItem) throw new AppError("Item with this id does not exists!", 404);
+
+    const user = await userModel.findById(id);
+    if (!user) throw new AppError("User with this id does not exists!", 404);
+
+    const foundItem = user["cart"].find(
+      (item) => item.id.toString() === product.toString()
+    );
+    if (foundItem) throw new AppError("item already added!", 409);
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id,
+      { $push: { ["cart"]: { id: product, quantity: quantity } } },
+      { new: true }
+    );
+    return [new UserDTO(updatedUser)];
+  }
+
+  static async deleteFromCart(id, productId) {
+    const user = await userModel.findById(id);
+
+    if (!user) throw new AppError("User with this id does not exist!", 404);
+
+    const foundItem = user["cart"].find(
+      (item) => item.id.toString() === productId.toString()
+    );
+
+    if (!foundItem) throw new AppError("item not found", 404);
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      id,
+      { $pull: { ["cart"]: foundItem } },
+      { new: true }
+    );
+    return [new UserDTO(updatedUser)];
+  }
+
   static async updateCart(userId, itemId, quantity) {
     const user = await userModel.findById(userId);
+    if (!user) throw new AppError("User with this id does not exist!", 404);
+
     const foundItemIndex = user.cart.findIndex(
       (item) => item.id.toString() === itemId.toString()
     );
@@ -229,6 +256,8 @@ export default class userService {
       if (!data?.password) throw new AppError("Provide password!", 400);
       if (!(await bcrypt.compare(data.oldPassword, doc.password)))
         throw new AppError("Invalid oldPassword", 400);
+
+      data.password = await bcrypt.hash(data.password, 12);
     }
 
     try {

@@ -3,7 +3,7 @@ import { getArticleData } from "../utils/getArticleData.js";
 import { getQueryData } from "../utils/getQueryData.js";
 import addLinks from "../utils/addLinks.js";
 import addLinksToMarkup from "../utils/addLinksToMarkup.js";
-import { checkBodyErrors } from "../utils/checkBodyErrors.js";
+import { validationResult } from "express-validator";
 
 export const getArticles = async (req, res, next) => {
   try {
@@ -27,11 +27,21 @@ export const getArticles = async (req, res, next) => {
 };
 export const addArticle = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     const newArticleData = getArticleData(req);
 
-    let data = await articleService.addOne(newArticleData, req?.files?.imgCover);
+    let data = await articleService.addOne(
+      newArticleData,
+      req?.files?.imgCover?.[0]?.buffer
+    );
     data = addLinks(req, data[0], ["imgCover"]);
     data = addLinksToMarkup(req, data, "markup");
 
@@ -45,6 +55,15 @@ export const addArticle = async (req, res, next) => {
 };
 export const getArticle = async (req, res, next) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
     let data = await articleService.getOne({
       id: req.params.id,
       populateObj: { path: "comments", match: { isModerated: true } },
@@ -64,11 +83,23 @@ export const getArticle = async (req, res, next) => {
 };
 export const updateArticle = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     const updatedObj = getArticleData(req);
 
-    let data = await articleService.updateOne(req.params.id, updatedObj, imgCover);
+    let data = await articleService.updateOne(
+      req.params.id,
+      updatedObj,
+      req?.files?.imgCover?.[0]?.buffer
+    );
+
     data = addLinks(req, data[0], ["imgCover"]);
     data = addLinksToMarkup(req, data, "markup");
 
@@ -82,6 +113,15 @@ export const updateArticle = async (req, res, next) => {
 };
 export const deleteArticle = async (req, res, next) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
     await articleService.deleteOne(req.params.id);
     res.status(204).json({
       status: "success",

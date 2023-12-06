@@ -71,42 +71,33 @@ export const orderValidationSchema = {
     },
     normalizeEmail: true,
   },
-  products: {
-    exists: {
-      errorMessage: "Products is required!",
-      bail: true,
-    },
-    isArray: {
-      options: { min: 1 },
-      errorMessage: "Products should be an array and contain products!",
-    },
-  },
-  "products.*.id": {
-    exists: {
-      errorMessage: "Product id is required!",
-      bail: true,
-    },
-    isMongoId: {
-      errorMessage: "Product id should be a mongo id!",
-    },
-  },
-  "products.*.quantity": {
-    exists: {
-      errorMessage: "Product quantity is required!",
-      bail: true,
-    },
-    isInt: {
-      options: {
-        min: 1,
-      },
-      errorMessage: "Product quantity should be bigger than 0!",
-    },
-  },
   deliveryType: {
     isIn: {
       if: body("deliveryType").exists(),
       options: [["Самовивіз", "Доставка кур'єром"]],
       errorMessage: "This value is not allowed!",
+    },
+  },
+  products: {
+    isArray: {
+      if: body("products").exists(),
+      options: { min: 1 },
+      errorMessage: "Products should be an array and contain products!",
+    },
+  },
+  "products.*.id": {
+    isMongoId: {
+      if: body("products").exists(),
+      errorMessage: "Product id should be a mongo id!",
+    },
+  },
+  "products.*.quantity": {
+    isInt: {
+      if: body("products").exists(),
+      options: {
+        min: 1,
+      },
+      errorMessage: "Product quantity should be bigger than 0!",
     },
   },
   deliveryAddress: {
@@ -229,6 +220,37 @@ export const orderValidationStrictSchema = {
       errorMessage: "DeliveryAddres is required!",
     },
     ...orderValidationSchema.deliveryAddress,
+  },
+  products: {
+    exists: {
+      errorMessage: "Products is required!",
+      bail: true,
+    },
+    isArray: {
+      options: { min: 1 },
+      errorMessage: "Products should be an array and contain products!",
+    },
+  },
+  "products.*.id": {
+    exists: {
+      errorMessage: "Product id is required!",
+      bail: true,
+    },
+    isMongoId: {
+      errorMessage: "Product id should be a mongo id!",
+    },
+  },
+  "products.*.quantity": {
+    exists: {
+      errorMessage: "Product quantity is required!",
+      bail: true,
+    },
+    isInt: {
+      options: {
+        min: 1,
+      },
+      errorMessage: "Product quantity should be bigger than 0!",
+    },
   },
   pickupLocation: {
     exists: {

@@ -45,11 +45,14 @@ export class articleService {
   static async addOne(data, imgCover) {
     data["slug"] = slugify(data.title, { lower: true });
 
-    const testDoc = await articleModel.findOne({ title: data.title, slug: data.slug });
+    const testDoc = await articleModel.findOne({ slug: data.slug });
     if (testDoc) throw new AppError("This article already exist!", 409);
 
     const payload = data.slug;
+
     const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
+
+    data["imgCover"] = savedCover;
     let savedImages = [];
     const promises = [];
 
@@ -79,7 +82,7 @@ export class articleService {
     });
 
     await Promise.all(promises);
-    data["markup"] = $.html($("p"));
+    data["markup"] = $.html($("article"));
 
     try {
       const doc = await articleModel.create(data);
@@ -95,23 +98,35 @@ export class articleService {
     const doc = await articleModel.findById(id);
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
-    if (data[title]) {
-      data["slug"] = slugify(data.title, { lower: true });
+    if (data["title"]) {
+      const newSlug = slugify(data.title, { lower: true });
+      if (await articleModel.findOne({ slug: newSlug }))
+        throw new AppError("this article already exist!", 409);
+
+      data["slug"] = newSlug;
     }
 
     const oldCover = doc.imgCover;
     let oldImages = [];
 
+    cheerio
+      .load(doc.markup)("img")
+      .each((i, elem) => {
+        oldImages.push(...elem.attribs.srcset.split(", "));
+      }) || [];
+
     const payload = data?.slug || doc.slug;
 
     const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
+
+    if (Object.keys(savedCover).length === 0) {
+      data["imgCover"] = doc.imgCover;
+    } else {
+      data["imgCover"] = savedCover;
+      await fileService.deleteFiles(oldCover);
+    }
+
     let savedImages = [];
-
-    const old$ = cheerio.load(doc.markup);
-    old$("img").each((i, elem) => {
-      oldImages.push(...elem.attribs.srcset.split(", "));
-    });
-
     if (data?.markup) {
       const $ = cheerio.load(data.markup);
       const promises = [];
@@ -142,7 +157,9 @@ export class articleService {
       });
 
       await Promise.all(promises);
-      data["markup"] = $.html($("p"));
+      await fileService.deleteFiles(oldImages);
+
+      data["markup"] = $.html($("article"));
     }
 
     try {
@@ -150,13 +167,12 @@ export class articleService {
         runValidators: true,
         new: true,
       });
-      await fileService.deleteFiles(oldCover);
-      await fileService.deleteFiles(oldImages);
 
       return [new ArticleDTO(doc)];
     } catch (err) {
       await fileService.deleteFiles(savedCover);
       await fileService.deleteFiles(savedImages);
+      throw err;
     }
   }
 
@@ -172,6 +188,7 @@ export class articleService {
     });
 
     await fileService.deleteFiles(links);
+    await fileService.deleteFiles(doc.imgCover);
     await articleModel.findByIdAndDelete(id);
   }
 

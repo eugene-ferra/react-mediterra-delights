@@ -25,7 +25,6 @@ export class fileService {
           fullNameObj[ext] = localPath;
         })
       );
-
       return fullNameObj;
     } catch (err) {
       return {};
@@ -34,13 +33,13 @@ export class fileService {
 
   static async saveManyImages(buffArr, folder, payload, width) {
     try {
-      const fullNamesArr = buffArr.map(async (buffer, i) => {
+      const promises = buffArr.map(async (buffer, i) => {
         return await this.saveOneImage(buffer, folder, `${payload}-${i}`, width);
       });
 
-      return fullNamesArr;
+      return await Promise.all(promises);
     } catch (err) {
-      return fullNamesArr;
+      return [];
     }
   }
 

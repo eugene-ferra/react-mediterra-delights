@@ -9,15 +9,16 @@ import {
 } from "../validations/commentValidator.js";
 import { idValidationSchema } from "../validations/idValidation.js";
 import { checkSchema } from "express-validator";
+import multer from "multer";
 
 const commentRouter = express.Router({ mergeParams: true });
 
+commentRouter.use(multer({ storage: multer.memoryStorage() }).none());
 commentRouter
   .route("/")
   .get(commentController.getAllComments)
   .post(
     protect(),
-    restrictTo("user"),
     prefillReqBody({
       userID: (req) => req.user._id,
       articleID: (req) => req.params.articleID,

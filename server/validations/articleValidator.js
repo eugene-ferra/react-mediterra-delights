@@ -35,30 +35,6 @@ export const articleValidationSchema = {
       errorMessage: "This value is not allowed!",
     },
   },
-  imgCover: {
-    isObject: {
-      if: body("imgCover").exists(),
-      errorMessage: "imageCover should be an object!",
-    },
-  },
-  "imgCover.jpg": {
-    isURL: {
-      if: body("imgCover").exists(),
-      errorMessage: "jpg image should be a correct URL!",
-    },
-  },
-  "imgCover.webp": {
-    isURL: {
-      if: body("imgCover").exists(),
-      errorMessage: "webp image should be a correct URL!",
-    },
-  },
-  "imgCover.avif": {
-    isURL: {
-      if: body("imgCover").exists(),
-      errorMessage: "avif image should be a correct URL!",
-    },
-  },
   markup: {
     isString: {
       if: body("markup").exists(),
@@ -103,13 +79,6 @@ export const articleValidationStrictSchema = {
       bail: true,
     },
     ...articleValidationSchema.topic,
-  },
-  imgCover: {
-    exists: {
-      errorMessage: "imgCover is required!",
-      bail: true,
-    },
-    ...articleValidationSchema.imgCover,
   },
   markup: {
     exists: {

@@ -35,7 +35,8 @@ export class authService {
       const data = await promisify(jwt.verify)(token, process.env.JWT_REFRESH_SECRET);
       return data;
     } catch (err) {
-      if (err instanceof jwt.TokenExpiredError) throw new jwt.TokenExpiredError();
+      if (err instanceof jwt.TokenExpiredError)
+        throw new AppError("you are not log in!", 401);
       return null;
     }
   }
@@ -69,6 +70,20 @@ export class authService {
 
     await tokenModel.findOneAndUpdate(
       { user: user.id },
+      {
+        $pull: {
+          refreshTokens: {
+            refreshToken,
+            device,
+          },
+        },
+      }
+    );
+  }
+
+  static async removeOldTokens(userId, refreshToken, device) {
+    await tokenModel.findOneAndUpdate(
+      { user: userId },
       {
         $pull: {
           refreshTokens: {

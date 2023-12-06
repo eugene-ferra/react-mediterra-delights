@@ -1,9 +1,16 @@
 import userService from "../services/userService.js";
-import { checkBodyErrors } from "../utils/checkBodyErrors.js";
+import { validationResult } from "express-validator";
 
 export const signup = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     const { name, lastName, email, password } = req.body;
     const userData = await userService.registration({
@@ -36,7 +43,14 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     const { email, password } = req.body;
     const userData = await userService.login(email, password, req.headers["user-agent"]);
@@ -61,7 +75,14 @@ export const login = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     const refreshToken = req.cookies.refresh;
     await userService.logout(refreshToken, req.headers["user-agent"]);
@@ -78,7 +99,14 @@ export const logout = async (req, res, next) => {
 
 export const refresh = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     const { refresh } = req.cookies;
     const userData = await userService.refresh(refresh, req.headers["user-agent"]);
@@ -103,7 +131,14 @@ export const refresh = async (req, res, next) => {
 
 export const forgotPassword = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     await userService.sendResetToken(req.body.email);
     res.status(200).json({ status: "success" });
@@ -114,7 +149,14 @@ export const forgotPassword = async (req, res, next) => {
 
 export const resetPassword = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     await userService.resetPassword(
       req.params.token,

@@ -157,15 +157,17 @@ productSchema.pre("findOneAndDelete", async function (next) {
 });
 
 productSchema.post("findOneAndDelete", async function () {
-  if (this.r) await reviewModel.deleteMany({ productID: this.r._id });
-  await userModel.updateMany(
-    { savedProducts: { $in: [this.r._id] } },
-    { $pull: { savedProducts: this.r._id } }
-  );
-  await userModel.updateMany(
-    { cart: { $in: [this.r._id] } },
-    { $pull: { cart: this.r._id } }
-  );
+  if (this.r) {
+    await reviewModel.deleteMany({ productID: this.r._id });
+    await userModel.updateMany(
+      { savedProducts: { $in: [this.r._id] } },
+      { $pull: { savedProducts: this.r._id } }
+    );
+    await userModel.updateMany(
+      { "cart.id": this.r._id },
+      { $pull: { cart: { id: this.r._id } } }
+    );
+  }
 });
 
 const productModel = mongoose.model("Product", productSchema);

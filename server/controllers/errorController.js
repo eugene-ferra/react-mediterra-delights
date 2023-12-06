@@ -10,7 +10,7 @@ const handleDublicateKeysErrorDB = (err) => {
   const value = JSON.stringify(err.keyValue).match(/(["'])(\\?.)*?\1/)[0];
   const message = `Dublicate value ${value}. Use another one!`;
 
-  return new AppError(message, 400);
+  return new AppError(message, 409);
 };
 
 const handleCastErrorDB = (err) => {
@@ -46,7 +46,6 @@ const sendError = (err, req, res) => {
 };
 
 export default function (err, req, res, next) {
-  console.log(err);
   let error;
 
   if (err.name === "JsonWebTokenError") error = handleJWTError(err);

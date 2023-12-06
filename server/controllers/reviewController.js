@@ -1,10 +1,17 @@
 import { reviewService } from "../services/reviewService.js";
 import { getQueryData } from "../utils/getQueryData.js";
-import { checkBodyErrors } from "../utils/checkBodyErrors.js";
+import { validationResult } from "express-validator";
 
 export const addReview = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     const newReview = {
       productID: req.body.productID,
@@ -26,7 +33,8 @@ export const addReview = async (req, res, next) => {
 
 export const getAllReviews = async (req, res, next) => {
   try {
-    const { filterObj, sortObj, page, limit } = getQueryData(req);
+    let { filterObj, sortObj, page, limit } = getQueryData(req);
+
     if (req.params.productID) {
       filterObj = { ...filterObj, productID: req.params.productID, isModerated: true };
     }
@@ -36,14 +44,26 @@ export const getAllReviews = async (req, res, next) => {
       status: "success",
       data,
     });
-  } catch {
-    next();
+  } catch (err) {
+    next(err);
   }
 };
 
 export const getReview = async (req, res, next) => {
   try {
-    const data = await reviewService.getOne({ id: req.params.id });
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
+
+    const data = await reviewService.getOne({
+      id: req.params.id,
+      productID: req.params?.productID,
+    });
     res.status(200).json({
       status: "success",
       data,
@@ -55,17 +75,25 @@ export const getReview = async (req, res, next) => {
 
 export const updateReview = async (req, res, next) => {
   try {
-    checkBodyErrors(req, res);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: "fail",
+        errors: errors.array(),
+      });
+    }
 
     let updateReview = {
       review: req.body.review,
       rating: req.body.rating,
-      isModerated: req.body.rating,
+      isModerated: req.body.isModerated,
     };
 
     const data = await reviewService.updateOne(
       req.params.id,
       updateReview,
+      req.user._id,
       req.user.role
     );
 
@@ -79,7 +107,7 @@ export const updateReview = async (req, res, next) => {
 };
 export const deleteReview = async (req, res, next) => {
   try {
-    await reviewService.deleteOne(req.params.id);
+    await reviewService.deleteOne(req.params.id, req.user.role, req.user._id);
     res.status(204).json({
       status: "success",
       data: null,
