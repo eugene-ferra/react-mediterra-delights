@@ -16,6 +16,8 @@ import OneProductPage from "./pages/OneProductPage.jsx";
 import OrderPage from "./pages/OrderPage.jsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import ArticlesPage from "./pages/ArticlesPage.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const router = createBrowserRouter([
   {
@@ -42,8 +44,21 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+    },
+  },
+});
+
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 };
 
 export default App;

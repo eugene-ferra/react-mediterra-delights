@@ -1,0 +1,6 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.title {
+  @include mixins.titleText;
+  margin: 0;
+}

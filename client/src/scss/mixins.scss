@@ -1,23 +1,43 @@
 @mixin smallMobile {
-  @media screen and (min-width: 320px) {
+  @media screen and (max-width: 576px) {
     @content;
   }
 }
 
 @mixin mobile {
-  @media screen and (min-width: 576px) {
+  @media screen and (max-width: 768px) {
     @content;
   }
 }
 
 @mixin tablet {
-  @media screen and (min-width: 768px) {
+  @media screen and (max-width: 992px) {
     @content;
   }
 }
 
-@mixin desctop {
-  @media screen and (min-width: 992px) {
-    @content;
-  }
+@mixin smallText {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 400;
+  color: var(--secondary-color);
+}
+
+@mixin basicText {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--secondary-color);
+}
+
+@mixin basicBold {
+  @include basicText();
+  font-weight: 500;
+}
+
+@mixin titleText {
+  font-size: 28px;
+  line-height: 36px;
+  font-weight: 600;
+  color: var(--secondary-color);
 }

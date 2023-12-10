@@ -1,11 +1,26 @@
-@use "./scss/vars.scss" as vars;
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
 
 #root {
+  --primary-color: #f2f2f2;
+  --primary-pure-color: #ffffff;
+  --secondary-color: #272a2f;
+  --secondary-light-color: #272a2f80;
+  --accent-color: #c74134;
+  --selection-color: #3b8ae4;
+
+  --radius: 10px;
+  --transition: 0.3s all;
+  &.dark {
+    --primary-color: #272a2f;
+    --secondary-color: #f2f2f2;
+    --secondary-light-color: #f2f2f285;
+  }
+
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   flex-grow: 1;
+  background-color: var(--base-color);
   header {
     flex: 0 0 auto;
   }
@@ -19,6 +34,11 @@
 
 * {
   box-sizing: border-box;
+  font-family: "Montserrat";
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 400;
+  color: var(--text-color);
 }
 
 a {

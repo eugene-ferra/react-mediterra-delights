@@ -1,0 +1,12 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.text {
+  @include mixins.basicText;
+  margin: 0;
+  width: 100%;
+}
+
+.small {
+  @extend .text;
+  @include mixins.smallText;
+}

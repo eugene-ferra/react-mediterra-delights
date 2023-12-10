@@ -7,10 +7,7 @@ dotenv.config({ path: "./.env" });
 export default function protect() {
   return async (req, res, next) => {
     try {
-      let token;
-      if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-        token = req.headers.authorization.split(" ")[1];
-      }
+      let token = req?.cookies?.access;
 
       if (!token) {
         return next(new AppError("Please provide authorization token!", 400));

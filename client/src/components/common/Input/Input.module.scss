@@ -1,0 +1,33 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.input {
+  width: 100%;
+  border: 2px solid var(--secondary-color);
+  background-color: rgba(var(--secondary-color), 0.1);
+  padding: 8px 16px;
+  color: var(--secondary-color);
+  transition: var(--transition);
+  margin: 0;
+  @include mixins.basicText;
+  &::placeholder {
+    @include mixins.basicText;
+    color: var(--secondary-light-color);
+  }
+  &:focus,
+  &:active {
+    outline: none;
+    border-color: var(--selection-color);
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+.inputTitle {
+  @include mixins.basicBold;
+  margin: 0 0 5px 0;
+}
+
+.inputError {
+  margin: 3px 0px 0px 0px;
+  color: var(--accent-color);
+}

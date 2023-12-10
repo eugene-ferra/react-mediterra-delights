@@ -1,0 +1,30 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.button {
+  @include mixins.basicBold;
+  padding: 10px 20px;
+  background-color: var(--accent-color);
+  color: var(--primary-pure-color);
+  border: none;
+  transition: var(--transition);
+  outline-width: 0;
+  height: max-content;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--accent-color);
+  }
+  &:active,
+  &:focus {
+    box-shadow: 0 0 10px var(--accent-color);
+  }
+  &:disabled {
+    opacity: 0.5;
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: default;
+      box-shadow: none;
+    }
+  }
+}

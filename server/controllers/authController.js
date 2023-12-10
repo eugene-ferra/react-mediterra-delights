@@ -27,7 +27,7 @@ export const signup = async (req, res, next) => {
     });
 
     res.cookie("access", userData.accessToken, {
-      maxAge: 15 * 60 * 1000,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
     });
@@ -60,7 +60,7 @@ export const login = async (req, res, next) => {
       secure: true,
     });
     res.cookie("access", userData.accessToken, {
-      maxAge: 15 * 60 * 1000,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
     });
@@ -116,7 +116,7 @@ export const refresh = async (req, res, next) => {
       secure: true,
     });
     res.cookie("access", userData.accessToken, {
-      maxAge: 15 * 60 * 1000,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
     });
