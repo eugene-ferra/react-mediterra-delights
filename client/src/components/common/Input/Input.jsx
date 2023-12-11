@@ -10,11 +10,13 @@ const Input = ({
   disabled,
   className,
 }) => {
+  const errorClass = errorMessage ? styles.error : "";
+
   return (
-    <label className={className || ""}>
+    <label className={`${className || ""} `}>
       <p className={styles.inputTitle}>{title}</p>
       <input
-        className={`${styles.input}`}
+        className={`${styles.input} ${errorClass}`}
         type={type}
         placeholder={placeholder}
         name={name}
