@@ -16,6 +16,13 @@
   }
 }
 
+@mixin tinyText {
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 400;
+  color: var(--secondary-color);
+}
+
 @mixin smallText {
   font-size: 14px;
   line-height: 18px;

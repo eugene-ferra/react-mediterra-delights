@@ -21,9 +21,6 @@
   &:disabled {
     opacity: 0.5;
   }
-  &.error {
-    border-color: var(--accent-color);
-  }
 }
 
 .inputTitle {

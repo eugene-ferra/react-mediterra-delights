@@ -1,0 +1,43 @@
+.burger {
+  // display: block;
+  min-height: 30px;
+  min-width: 30px;
+  background-color: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  span {
+    user-select: none;
+    transition: var(--transition);
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--primary-stable-color);
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-radius: var(--radius);
+    &:first-child {
+      top: 0;
+    }
+    &:last-child {
+      bottom: 0;
+    }
+  }
+  &Active {
+    @extend .burger;
+    span {
+      opacity: 0;
+    }
+    span:first-child {
+      top: 14px;
+      opacity: 1;
+      transform: rotate(45deg);
+    }
+    span:last-child {
+      bottom: 14px;
+      opacity: 1;
+      transform: rotate(-45deg);
+    }
+  }
+}

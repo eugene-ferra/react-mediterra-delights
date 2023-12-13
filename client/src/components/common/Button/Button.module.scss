@@ -4,12 +4,16 @@
   @include mixins.basicBold;
   padding: 10px 20px;
   background-color: var(--accent-color);
-  color: var(--primary-pure-color);
+  color: var(--primary-stable-color);
   border: none;
   transition: var(--transition);
   outline-width: 0;
   height: max-content;
-
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--radius);
+  gap: 0px 10px;
   &:hover {
     cursor: pointer;
     box-shadow: 0 0 10px var(--accent-color);
@@ -26,5 +30,10 @@
       cursor: default;
       box-shadow: none;
     }
+  }
+  &Outline {
+    @extend .button;
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
   }
 }

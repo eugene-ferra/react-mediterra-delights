@@ -1,0 +1,22 @@
+@use "../../scss/mixins.scss" as mixins;
+
+.footer {
+  background-color: var(--secondary-stable-color);
+  padding: 10px 0;
+}
+.mainContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px 30px;
+  @include mixins.smallMobile {
+    justify-content: center;
+  }
+}
+
+.copyright {
+  width: 100%;
+  color: var(--primary-stable-color);
+  text-align: center;
+}

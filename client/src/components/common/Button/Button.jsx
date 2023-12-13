@@ -1,21 +1,42 @@
+import { Link } from "react-router-dom";
 import styles from "./Button.module.scss";
 
-const Button = ({ className, type, disabled, children }) => {
+const Button = ({ className, type, asTag, to, disabled, children, onClick }) => {
   let classValue;
+
   switch (type) {
     case "primary":
       classValue = styles.button;
       break;
-
+    case "outline":
+      classValue = styles.buttonOutline;
+      break;
     default:
       classValue = styles.button;
   }
 
-  return (
-    <button className={`${classValue} ${className || ""}`} disabled={disabled}>
-      {children}
-    </button>
-  );
+  if (asTag === "Link") {
+    return (
+      <Link
+        to={to}
+        className={`${classValue} ${className || ""}`}
+        disabled={disabled}
+        onClick={onClick}
+      >
+        {children}
+      </Link>
+    );
+  } else {
+    return (
+      <button
+        className={`${classValue} ${className || ""}`}
+        disabled={disabled}
+        onClick={onClick}
+      >
+        {children}
+      </button>
+    );
+  }
 };
 
 export default Button;

@@ -1,0 +1,7 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.img {
+  object-fit: cover;
+  max-width: max-content;
+  @include mixins.tinyText;
+}

@@ -1,0 +1,71 @@
+@use "../../scss/mixins.scss" as mixins;
+
+.header {
+  background-color: var(--secondary-stable-color);
+  border-bottom: 3px solid var(--secondary-light-color);
+  position: sticky;
+  top: 0;
+}
+
+.mainContent {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding: 14px 10px;
+}
+
+.navbar {
+  margin: 0 auto 0 50px;
+  &Mobile {
+    display: flex;
+    flex-direction: column;
+  }
+  @include mixins.tablet {
+    & {
+      display: none !important;
+    }
+  }
+}
+
+.dropDown {
+  padding: 20px 0;
+  transition: var(--transition);
+  background-color: var(--secondary-stable-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 20px;
+  align-items: center;
+  position: absolute;
+  top: 78px;
+  left: -100%;
+  width: 100%;
+  bottom: 0;
+  height: calc(100vh - 78px);
+  overflow-y: auto;
+  &Show {
+    @extend .dropDown;
+    right: 0;
+    left: 0;
+  }
+}
+
+.toggle {
+  display: none;
+  @include mixins.tablet {
+    display: block;
+  }
+}
+
+.cart {
+  @include mixins.tablet {
+    margin-left: auto;
+  }
+}
+
+.signup,
+.login {
+  @include mixins.tablet {
+    display: none !important;
+  }
+}

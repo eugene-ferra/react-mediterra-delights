@@ -1,0 +1,9 @@
+.avatar {
+  height: 45px;
+  img {
+    display: inline;
+    height: 100%;
+    max-width: max-content;
+    object-fit: contain;
+  }
+}
