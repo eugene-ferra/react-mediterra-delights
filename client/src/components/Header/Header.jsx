@@ -11,10 +11,13 @@ import loginImg from "../../assets/login.svg";
 import Avatar from "../common/Avatar/Avatar";
 import Burger from "../common/Burger/Burger";
 import { useState } from "react";
+import { useUser } from "../../hooks/useUser";
 
 const Header = () => {
-  const user = 1;
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const { user } = useUser();
+
+  console.log(user);
 
   const handleClick = () => {
     setIsDropDownOpen((state) => !state);
@@ -26,19 +29,14 @@ const Header = () => {
         <Logo />
         <Navbar className={styles.navbar} />
 
-        <CartLink count={12} className={styles.cart} />
+        <CartLink count={user?.cart?.lenght} className={styles.cart} />
         {user ? (
           <Link to={"/account"}>
-            <Avatar />
+            <Avatar formats={user?.avatar} />
           </Link>
         ) : (
           <>
-            <Button
-              asTag={"Link"}
-              to={"/signup"}
-              className={styles.signup}
-              onClick={handleClick}
-            >
+            <Button asTag={"Link"} to={"/signup"} className={styles.signup}>
               Реєстрація {<Picture alt={"register"} formats={{ jpg: registerImg }} />}
             </Button>
 
@@ -47,7 +45,6 @@ const Header = () => {
               to={"/login"}
               type={"outline"}
               className={styles.login}
-              onClick={handleClick}
             >
               Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
             </Button>

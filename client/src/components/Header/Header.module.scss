@@ -33,7 +33,7 @@
   background-color: var(--secondary-stable-color);
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   gap: 20px;
   align-items: center;
   position: absolute;
@@ -45,8 +45,12 @@
   overflow-y: auto;
   &Show {
     @extend .dropDown;
-    right: 0;
-    left: 0;
+    display: none !important;
+    @include mixins.tablet {
+      right: 0;
+      left: 0;
+      display: flex !important;
+    }
   }
 }
 

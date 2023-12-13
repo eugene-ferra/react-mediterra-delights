@@ -5,9 +5,11 @@ import Header from "../components/Header/Header";
 const AppLayout = () => {
   return (
     <>
-      <Header />
-      <Outlet />
-      <Footer />
+      <>
+        <Header />
+        <Outlet />
+        <Footer />
+      </>
     </>
   );
 };
