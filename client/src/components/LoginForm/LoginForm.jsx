@@ -21,12 +21,9 @@ const LoginForm = () => {
   return (
     <MainLayout className={styles.layout}>
       <Form className={styles.loginForm} onSubmit={handleSubmit(onSubmit)}>
-        <Title className={styles.title}>Вхід</Title>
-        <Text className={styles.text}>
-          Маєте аккаунт? Заповніть поля нижче, щоб увійти
-        </Text>
+        <Title align={"center"}>Вхід</Title>
+        <Text align={"center"}>Маєте аккаунт? Заповніть поля нижче, щоб увійти</Text>
         <Input
-          className={styles.input}
           title={"Електронна пошта*"}
           type={"email"}
           placeholder={"example@domain.com"}
@@ -36,7 +33,6 @@ const LoginForm = () => {
           disabled={isLoading}
         />
         <Input
-          className={styles.input}
           type={"password"}
           title={"Пароль*"}
           name={"password"}
@@ -44,18 +40,16 @@ const LoginForm = () => {
           register={register("password")}
           disabled={isLoading}
         />
-        <Text className={styles.errorText} type={"small"}>
-          {errors?.all}
-        </Text>
-        <Button className={styles.button} disabled={isLoading}>
+        {errors?.all ? <Text type={"small"}>{errors?.all}</Text> : null}
+
+        <Button disabled={isLoading} style={{ width: "100%" }}>
           {isLoading ? <Loader /> : "Увійти"}
         </Button>
-        <Text className={styles.textSmall} type="small">
-          Забули пароль? <Link to="/forgot-password">Відновити доступ</Link>{" "}
-        </Text>
-        <Text className={styles.textSmall} type="small">
+        <Text type="small" align={"center"}>
+          Забули пароль? <Link to="/forgot-password">Відновити доступ</Link> <br />
           Ще не маєте аккаунту? <Link to="/signup">Зареєструватися</Link>{" "}
         </Text>
+        <Text type="small" align={"center"}></Text>
       </Form>
     </MainLayout>
   );

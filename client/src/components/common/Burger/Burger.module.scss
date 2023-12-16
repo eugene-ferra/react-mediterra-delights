@@ -1,7 +1,7 @@
 .burger {
   // display: block;
-  min-height: 30px;
-  min-width: 30px;
+  min-height: 28px;
+  min-width: 28px;
   background-color: transparent;
   border: none;
   position: relative;
@@ -30,12 +30,12 @@
       opacity: 0;
     }
     span:first-child {
-      top: 14px;
+      top: 12px;
       opacity: 1;
       transform: rotate(45deg);
     }
     span:last-child {
-      bottom: 14px;
+      bottom: 13px;
       opacity: 1;
       transform: rotate(-45deg);
     }

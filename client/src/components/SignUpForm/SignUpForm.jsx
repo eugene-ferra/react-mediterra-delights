@@ -21,13 +21,12 @@ const SignUpForm = () => {
   return (
     <MainLayout className={styles.layout}>
       <Form className={styles.signUpForm} onSubmit={handleSubmit(onSubmit)}>
-        <Title className={styles.title}>Реєстрація</Title>
-        <Text className={styles.text}>
+        <Title align={"center"}>Реєстрація</Title>
+        <Text align={"center"}>
           Вітаємо Вас на нашому сайті! Для реєстрації заповніть поля нижче
         </Text>
         <Input
           title={"Ім'я*"}
-          className={styles.input}
           type={"text"}
           placeholder={"Іван"}
           name={"name"}
@@ -36,7 +35,6 @@ const SignUpForm = () => {
           disabled={isLoading}
         />
         <Input
-          className={styles.input}
           title={"Прізвище*"}
           type={"text"}
           placeholder={"Іванов"}
@@ -46,7 +44,6 @@ const SignUpForm = () => {
           disabled={isLoading}
         />
         <Input
-          className={styles.input}
           title={"Електронна пошта*"}
           type={"email"}
           placeholder={"example@domain.com"}
@@ -57,7 +54,6 @@ const SignUpForm = () => {
         />
 
         <Input
-          className={styles.input}
           type={"password"}
           title={"Пароль*"}
           name={"password"}
@@ -65,8 +61,10 @@ const SignUpForm = () => {
           register={register("password")}
           disabled={isLoading}
         />
-        <Button disabled={isLoading}>{isLoading ? <Loader /> : "Реєстрація"}</Button>
-        <Text className={styles.textSmall} type="small">
+        <Button disabled={isLoading} style={{ width: "100%" }}>
+          {isLoading ? <Loader /> : "Реєстрація"}
+        </Button>
+        <Text type="small" align={"center"}>
           Вже маєте аккаунт? <Link to="/login">Увійти в аккаунт</Link>{" "}
         </Text>
       </Form>

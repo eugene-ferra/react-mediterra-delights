@@ -1,0 +1,74 @@
+@use "../../scss/mixins.scss" as mixins;
+
+.aside {
+  background-color: var(--secondary-stable-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 300px;
+  transition: var(--transition);
+  @include mixins.tablet {
+    padding-top: 15px;
+    left: 0;
+    width: 45px;
+    min-width: 48px;
+  }
+  &Open {
+    @extend .aside;
+    min-width: 100%;
+    width: 100%;
+    .link {
+      @extend .link;
+      display: block;
+    }
+  }
+}
+
+.burger {
+  display: none;
+  @include mixins.tablet {
+    display: block;
+    margin-bottom: 15px;
+    margin-left: 10px;
+  }
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  @include mixins.basicBold;
+  gap: 10px;
+  padding: 15px 10px;
+  transition: var(--transition);
+  width: 100%;
+  &Icon {
+    height: 28px;
+    width: 28px;
+  }
+  &:hover,
+  &:focus {
+    outline-width: 0;
+    background-color: var(--selection-color);
+  }
+  &:global.active {
+    background-color: var(--selection-color);
+  }
+}
+
+.text {
+  color: var(--primary-stable-color) !important;
+  opacity: 1 !important;
+  &Open {
+    @extend .text;
+    display: inline !important;
+    opacity: 1;
+  }
+  @include mixins.tablet {
+    display: none;
+    opacity: 0;
+  }
+}

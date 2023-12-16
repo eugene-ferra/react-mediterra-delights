@@ -1,0 +1,47 @@
+@use "../../scss/mixins.scss" as mixins;
+
+.box {
+  overflow-x: auto;
+  max-width: calc(100% - 50px);
+}
+
+.table {
+  border-collapse: collapse;
+  width: max-content;
+  img {
+    max-width: 100px;
+    max-height: 150px;
+  }
+}
+
+.head {
+  background-color: var(--accent-color);
+  th {
+    text-align: center;
+    @include mixins.basicBold;
+    color: var(--primary-stable-color);
+  }
+}
+
+.body {
+  font-size: 14px;
+  background-color: var(--primary-color);
+}
+
+.row {
+  border-bottom: 2px solid var(--secondary-light-color);
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.cell {
+  padding: 10px 25px;
+  border-right: 2px solid var(--secondary-light-color);
+  text-align: center;
+  color: var(--secondary-color);
+  @include mixins.smallText;
+  &:last-child {
+    border-right: none;
+  }
+}

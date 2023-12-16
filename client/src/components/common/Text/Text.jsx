@@ -1,6 +1,6 @@
 import styles from "./Text.module.scss";
 
-const Text = ({ children, className, type }) => {
+const Text = ({ children, className, type, align }) => {
   let classValue;
 
   switch (type) {
@@ -14,7 +14,14 @@ const Text = ({ children, className, type }) => {
       classValue = styles.text;
   }
 
-  return <p className={`${classValue} ${className || ""}`}>{children}</p>;
+  return (
+    <p
+      className={`${classValue} ${className || ""}`}
+      style={{ textAlign: align || "left" }}
+    >
+      {children}
+    </p>
+  );
 };
 
 export default Text;

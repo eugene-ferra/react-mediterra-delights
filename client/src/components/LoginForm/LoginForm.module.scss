@@ -1,10 +1,6 @@
 .loginForm {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   max-width: 500px;
   background-color: var(--primary-color);
-  min-width: 300px;
   a {
     color: var(--accent-color);
     &:hover {
@@ -20,33 +16,4 @@
   justify-content: center;
   align-items: center;
   padding: 50px 0 50px;
-}
-
-.title {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.text {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.errorText {
-  color: var(--accent-color);
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.button {
-  margin-bottom: 15px;
-}
-
-.textSmall {
-  margin-bottom: 5px;
-  text-align: center;
-}
-
-.input {
-  margin-bottom: 20px;
 }

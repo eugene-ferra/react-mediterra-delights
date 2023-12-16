@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./Button.module.scss";
 
-const Button = ({ className, type, asTag, to, disabled, children, onClick }) => {
+const Button = ({ className, type, asTag, to, disabled, children, onClick, style }) => {
   let classValue;
 
   switch (type) {
@@ -22,6 +22,7 @@ const Button = ({ className, type, asTag, to, disabled, children, onClick }) => 
         className={`${classValue} ${className || ""}`}
         disabled={disabled}
         onClick={onClick}
+        style={styles}
       >
         {children}
       </Link>
@@ -32,6 +33,7 @@ const Button = ({ className, type, asTag, to, disabled, children, onClick }) => 
         className={`${classValue} ${className || ""}`}
         disabled={disabled}
         onClick={onClick}
+        style={style}
       >
         {children}
       </button>

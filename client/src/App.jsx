@@ -18,6 +18,13 @@ import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import ArticlesPage from "./pages/ArticlesPage.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ProductManage from "./components/ProductManage/ProductManage.jsx";
+import ArticleManage from "./components/ArticleManage/ArticleManage.jsx";
+import CommentManage from "./components/CommentManage/CommentsManage.jsx";
+import ReviewManage from "./components/ReviewManage/ReviewManage.jsx";
+import OrdersManage from "./components/OrdersManage/OrdersManage.jsx";
+import ProductManageAdd from "./components/ProductManage/ProductManageAdd.jsx";
+import ManageBox from "./components/ManageBox/ManageBox.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +32,24 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "/admin", element: <AdminPage /> },
+      {
+        path: "/admin",
+        element: <AdminPage />,
+        children: [
+          {
+            path: "products",
+            element: <ManageBox />,
+            children: [
+              { path: "", element: <ProductManage /> },
+              { path: "new", element: <ProductManageAdd /> },
+            ],
+          },
+          { path: "articles", element: <ArticleManage /> },
+          { path: "comments", element: <CommentManage /> },
+          { path: "reviews", element: <ReviewManage /> },
+          { path: "orders", element: <OrdersManage /> },
+        ],
+      },
       { path: "/account", element: <AccountPage /> },
       { path: "/signup", element: <SignUpPage /> },
       { path: "/login", element: <LoginPage /> },

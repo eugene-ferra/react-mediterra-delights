@@ -9,11 +9,12 @@
   transition: var(--transition);
   outline-width: 0;
   height: max-content;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius);
   gap: 0px 10px;
+  width: max-content;
   &:hover {
     cursor: pointer;
     box-shadow: 0 0 10px var(--accent-color);

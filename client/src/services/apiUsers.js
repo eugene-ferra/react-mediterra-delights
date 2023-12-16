@@ -64,7 +64,7 @@ export async function resetTokens() {
 
 export async function getMe() {
   try {
-    const response = await axios.get("api/users/me");
+    const response = await axios.get("/api/users/me");
     return response.data.data;
   } catch (err) {
     switch (err.response.status) {
@@ -73,7 +73,7 @@ export async function getMe() {
       case 401:
         try {
           await resetTokens();
-          const response = await axios.get("api/users/me");
+          const response = await axios.get("/api/users/me");
           throw { user: response.data.data };
         } catch (err) {
           throw null;

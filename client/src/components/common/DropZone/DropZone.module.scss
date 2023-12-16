@@ -1,0 +1,110 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.dropZone {
+  width: 100%;
+  background-color: transparent;
+  border: 2px solid var(--secondary-color);
+  padding: 15px 15px 0;
+  transition: var(--transition);
+  &Active {
+    @extend .dropZone;
+    border-color: var(--selection-color);
+  }
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--selection-color);
+  border: none;
+  @include mixins.smallText;
+  color: var(--primary-stable-color);
+  padding: 10px;
+  box-shadow: 0 0 5px 2px transparent;
+  transition: var(--transition);
+  cursor: pointer;
+  &:hover,
+  &:focus,
+  &:active {
+    transition: var(--transition);
+    box-shadow: 0 0 5px 2px var(--selection-color);
+  }
+  &Active {
+    @extend .addBtn;
+    box-shadow: 0 0 5px 2px var(--selection-color);
+  }
+}
+
+.zone {
+  border: 2px dashed var(--secondary-light-color);
+  margin-bottom: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  &Active {
+    @extend .zone;
+    transition: var(--transition);
+    border-color: var(--selection-color);
+  }
+}
+
+.inputText {
+  @include mixins.basicText;
+  color: var(--secondary-color);
+  padding: 10px 15px;
+  text-align: center;
+  margin: 0;
+}
+
+.previews {
+  display: flex;
+  gap: 0px 15px;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.previewImage {
+  height: 150px;
+  margin-bottom: 15px;
+  position: relative;
+  img {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+  }
+  button {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    background-color: var(--accent-color);
+    border: none;
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    box-shadow: 0 0 5px 2px transparent;
+    &:hover,
+    &:focus,
+    &:active {
+      transition: var(--transition);
+      box-shadow: 0 0 5px 2px var(--accent-color);
+    }
+    * {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.inputTitle {
+  @include mixins.basicBold;
+  margin: 0 0 5px 0;
+}
+
+.inputError {
+  margin: 3px 0px 0px 0px;
+  color: var(--accent-color);
+}

@@ -1,6 +1,10 @@
 @use "../../../scss/mixins.scss" as mixins;
 
 .form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 30px;
   @include mixins.mobile {
     padding: 20px 10px;
   }

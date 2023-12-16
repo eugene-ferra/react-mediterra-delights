@@ -3,18 +3,21 @@
 #root {
   --primary-color: #f2f2f2;
   --primary-stable-color: #f2f2f2;
+  --primary-dark-color: #e0e0e0;
   --secondary-color: #272a2f;
   --secondary-light-color: #272a2f80;
   --secondary-stable-color: #272a2f;
   --accent-color: #c74134;
   --selection-color: #3b8ae4;
+  --selection-light-color: #7db2ee;
 
   --radius: 10px;
   --transition: 0.3s all;
   &.dark {
     --primary-color: #272a2f;
     --secondary-color: #f2f2f2;
-    --secondary-light-color: #f2f2f285;
+    --secondary-light-color: #b8b8b8;
+    --primary-dark-color: #464b56;
   }
 
   display: flex;

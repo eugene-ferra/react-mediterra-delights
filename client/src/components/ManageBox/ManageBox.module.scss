@@ -1,0 +1,15 @@
+@use "../../scss/mixins.scss" as mixins;
+
+.manageBox {
+  width: 100%;
+  background-color: var(--primary-dark-color);
+  padding: 10px 20px 0 320px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
+  flex-direction: column;
+  @include mixins.tablet {
+    padding: 5px 5px 0px 55px;
+  }
+}

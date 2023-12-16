@@ -1,0 +1,95 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.checkBox,
+.checkBox * {
+  box-sizing: content-box !important;
+}
+
+.checkBox input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.checkBox span {
+  @include mixins.basicText;
+}
+
+.checkBox {
+  width: max-content;
+  display: table;
+  position: relative;
+  padding-left: 38px;
+  cursor: pointer;
+  margin-bottom: 0px;
+}
+
+.checkBox input[type="checkbox"] ~ .checkBoxInput {
+  position: absolute;
+  top: -2px;
+  left: 0;
+  height: 24px;
+  width: 24px;
+  background: transparent;
+  transition: var(--transition);
+  border: 2px solid var(--secondary-color);
+  border-radius: 0px;
+}
+
+.checkBox input[type="checkbox"] ~ .checkBoxInput::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 8px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid var(--secondary-color);
+  border-width: 0 2px 2px 0;
+  transition: var(--transition);
+  transform: rotate(45deg);
+}
+
+.checkBox input[type="checkbox"]:disabled ~ .checkBoxInput::after {
+  border-color: var(--secondary-light-color);
+}
+
+.checkBox input:checked ~ .checkBoxInput::after {
+  display: block;
+}
+
+.checkBox:hover input[type="checkbox"]:not([disabled]) ~ .checkBoxInput,
+.checkBox input[type="checkbox"]:focus ~ .checkBoxInput {
+  border-color: var(--selection-color);
+  background: transparent;
+}
+
+.checkBox input:focus ~ .checkBoxInput {
+  box-shadow: 0 0 0 2px var(--selection-color);
+}
+
+.checkBox input[type="checkbox"]:checked ~ .checkBoxInput {
+  background: transparent;
+  border-color: var(--secondary-color);
+}
+
+.checkBox input[type="checkbox"]:disabled ~ .checkBoxInput {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkBox:hover input[type="checkbox"]:not([disabled]):checked ~ .checkBoxInput,
+.checkBox input[type="checkbox"]:checked:focus ~ .checkBoxInput {
+  background: transparent;
+  border-color: var(--selection-color);
+}
+
+.inputTitle {
+  @include mixins.basicBold;
+  margin-bottom: 10px;
+}
+
+.inputError {
+  margin-top: 10px;
+  color: var(--accent-color);
+}
