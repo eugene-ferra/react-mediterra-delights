@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import styles from "./DropZone.module.scss";
 import trash from "../../../assets/trash.svg";
 
-const DropZone = ({ maxPhotos, title, errorMessage, name }) => {
+const DropZone = ({ maxPhotos, title, errorMessage, name, disabled }) => {
   const { control } = useFormContext();
 
   return (
@@ -16,6 +16,7 @@ const DropZone = ({ maxPhotos, title, errorMessage, name }) => {
           maxPhotos={maxPhotos}
           onChange={onChange}
           name={name}
+          disabled={disabled}
         />
       )}
       name={name}
@@ -24,7 +25,7 @@ const DropZone = ({ maxPhotos, title, errorMessage, name }) => {
   );
 };
 
-const Drop = ({ title, errorMessage, maxPhotos, name, onChange }) => {
+const Drop = ({ title, errorMessage, maxPhotos, name, onChange, disabled }) => {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
 
@@ -68,6 +69,7 @@ const Drop = ({ title, errorMessage, maxPhotos, name, onChange }) => {
       "image/jpg": [],
       "image/png": [],
     },
+    disabled: disabled,
     onDrop: handleDrop,
   });
 
@@ -75,15 +77,35 @@ const Drop = ({ title, errorMessage, maxPhotos, name, onChange }) => {
     <div>
       <p className={styles.inputTitle}>{title}</p>
 
-      <div className={`${isFocused ? styles.dropZoneActive : styles.dropZone}`}>
+      <div
+        className={`${
+          disabled
+            ? styles.dropZoneDisabled
+            : isFocused
+            ? styles.dropZoneActive
+            : styles.dropZone
+        }`}
+      >
         <div
           {...getRootProps({})}
-          className={`${isDragActive ? styles.zoneActive : styles.zone}`}
+          className={`${
+            disabled
+              ? styles.zoneDisabled
+              : isDragActive
+              ? styles.zoneActive
+              : styles.zone
+          }`}
         >
           <input {...getInputProps()} name={name} type="file" />
           <label
             htmlFor={name}
-            className={isFocused ? styles.addBtnActive : styles.addBtn}
+            className={
+              disabled
+                ? styles.addBtnDisabled
+                : isFocused
+                ? styles.addBtnActive
+                : styles.addBtn
+            }
           >
             Оберіть файли
           </label>
@@ -103,6 +125,7 @@ const Drop = ({ title, errorMessage, maxPhotos, name, onChange }) => {
                 <button
                   className={styles.deleteButton}
                   onClick={() => handleDelete(index)}
+                  disabled={disabled}
                 >
                   <img src={trash} alt={`x`} />
                 </button>

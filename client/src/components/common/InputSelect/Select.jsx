@@ -2,7 +2,14 @@ import Select from "react-select";
 import styles from "./InputSelect.module.scss";
 import { Controller, useFormContext } from "react-hook-form";
 
-const InputSelect = ({ placeholder, title, valuesArr, errorMessage, name }) => {
+const InputSelect = ({
+  placeholder,
+  title,
+  valuesArr,
+  errorMessage,
+  name,
+  disabled,
+}) => {
   const { control } = useFormContext();
 
   return (
@@ -14,6 +21,7 @@ const InputSelect = ({ placeholder, title, valuesArr, errorMessage, name }) => {
           valuesArr={valuesArr}
           onChange={onChange}
           errorMessage={errorMessage}
+          disabled={disabled}
         />
       )}
       name={name}
@@ -22,7 +30,14 @@ const InputSelect = ({ placeholder, title, valuesArr, errorMessage, name }) => {
   );
 };
 
-const SelectComponent = ({ placeholder, title, valuesArr, errorMessage, onChange }) => {
+const SelectComponent = ({
+  placeholder,
+  title,
+  valuesArr,
+  errorMessage,
+  onChange,
+  disabled,
+}) => {
   const colourStyles = {
     control: (styles, { isFocused, isSelected }) => ({
       ...styles,
@@ -35,8 +50,11 @@ const SelectComponent = ({ placeholder, title, valuesArr, errorMessage, onChange
         borderColor:
           isSelected || isFocused ? "var(--selection-color)" : "var(--secondary-color)",
       },
-      borderColor:
-        isSelected || isFocused ? "var(--selection-color)" : "var(--secondary-color)",
+      borderColor: disabled
+        ? "#848588" // Set to red when disabled
+        : isSelected || isFocused
+        ? "var(--selection-color)"
+        : "var(--secondary-color)",
     }),
     placeholder: (styles) => ({
       ...styles,
@@ -102,6 +120,7 @@ const SelectComponent = ({ placeholder, title, valuesArr, errorMessage, onChange
         onChange={(value) => {
           onChange(value.value);
         }}
+        isDisabled={disabled}
         noOptionsMessage={() => "Таких варінтів не знайдено!"}
       />
       <p className={styles.inputError}>{errorMessage}</p>

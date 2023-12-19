@@ -8,7 +8,6 @@ api.interceptors.response.use(
     const { status, data, config } = error.response;
 
     if (status === 400) {
-      console.log("IN 400");
       if (data?.errors) {
         const errors = data.errors?.reduce(
           (acc, { path, msg }) => {
