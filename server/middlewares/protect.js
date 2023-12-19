@@ -10,12 +10,12 @@ export default function protect() {
       let token = req?.cookies?.access;
 
       if (!token) {
-        return next(new AppError("Please provide authorization token!", 400));
+        return next(new AppError("Please provide authorization token!", 401));
       }
 
       const decoded = await authService.validateAccessToken(token);
 
-      if (!decoded) return next(new AppError("Invalid authorization token!", 400));
+      if (!decoded) return next(new AppError("Invalid authorization token!", 401));
 
       req.user = { _id: decoded.id, role: decoded.role };
       next();

@@ -1,19 +1,39 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { Controller, useFormContext } from "react-hook-form";
 import styles from "./DropZone.module.scss";
 import trash from "../../../assets/trash.svg";
 
-const DropZone = ({ title, errorMessage, maxPhotos, name }) => {
+const DropZone = ({ maxPhotos, title, errorMessage, name }) => {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      render={({ field: { onChange } }) => (
+        <Drop
+          title={title}
+          errorMessage={errorMessage}
+          maxPhotos={maxPhotos}
+          onChange={onChange}
+          name={name}
+        />
+      )}
+      name={name}
+      control={control}
+    />
+  );
+};
+
+const Drop = ({ title, errorMessage, maxPhotos, name, onChange }) => {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
 
-  const { getRootProps, getInputProps, isDragActive, isFocused } = useDropzone({
-    accept: {
-      "image/*": [],
-    },
-    onDrop: (acceptedFiles, rejectedFiles) => {
+  const handleDrop = useCallback(
+    (acceptedFiles, rejectedFiles) => {
       if (rejectedFiles.length > 0) {
-        setError("Неправильний формат файлу. Підтримуються лише картинки!");
+        setError(
+          "Неправильний формат файлу. Підтримуються лише картинки формату .jpg та .png!"
+        );
       } else if (files.length + acceptedFiles.length <= maxPhotos) {
         setFiles((prevFiles) =>
           prevFiles.concat(
@@ -29,13 +49,27 @@ const DropZone = ({ title, errorMessage, maxPhotos, name }) => {
         setError(`Максимальна допустима кількість файлів - ${maxPhotos} !`);
       }
     },
-  });
+    [files, maxPhotos]
+  );
+
+  useEffect(() => {
+    onChange(files);
+  }, [files, onChange, maxPhotos]);
 
   const handleDelete = (index) => {
     const newFiles = [...files];
     newFiles.splice(index, 1);
     setFiles(newFiles);
   };
+
+  const { getRootProps, getInputProps, isDragActive, isFocused } = useDropzone({
+    accept: {
+      "image/jpeg": [],
+      "image/jpg": [],
+      "image/png": [],
+    },
+    onDrop: handleDrop,
+  });
 
   return (
     <div>
@@ -46,7 +80,7 @@ const DropZone = ({ title, errorMessage, maxPhotos, name }) => {
           {...getRootProps({})}
           className={`${isDragActive ? styles.zoneActive : styles.zone}`}
         >
-          <input {...getInputProps()} name={name} />
+          <input {...getInputProps()} name={name} type="file" />
           <label
             htmlFor={name}
             className={isFocused ? styles.addBtnActive : styles.addBtn}

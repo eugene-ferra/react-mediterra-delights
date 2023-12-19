@@ -1,5 +1,14 @@
+import Header from "../components/Header/Header";
+import Footer from "../components/Footer/Footer";
+
 const HomePage = () => {
-  return <div className="container">HOME</div>;
+  return (
+    <>
+      <Header />
+      HOME
+      <Footer />
+    </>
+  );
 };
 
 export default HomePage;

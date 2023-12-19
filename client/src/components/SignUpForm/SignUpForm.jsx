@@ -30,7 +30,7 @@ const SignUpForm = () => {
           type={"text"}
           placeholder={"Іван"}
           name={"name"}
-          errorMessage={errors.name}
+          errorMessage={errors?.name}
           register={register("name")}
           disabled={isLoading}
         />
@@ -39,7 +39,7 @@ const SignUpForm = () => {
           type={"text"}
           placeholder={"Іванов"}
           name={"lastname"}
-          errorMessage={errors.lastName}
+          errorMessage={errors?.lastName}
           register={register("lastName")}
           disabled={isLoading}
         />
@@ -48,7 +48,7 @@ const SignUpForm = () => {
           type={"email"}
           placeholder={"example@domain.com"}
           name={"email"}
-          errorMessage={errors.email}
+          errorMessage={errors?.email}
           register={register("email")}
           disabled={isLoading}
         />
@@ -57,7 +57,7 @@ const SignUpForm = () => {
           type={"password"}
           title={"Пароль*"}
           name={"password"}
-          errorMessage={errors.password}
+          errorMessage={errors?.password}
           register={register("password")}
           disabled={isLoading}
         />

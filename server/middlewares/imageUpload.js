@@ -13,7 +13,6 @@ export const imageUpload = multer({
     cb(null, true);
   },
   limits: {
-    fields: 15,
-    fileSize: 1024 * 1024 * 3,
+    fileSize: 1024 * 1024 * 5,
   },
 });

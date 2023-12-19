@@ -1,9 +1,30 @@
 import Select from "react-select";
 import styles from "./InputSelect.module.scss";
+import { Controller, useFormContext } from "react-hook-form";
 
-const InputSelect = ({ placeholder, title, valuesArr, onChange, errorMessage }) => {
+const InputSelect = ({ placeholder, title, valuesArr, errorMessage, name }) => {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      render={({ field: { onChange } }) => (
+        <SelectComponent
+          placeholder={placeholder}
+          title={title}
+          valuesArr={valuesArr}
+          onChange={onChange}
+          errorMessage={errorMessage}
+        />
+      )}
+      name={name}
+      control={control}
+    />
+  );
+};
+
+const SelectComponent = ({ placeholder, title, valuesArr, errorMessage, onChange }) => {
   const colourStyles = {
-    control: (styles, { isFocused, isSelected, isHovered }) => ({
+    control: (styles, { isFocused, isSelected }) => ({
       ...styles,
       backgroundColor: "transparent",
       borderWidth: "2px",
@@ -38,13 +59,13 @@ const InputSelect = ({ placeholder, title, valuesArr, onChange, errorMessage }) 
       lineHeight: "24px",
       fontWeight: "400",
     }),
-    dropdownIndicator: (styles, { isFocused }) => ({
+    dropdownIndicator: (styles) => ({
       ...styles,
       svg: {
         fill: "var(--secondary-color)",
       },
     }),
-    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    option: (styles, { isFocused, isSelected }) => {
       return {
         ...styles,
         transition: "var(--transition)",
@@ -77,8 +98,10 @@ const InputSelect = ({ placeholder, title, valuesArr, onChange, errorMessage }) 
         options={valuesArr?.map((item) => {
           return { value: item, label: item };
         })}
-        onChange={onChange}
         styles={colourStyles}
+        onChange={(value) => {
+          onChange(value.value);
+        }}
         noOptionsMessage={() => "Таких варінтів не знайдено!"}
       />
       <p className={styles.inputError}>{errorMessage}</p>

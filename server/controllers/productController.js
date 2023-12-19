@@ -60,12 +60,14 @@ export const getProduct = async (req, res, next) => {
 };
 export const addProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    let errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
         status: "fail",
-        errors: errors.array(),
+        errors: req?.files?.imgCover?.[0]?.buffer
+          ? errors.array()
+          : [...errors.array(), { path: "imgCover", msg: "imgCover is required" }],
       });
     }
 
@@ -73,7 +75,7 @@ export const addProduct = async (req, res, next) => {
 
     let data = await productService.addOne(
       textData,
-      req.files?.imgCover?.[0]?.buffer,
+      req?.files?.imgCover?.[0]?.buffer,
       req.files?.images?.map((item) => item?.buffer)
     );
 

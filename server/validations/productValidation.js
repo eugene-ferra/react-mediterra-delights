@@ -21,10 +21,10 @@ export const productValidationSchema = {
     isLength: {
       if: body("title").exists(),
       options: {
-        min: 1,
+        min: 3,
         max: 60,
       },
-      errorMessage: "Title must contain from 0 to 60 characters",
+      errorMessage: "Title must contain from 3 to 60 characters",
     },
     trim: true,
   },
@@ -100,7 +100,7 @@ export const productValidationSchema = {
   },
   discountPrice: {
     isFloat: {
-      if: body("discountPrice").exists(),
+      if: body("discountPrice").exists().notEmpty(),
       options: { min: 1 },
       errorMessage: "DiscountPrice should be a float and be greater than 0!",
     },
@@ -126,7 +126,7 @@ export const productValidationSchema = {
   },
   "nutrients.calories": {
     isFloat: {
-      if: body("nutriens").exists(),
+      if: body("nutrients.calories").exists().notEmpty(),
       options: {
         min: 0,
       },
@@ -135,7 +135,7 @@ export const productValidationSchema = {
   },
   "nutrients.carbohydrates": {
     isFloat: {
-      if: body("nutriens").exists(),
+      if: body("nutrients.carbohydrates").exists().notEmpty(),
       options: {
         min: 0,
       },
@@ -144,7 +144,7 @@ export const productValidationSchema = {
   },
   "nutrients.protein": {
     isFloat: {
-      if: body("nutriens").exists(),
+      if: body("nutrients.protein").exists().notEmpty(),
       options: {
         min: 0,
       },
@@ -153,7 +153,7 @@ export const productValidationSchema = {
   },
   "nutrients.fats": {
     isFloat: {
-      if: body("nutriens").exists(),
+      if: body("nutrients.fats").exists().notEmpty(),
       options: {
         min: 0,
       },
@@ -216,6 +216,7 @@ export const productValidationStrictSchema = {
   },
   description: {
     exists: {
+      options: { values: "falsy" },
       errorMessage: "Description is required",
       bail: true,
     },

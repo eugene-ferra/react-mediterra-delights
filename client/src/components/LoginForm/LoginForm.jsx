@@ -28,7 +28,7 @@ const LoginForm = () => {
           type={"email"}
           placeholder={"example@domain.com"}
           name={"email"}
-          errorMessage={errors.email || Boolean(errors.all)}
+          errorMessage={errors?.email}
           register={register("email")}
           disabled={isLoading}
         />
@@ -36,7 +36,7 @@ const LoginForm = () => {
           type={"password"}
           title={"Пароль*"}
           name={"password"}
-          errorMessage={errors.password || Boolean(errors.all)}
+          errorMessage={errors?.password}
           register={register("password")}
           disabled={isLoading}
         />
