@@ -1,7 +1,5 @@
-import ManageBox from "../ManageBox/ManageBox";
-
 const ArticleManage = () => {
-  return <ManageBox>Articles</ManageBox>;
+  return <>Articles</>;
 };
 
 export default ArticleManage;

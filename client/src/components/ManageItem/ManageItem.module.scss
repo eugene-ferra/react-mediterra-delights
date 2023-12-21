@@ -1,8 +1,13 @@
 @use "../../scss/mixins.scss" as mixins;
 
 .box {
-  overflow-x: auto;
   max-width: calc(100% - 50px);
+  width: 100%;
+  display: flex;
+  &Center {
+    @extend .box;
+    justify-content: center;
+  }
 }
 
 .table {

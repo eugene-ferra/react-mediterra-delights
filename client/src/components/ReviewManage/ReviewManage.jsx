@@ -1,7 +1,5 @@
-import ManageBox from "../ManageBox/ManageBox";
-
 const ReviewManage = () => {
-  return <ManageBox>Reviews</ManageBox>;
+  return <>Reviews</>;
 };
 
 export default ReviewManage;

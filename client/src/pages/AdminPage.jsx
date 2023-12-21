@@ -1,28 +1,31 @@
 import MainLayout from "../components/MainLayout/MainLayout";
-import NavSidebar from "../components/NavSidebar/NavSidebar";
-import food from "../assets/food.svg";
-import article from "../assets/article.svg";
-import comment from "../assets/comment.svg";
-import review from "../assets/review.svg";
-import order from "../assets/order.svg";
-import home from "../assets/home.svg";
 import { Outlet } from "react-router-dom";
+import Panel from "../components/Panel/Panel";
+import Header from "../components/Header/Header";
+import HomeIcon from "../components/svg/HomeIcon";
+import FoodIcon from "../components/svg/FoodIcon";
+import ArticleIcon from "../components/svg/ArticleIcon";
+import CommenIcon from "../components/svg/CommenIcon";
+import ReviewIcon from "../components/svg/ReviewIcon";
+import OrderIcon from "../components/svg/OrderIcon";
 
 const AdminPage = () => {
   return (
     <>
+      <Header />
       <MainLayout style={{ display: "flex", overflowX: "hidden", position: "relative" }}>
-        <NavSidebar
+        <Panel
           links={[
-            { to: "", text: "Головна", image: home, end: true },
-            { to: "products", text: "Продукти", image: food },
-            { to: "articles", text: "Статті", image: article },
-            { to: "comments", text: "Коментарі", image: comment },
-            { to: "reviews", text: "Відгуки", image: review },
-            { to: "orders", text: "Замовлення", image: order },
+            { to: "", text: "Головна", image: <HomeIcon />, end: true },
+            { to: "products", text: "Продукти", image: <FoodIcon /> },
+            { to: "articles", text: "Статті", image: <ArticleIcon /> },
+            { to: "comments", text: "Коментарі", image: <CommenIcon /> },
+            { to: "reviews", text: "Відгуки", image: <ReviewIcon /> },
+            { to: "orders", text: "Замовлення", image: <OrderIcon /> },
           ]}
-        />
-        <Outlet />
+        >
+          <Outlet />
+        </Panel>
       </MainLayout>
     </>
   );

@@ -1,7 +1,5 @@
-import ManageBox from "../ManageBox/ManageBox";
-
 const OrdersManage = () => {
-  return <ManageBox>ORDERS</ManageBox>;
+  return <>ORDERS</>;
 };
 
 export default OrdersManage;

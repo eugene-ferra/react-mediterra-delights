@@ -23,18 +23,26 @@
   transform: translateZ(0) scale(1);
   backface-visibility: hidden;
   transform-origin: 0 0;
-}
-
-.loaderBody div {
-  position: absolute;
-  min-width: 100%;
-  min-height: 100%;
-  border: 5px solid #ffffff;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: loaderBody 1s linear infinite;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  box-sizing: content-box;
+  div {
+    position: absolute;
+    min-width: 100%;
+    min-height: 100%;
+    border: 5px solid var(--primary-stable-color);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: loaderBody 1s linear infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: content-box;
+  }
+  &Global {
+    @extend .loaderBody;
+    min-width: 40px;
+    min-height: 40px;
+    div {
+      border: 5px solid var(--accent-color);
+      border-top-color: transparent;
+    }
+  }
 }

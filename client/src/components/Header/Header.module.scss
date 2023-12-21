@@ -4,6 +4,7 @@
   background-color: var(--secondary-stable-color);
   border-bottom: 3px solid var(--secondary-light-color);
   position: sticky;
+  z-index: var(--last-index);
   top: 0;
 }
 
@@ -12,6 +13,9 @@
   align-items: center;
   gap: 25px;
   padding: 14px 10px;
+  @include mixins.tablet {
+    padding: 6px 10px;
+  }
 }
 
 .navbar {

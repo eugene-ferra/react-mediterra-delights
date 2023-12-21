@@ -1,7 +1,5 @@
-import ManageBox from "../ManageBox/ManageBox";
-
 const CommentManage = () => {
-  return <ManageBox>Comments</ManageBox>;
+  return <>Comments</>;
 };
 
 export default CommentManage;

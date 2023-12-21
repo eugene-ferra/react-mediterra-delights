@@ -1,0 +1,10 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.errorMessage {
+  @include mixins.basicBold;
+  color: var(--primary-stable-color);
+  padding: 20px;
+  background-color: var(--accent-color);
+  width: max-content;
+  text-align: center;
+}

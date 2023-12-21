@@ -1,39 +1,35 @@
+import { useState } from "react";
 import ManageItem from "../ManageItem/ManageItem";
 import Button from "../common/Button/Button";
-import Picture from "../common/Picture/Picture";
 import Title from "../common/Title/Title";
+import { useProducts } from "./useProducts";
+import ErrorMassage from "../common/ErrorMassage/ErrorMassage";
 
 const ProductManage = () => {
+  const [page, setPage] = useState(1);
+  const { products, isError, error, isLoading } = useProducts(page);
+  console.log(error);
+
   return (
     <>
       <Title>Додані товари:</Title>
       <Button asTag={"Link"} to={"new"}>
         Створити
       </Button>
+
       <ManageItem
-        columns={["Фото", "Назва", "Категорія", "Вага", "Ціна", "Знижка", "Рейтинг"]}
-        rowsData={[
-          [
-            <Picture
-              formats={{
-                jpg: "https://buffer.com/library/content/images/size/w1200/2023/10/free-images.jpg",
-              }}
-              key={1}
-            />,
-            "test1",
-            "category1",
-            100,
-            200,
-            "-",
-            3.4,
-          ],
-          ["ava", "test1", "category1", 100, 200, "-", 3.4],
-          ["ava", "test1", "category1", 100, 200, "-", 3.4],
-          ["ava", "test1", "category1", 100, 200, "-", 3.4],
-          ["ava", "test1", "category1", 100, 200, "-", 3.4],
-          ["ava", "test1", "category1", 100, 200, "-", 3.4],
-          ["ava", "test1", "category1", 100, 200, "-", 3.4],
-        ]}
+        isLoading={isLoading}
+        isError={isError}
+        error={<ErrorMassage status={error?.status} />}
+        columns={["Назва", "Категорія", "Ціна", "Зі знижкою", "Вага", "Рейтинг"]}
+        rowsData={products?.map((item) => [
+          item.title,
+          item.category,
+          item.price,
+          item.discountPrice || "-",
+          item.weight,
+          item.avgRating,
+        ])}
       />
     </>
   );

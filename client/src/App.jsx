@@ -24,7 +24,6 @@ import CommentManage from "./components/CommentManage/CommentsManage.jsx";
 import ReviewManage from "./components/ReviewManage/ReviewManage.jsx";
 import OrdersManage from "./components/OrdersManage/OrdersManage.jsx";
 import ProductManageAdd from "./components/ProductManage/ProductManageAdd.jsx";
-import ManageBox from "./components/ManageBox/ManageBox.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,14 +35,9 @@ const router = createBrowserRouter([
         path: "/admin",
         element: <AdminPage />,
         children: [
-          {
-            path: "products",
-            element: <ManageBox />,
-            children: [
-              { path: "", element: <ProductManage /> },
-              { path: "new", element: <ProductManageAdd /> },
-            ],
-          },
+          { path: "", element: "home" },
+          { path: "products", element: <ProductManage /> },
+          { path: "products/new", element: <ProductManageAdd /> },
           { path: "articles", element: <ArticleManage /> },
           { path: "comments", element: <CommentManage /> },
           { path: "reviews", element: <ReviewManage /> },
