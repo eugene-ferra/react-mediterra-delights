@@ -16,7 +16,7 @@ import Loader from "../../components/common/Loader/Loader";
 const ProductManageAdd = () => {
   const { options } = useProductsOptions();
   const methods = useForm();
-  const { postProduct, isLoading, errors } = usePostProduct();
+  const { postProduct, isLoading, errors } = usePostProduct(methods.reset);
 
   async function onSubmit(data) {
     postProduct(getFormData(data));

@@ -17,8 +17,12 @@ export class productService {
     if (!data.length) {
       throw new AppError("No documents match the current filters!", 404);
     }
+    const docs = await productModel.countDocuments(filterObj);
 
-    return data.map((item) => new ProductDTO(item));
+    return [
+      { pages: Math.ceil(docs / limit) },
+      data.map((item) => new ProductDTO(item)),
+    ];
   }
 
   static async getOne({ id, populateObj }) {

@@ -1,36 +1,61 @@
-import { useState } from "react";
 import ManageItem from "../ManageItem/ManageItem";
 import Button from "../common/Button/Button";
 import Title from "../common/Title/Title";
 import { useProducts } from "./useProducts";
 import ErrorMassage from "../common/ErrorMassage/ErrorMassage";
+import { Link, useSearchParams } from "react-router-dom";
+import EditIcon from "../svg/EditIcon";
+import Pagination from "../common/Pagination/Pagination";
 
 const ProductManage = () => {
-  const [page, setPage] = useState(1);
-  const { products, isError, error, isLoading } = useProducts(page);
-  console.log(error);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { products, isError, error, isLoading } = useProducts(
+    searchParams.get("page") || 1
+  );
 
   return (
     <>
       <Title>Додані товари:</Title>
-      <Button asTag={"Link"} to={"new"}>
-        Створити
-      </Button>
 
       <ManageItem
         isLoading={isLoading}
         isError={isError}
         error={<ErrorMassage status={error?.status} />}
-        columns={["Назва", "Категорія", "Ціна", "Зі знижкою", "Вага", "Рейтинг"]}
-        rowsData={products?.map((item) => [
-          item.title,
-          item.category,
-          item.price,
-          item.discountPrice || "-",
-          item.weight,
-          item.avgRating,
+        columns={["", "Назва", "Категорія", "Ціна", "Зі знижкою", "Вага", "Рейтинг"]}
+        rowsData={products?.[1]?.map((item) => [
+          <Link to={`${item.id}`} key={item.id}>
+            <EditIcon />
+          </Link>,
+          <Link to={`${item.id}`} key={item.title}>
+            {item.title}
+          </Link>,
+          <Link to={`${item.id}`} key={item.category}>
+            {item.category}
+          </Link>,
+          <Link to={`${item.id}`} key={item.price}>
+            {item.price}
+          </Link>,
+          <Link to={`${item.id}`} key={item.discountPrice || "-"}>
+            {item.discountPrice || "-"}
+          </Link>,
+          <Link to={`${item.id}`} key={item.weight}>
+            {item.weight}
+          </Link>,
+          <Link to={`${item.id}`} key={item.avgRating}>
+            {item.avgRating}
+          </Link>,
         ])}
-      />
+      >
+        <Pagination
+          totalCount={products?.[0]?.pages}
+          siblingCount={2}
+          currPage={searchParams.get("page")}
+        />
+      </ManageItem>
+
+      <Button asTag={"Link"} to={"new"}>
+        Створити
+      </Button>
     </>
   );
 };

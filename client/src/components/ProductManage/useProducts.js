@@ -4,7 +4,8 @@ import { getProducts } from "../../services/apiProducts";
 export const useProducts = (page) => {
   const query = useQuery({
     queryFn: () => getProducts(page),
-    queryKey: ["adminProducts"],
+    queryKey: ["adminProducts", page],
+    staleTime: 10 * 60 * 1000,
   });
 
   return {

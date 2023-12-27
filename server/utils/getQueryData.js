@@ -19,7 +19,7 @@ export const getQueryData = (req) => {
   }, {});
 
   const queryStr = JSON.stringify(queryObj).replace(
-    /\b(gte|gt|lte|lt)\b/g,
+    /\b(gte|gt|lte|lt|regex)\b/g,
     (match) => `$${match}`
   );
 
