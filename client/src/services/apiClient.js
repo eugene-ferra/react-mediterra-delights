@@ -52,7 +52,6 @@ api.interceptors.response.use(
     } else if (status === 409) {
       throw { status, message: data?.message || "Об'єкт вже існує!" };
     } else if (status === 429) {
-      console.log("PLEASE");
       throw { status, message: "Забагато запитів. Спробуйте пізніше!" };
     } else if (status === 500) {
       throw { status, navTo: "/500", message: "Сталася непередбачувана помилка!" };

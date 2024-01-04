@@ -9,6 +9,7 @@ const InputSelect = ({
   errorMessage,
   name,
   disabled,
+  value,
 }) => {
   const { control } = useFormContext();
 
@@ -22,6 +23,7 @@ const InputSelect = ({
           onChange={onChange}
           errorMessage={errorMessage}
           disabled={disabled}
+          value={value}
         />
       )}
       name={name}

@@ -3,7 +3,7 @@ export const getProductData = (req) => {
     title: req.body.title,
     category: req.body.category,
     description: req.body.description,
-    fulltext: req.body.fullText,
+    fullText: req.body.fullText,
     weight: req.body.weight,
     price: req.body.price,
     discountPrice: req.body.discountPrice,

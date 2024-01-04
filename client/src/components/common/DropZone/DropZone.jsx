@@ -4,7 +4,14 @@ import { Controller, useFormContext } from "react-hook-form";
 import styles from "./DropZone.module.scss";
 import trash from "../../../assets/trash.svg";
 
-const DropZone = ({ maxPhotos, title, errorMessage, name, disabled }) => {
+const DropZone = ({
+  maxPhotos,
+  title,
+  errorMessage,
+  name,
+  disabled,
+  initialFiles = [],
+}) => {
   const { control } = useFormContext();
 
   return (
@@ -17,6 +24,7 @@ const DropZone = ({ maxPhotos, title, errorMessage, name, disabled }) => {
           onChange={onChange}
           name={name}
           disabled={disabled}
+          initialFiles={initialFiles}
         />
       )}
       name={name}
@@ -25,9 +33,21 @@ const DropZone = ({ maxPhotos, title, errorMessage, name, disabled }) => {
   );
 };
 
-const Drop = ({ title, errorMessage, maxPhotos, name, onChange, disabled }) => {
+const Drop = ({
+  title,
+  errorMessage,
+  maxPhotos,
+  name,
+  onChange,
+  disabled,
+  initialFiles,
+}) => {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setFiles(initialFiles);
+  }, [initialFiles]);
 
   const handleDrop = useCallback(
     (acceptedFiles, rejectedFiles) => {
@@ -112,26 +132,28 @@ const Drop = ({ title, errorMessage, maxPhotos, name, onChange, disabled }) => {
           <p className={styles.inputText}>Оберіть або перетягніть файли</p>
         </div>
         <aside className={styles.previews}>
-          {files.map((file, index) => (
-            <div key={`${file.name}-${file.preview}`}>
-              <div className={styles.previewImage}>
-                <img
-                  src={file.preview}
-                  alt={`Preview ${index + 1}`}
-                  onLoad={() => {
-                    URL.revokeObjectURL(file.preview);
-                  }}
-                />
-                <button
-                  className={styles.deleteButton}
-                  onClick={() => handleDelete(index)}
-                  disabled={disabled}
-                >
-                  <img src={trash} alt={`x`} />
-                </button>
-              </div>
-            </div>
-          ))}
+          {files.length === 0
+            ? null
+            : files.map((file, index) => (
+                <div key={`${file?.name}-${file?.preview}`}>
+                  <div className={styles.previewImage}>
+                    <img
+                      src={file?.preview}
+                      alt={`Preview ${index + 1}`}
+                      onLoad={() => {
+                        URL.revokeObjectURL(file?.preview);
+                      }}
+                    />
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDelete(index)}
+                      disabled={disabled}
+                    >
+                      <img src={trash} alt={`x`} />
+                    </button>
+                  </div>
+                </div>
+              ))}
         </aside>
       </div>
       {error && <p className={styles.inputError}>{error}</p>}

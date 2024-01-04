@@ -63,7 +63,7 @@ export class productService {
     let doc = await productModel.findById(id);
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
-    if (data["title"]) {
+    if (data["title"] != doc.title) {
       const newSlug = slugify(data.title, { lower: true });
       if (await productModel.findOne({ slug: newSlug }))
         throw new AppError("this product already exist!", 409);
