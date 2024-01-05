@@ -37,4 +37,10 @@
     background-color: transparent;
     border: 2px solid var(--accent-color);
   }
+  &OutlineRed {
+    @extend .button;
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+  }
 }

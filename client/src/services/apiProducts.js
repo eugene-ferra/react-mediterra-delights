@@ -8,6 +8,10 @@ export const patchProduct = async (id, data) => {
   return await api.patch(`/api/products/${id}`, data);
 };
 
+export const deleteProduct = async (id) => {
+  return await api.delete(`/api/products/${id}`);
+};
+
 export const getProducts = async (page) => {
   return await api.get(`/api/products?page=${page}`);
 };

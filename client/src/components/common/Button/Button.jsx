@@ -11,6 +11,9 @@ const Button = ({ className, type, asTag, to, disabled, children, onClick, style
     case "outline":
       classValue = styles.buttonOutline;
       break;
+    case "outline-red":
+      classValue = styles.buttonOutlineRed;
+      break;
     default:
       classValue = styles.button;
   }

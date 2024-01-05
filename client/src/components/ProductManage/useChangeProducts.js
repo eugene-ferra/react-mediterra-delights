@@ -12,7 +12,7 @@ export const useChangeProduct = () => {
   const mutation = useMutation({
     mutationFn: (data) => patchProduct(data.id, data.data),
     onSuccess: () => {
-      toast.success("Товар успішно оновдено!");
+      toast.success("Товар успішно оновлено!");
       queryClient.invalidateQueries("adminProducts");
     },
     onError: (errObj) => {
