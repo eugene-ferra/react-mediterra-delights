@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styles from "./Button.module.scss";
-import BackArrow from "../../svg/BackArrow";
 
 const Button = ({ className, type, asTag, to, disabled, children, onClick, style }) => {
   let classValue;
