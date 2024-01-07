@@ -26,6 +26,9 @@ const ProductManageAdd = () => {
     <>
       <FormProvider {...methods}>
         <Form onSubmit={methods.handleSubmit(onSubmit)}>
+          <Button asTag={"Link"} to={"/admin/products"} type={"back"}>
+            Назад
+          </Button>
           <Title>Створення нового продукту</Title>
 
           <FieldSet title={"Базова інформація"}>

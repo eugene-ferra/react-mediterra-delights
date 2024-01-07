@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./Button.module.scss";
+import BackArrow from "../../svg/BackArrow";
 
 const Button = ({ className, type, asTag, to, disabled, children, onClick, style }) => {
   let classValue;
@@ -7,6 +8,9 @@ const Button = ({ className, type, asTag, to, disabled, children, onClick, style
   switch (type) {
     case "primary":
       classValue = styles.button;
+      break;
+    case "back":
+      classValue = styles.buttonBack;
       break;
     case "outline":
       classValue = styles.buttonOutline;

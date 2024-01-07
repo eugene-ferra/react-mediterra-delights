@@ -5,6 +5,11 @@
   box-sizing: content-box !important;
 }
 
+.inner {
+  padding: 10px 0;
+  min-width: max-content;
+}
+
 .checkBox input {
   position: absolute;
   z-index: -1;
@@ -16,7 +21,7 @@
 }
 
 .checkBox {
-  width: max-content;
+  max-height: max-content;
   display: table;
   position: relative;
   padding-left: 38px;
@@ -87,6 +92,8 @@
 .inputTitle {
   @include mixins.basicBold;
   margin-bottom: 10px;
+  display: inline-block;
+  width: max-content;
 }
 
 .inputError {

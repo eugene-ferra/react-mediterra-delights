@@ -50,6 +50,7 @@ const ProductManage = () => {
           totalCount={products?.[0]?.pages}
           siblingCount={2}
           currPage={searchParams.get("page")}
+          onLink={setSearchParams}
         />
       </ManageItem>
 

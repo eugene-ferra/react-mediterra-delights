@@ -48,7 +48,10 @@ const ProductEdit = () => {
         <>
           <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
-              <Title>Створення нового продукту</Title>
+              <Button asTag={"Link"} to={"/admin/products"} type={"back"}>
+                Назад
+              </Button>
+              <Title>Редагувати продукт</Title>
 
               <FieldSet title={"Базова інформація"}>
                 <Input
