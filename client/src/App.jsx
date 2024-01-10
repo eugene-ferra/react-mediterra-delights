@@ -26,6 +26,7 @@ import OrdersManage from "./components/OrdersManage/OrdersManage.jsx";
 import ProductManageAdd from "./components/ProductManage/ProductManageAdd.jsx";
 import ProductEdit from "./components/ProductManage/ProductEdit.jsx";
 import ArticleManageAdd from "./components/ArticleManage/ArticleManageAdd.jsx";
+import ArticleEdit from "./components/ArticleManage/ArticleEdit.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
           { path: "products/:id", element: <ProductEdit /> },
           { path: "articles", element: <ArticleManage /> },
           { path: "articles/new", element: <ArticleManageAdd /> },
+          { path: "articles/:id", element: <ArticleEdit /> },
           { path: "comments", element: <CommentManage /> },
           { path: "reviews", element: <ReviewManage /> },
           { path: "orders", element: <OrdersManage /> },

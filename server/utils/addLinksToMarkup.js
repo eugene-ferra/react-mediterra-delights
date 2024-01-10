@@ -7,13 +7,20 @@ export default function addLinksToMarkup(req, doc, field) {
   const $ = cheerio.load(doc[field]);
   $("img").each((index, element) => {
     element.attribs.src = `${linkBegin}/${element.attribs.src.replace(/\\/g, "/")}`;
-    element.attribs.srcset = element.attribs.srcset
-      .split(", ")
-      .map((img) => `${linkBegin}/${img.replace(/\\/g, "/")}`)
-      .join(", ");
+
+    element.attribs.srcset = element.attribs?.srcset
+      ?.split(", ")
+      ?.map((img) => {
+        if (img.startsWith("http")) {
+          return img;
+        } else {
+          return `${linkBegin}/${img.replace(/\\/g, "/")}`;
+        }
+      })
+      ?.join(", ");
   });
 
-  doc[field] = $.html($("p"));
+  doc[field] = $.html($("article"));
 
   return doc;
 }

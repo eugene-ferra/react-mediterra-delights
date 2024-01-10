@@ -8,3 +8,12 @@ export async function getProductOptions() {
     throw { status: err.response.status };
   }
 }
+
+export async function getArticleOptions() {
+  try {
+    const response = await axios.get("/api/articles/options");
+    return response.data.data;
+  } catch (err) {
+    throw { status: err.response.status };
+  }
+}

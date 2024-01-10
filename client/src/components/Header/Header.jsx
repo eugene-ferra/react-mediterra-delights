@@ -17,8 +17,6 @@ const Header = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const { user } = useUser();
 
-  console.log(user);
-
   const handleClick = () => {
     setIsDropDownOpen((state) => !state);
   };

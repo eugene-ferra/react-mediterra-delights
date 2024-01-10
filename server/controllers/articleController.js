@@ -17,8 +17,8 @@ export const getArticles = async (req, res, next) => {
       populateObj: { path: "comments", match: { isModerated: true } },
     });
 
-    data = data.map((doc) => addLinks(req, doc, ["imgCover"]));
-    data = data.map((doc) => addLinksToMarkup(req, doc, "markup"));
+    data[1].map((doc) => addLinks(req, doc, ["imgCover"]));
+    data[1].map((doc) => addLinksToMarkup(req, doc, "markup"));
 
     res.status(200).json({ status: "success", data });
   } catch (err) {
@@ -29,10 +29,12 @@ export const addArticle = async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() || !req?.files?.imgCover?.[0]?.buffer) {
       return res.status(400).json({
         status: "fail",
-        errors: errors.array(),
+        errors: req?.files?.imgCover?.[0]?.buffer
+          ? errors.array()
+          : [...errors.array(), { path: "imgCover", msg: "imgCover is required" }],
       });
     }
 
@@ -56,7 +58,6 @@ export const addArticle = async (req, res, next) => {
 export const getArticle = async (req, res, next) => {
   try {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       return res.status(400).json({
         status: "fail",
@@ -73,6 +74,7 @@ export const getArticle = async (req, res, next) => {
 
     data = addLinks(req, data[0], ["imgCover"]);
     data = addLinksToMarkup(req, data, "markup");
+
     res.status(200).json({
       status: "success",
       data,
@@ -97,7 +99,9 @@ export const updateArticle = async (req, res, next) => {
     let data = await articleService.updateOne(
       req.params.id,
       updatedObj,
-      req?.files?.imgCover?.[0]?.buffer
+      req?.files?.imgCover?.[0]?.buffer,
+      req.protocol,
+      req.hostname
     );
 
     data = addLinks(req, data[0], ["imgCover"]);

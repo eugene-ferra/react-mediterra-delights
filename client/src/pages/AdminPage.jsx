@@ -18,7 +18,7 @@ const AdminPage = () => {
           links={[
             { to: "", text: "Головна", image: <HomeIcon />, end: true },
             { to: "products?page=1", text: "Продукти", image: <FoodIcon /> },
-            { to: "articles", text: "Статті", image: <ArticleIcon /> },
+            { to: "articles?page=1", text: "Статті", image: <ArticleIcon /> },
             { to: "comments", text: "Коментарі", image: <CommenIcon /> },
             { to: "reviews", text: "Відгуки", image: <ReviewIcon /> },
             { to: "orders", text: "Замовлення", image: <OrderIcon /> },

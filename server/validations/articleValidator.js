@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, checkSchema, param } from "express-validator";
 
 export const articleValidationSchema = {
   id: {
@@ -39,6 +39,13 @@ export const articleValidationSchema = {
     isString: {
       if: body("markup").exists(),
       errorMessage: "markup should be a string!",
+    },
+    isLength: {
+      if: body("markup").exists(),
+      options: {
+        min: 1,
+      },
+      errorMessage: "markup cannot be empty",
     },
   },
   previewText: {
@@ -83,6 +90,9 @@ export const articleValidationStrictSchema = {
   markup: {
     exists: {
       errorMessage: "markup is required!",
+      options: {
+        values: "falsy",
+      },
       bail: true,
     },
     ...articleValidationSchema.markup,
