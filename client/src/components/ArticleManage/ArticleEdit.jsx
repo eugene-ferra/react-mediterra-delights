@@ -63,7 +63,7 @@ const ArticleEdit = () => {
                   title={"Назва статті*"}
                   errorMessage={errors?.title}
                   register={methods.register("title")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <InputSelect
                   title={"Тема статті*"}
@@ -71,7 +71,7 @@ const ArticleEdit = () => {
                   placeholder={article?.topic || "Тема"}
                   errorMessage={errors?.topic}
                   name={"topic"}
-                  disabled={isLoading}
+                  disabled={isLoading && isDeleting}
                 />
 
                 <DropZone
@@ -80,14 +80,14 @@ const ArticleEdit = () => {
                   maxPhotos={1}
                   name={"imgCover"}
                   initialFiles={imgCover}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <TextArea
                   name={"previewText"}
                   title={"Короткий зміст*"}
                   errorMessage={errors?.previewText}
                   register={methods.register("previewText")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
               </FieldSet>
               <Editor
@@ -95,7 +95,7 @@ const ArticleEdit = () => {
                 title={"Контент статті*"}
                 defaultValue={article?.markup}
                 errorText={errors?.markup}
-                disabled={isLoading}
+                disabled={isLoading || isDeleting}
               />
 
               <Button disabled={isLoading}>{isLoading ? <Loader /> : "Оновити"}</Button>

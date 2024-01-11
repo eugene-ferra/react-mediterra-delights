@@ -60,7 +60,7 @@ const ProductEdit = () => {
                   title={"Назва товару*"}
                   errorMessage={errors?.title}
                   register={methods.register("title")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <InputSelect
                   title={"Категорія товару*"}
@@ -69,7 +69,7 @@ const ProductEdit = () => {
                   errorMessage={errors?.category}
                   register={methods.register("category")}
                   name={"category"}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
               </FieldSet>
 
@@ -79,7 +79,7 @@ const ProductEdit = () => {
                   errorMessage={errors?.imgCover}
                   maxPhotos={1}
                   name={"imgCover"}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                   initialFiles={imgCover}
                 />
                 <DropZone
@@ -87,7 +87,7 @@ const ProductEdit = () => {
                   errorMessage={errors?.images}
                   maxPhotos={10}
                   name={"images"}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                   initialFiles={pictures}
                 />
               </FieldSet>
@@ -98,14 +98,14 @@ const ProductEdit = () => {
                   title={"Опис товару*"}
                   errorMessage={errors?.description}
                   register={methods.register("description")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <TextArea
                   name={"fullText"}
                   title={"Повна інформація про товар"}
                   errorMessage={errors?.fullText}
                   register={methods.register("fullText")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
               </FieldSet>
 
@@ -116,7 +116,7 @@ const ProductEdit = () => {
                   title={"Ціна товару*"}
                   errorMessage={errors?.price}
                   register={methods.register("price")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <Input
                   type={"text"}
@@ -124,7 +124,7 @@ const ProductEdit = () => {
                   title={"Ціна зі товару зі знижкою"}
                   errorMessage={errors?.discountPrice}
                   register={methods.register("discountPrice")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
               </FieldSet>
 
@@ -135,7 +135,7 @@ const ProductEdit = () => {
                   title={"Вага товару*"}
                   errorMessage={errors?.weight}
                   register={methods.register("weight")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <Input
                   type={"text"}
@@ -143,7 +143,7 @@ const ProductEdit = () => {
                   title={"Час приготування товару*"}
                   errorMessage={errors?.cookTime}
                   register={methods.register("cookTime")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
               </FieldSet>
 
@@ -154,7 +154,7 @@ const ProductEdit = () => {
                   title={"Калорії"}
                   errorMessage={errors?.["nutrients.calories"]}
                   register={methods.register("nutrients.calories")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <Input
                   type={"text"}
@@ -162,7 +162,7 @@ const ProductEdit = () => {
                   title={"Вуглеводи"}
                   errorMessage={errors?.["nutrients.carbohydrates"]}
                   register={methods.register("nutrients.carbohydrates")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <Input
                   type={"text"}
@@ -170,7 +170,7 @@ const ProductEdit = () => {
                   title={"Білки"}
                   errorMessage={errors?.["nutrients.protein"]}
                   register={methods.register("nutrients.protein")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <Input
                   type={"text"}
@@ -178,7 +178,7 @@ const ProductEdit = () => {
                   title={"Жири"}
                   errorMessage={errors?.["nutrients.fats"]}
                   register={methods.register("nutrients.fats")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
               </FieldSet>
 
@@ -188,14 +188,14 @@ const ProductEdit = () => {
                   text={"Товар для вегетеріанців"}
                   errorMessage={errors?.isVegan}
                   register={methods.register("isVegan")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
                 <CheckBox
                   name={"isNewProduct"}
                   text={"Помітити як новий"}
                   errorMessage={errors?.isNewProduct}
                   register={methods.register("isNewProduct")}
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 />
               </FieldSet>
 
