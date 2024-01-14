@@ -64,4 +64,10 @@
     border: 2px solid var(--accent-color);
     color: var(--accent-color);
   }
+  &Small {
+    @extend .button;
+    @include mixins.smallText;
+    color: var(--primary-stable-color);
+    font-weight: 500;
+  }
 }

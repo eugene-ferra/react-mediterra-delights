@@ -10,7 +10,7 @@ const Footer = () => {
       <Container className={styles.mainContent}>
         <Logo />
         <Navbar />
-        <Text className={styles.copyright} type={"small"}>
+        <Text className={styles.copyright} type={"small"} align={"center"}>
           © 2023 Ukraine Delights. Усі права захищені.
         </Text>
       </Container>

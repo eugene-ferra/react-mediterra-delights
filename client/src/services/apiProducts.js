@@ -12,8 +12,8 @@ export const deleteProduct = async (id) => {
   return await api.delete(`/api/products/${id}`);
 };
 
-export const getProducts = async (page) => {
-  return await api.get(`/api/products?page=${page}`);
+export const getProducts = async (query) => {
+  return await api.get(`/api/products?${query}`);
 };
 
 export const getOneProduct = async (id) => {

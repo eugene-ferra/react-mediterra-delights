@@ -3,4 +3,14 @@
 .title {
   @include mixins.titleText;
   margin: 0;
+  &Small {
+    @extend .title;
+    @include mixins.titleSmallText;
+  }
+  &Global {
+    @extend .title;
+    padding: 20px 0;
+    // display: block;
+    // margin: 20px;
+  }
 }

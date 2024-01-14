@@ -19,7 +19,7 @@ export const getProducts = async (req, res, next) => {
       },
     });
 
-    data = data.map((doc) => addLinks(req, doc, ["imgCover", "images"]));
+    data[1].map((doc) => addLinks(req, doc, ["imgCover", "images"]));
 
     res.status(200).json({
       status: "success",

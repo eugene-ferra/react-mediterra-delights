@@ -12,7 +12,7 @@
   --selection-color: #3b8ae4;
   --selection-light-color: #7db2ee;
 
-  --radius: 10px;
+  --radius: 16px;
   --transition: 0.3s all;
   --last-index: 3;
   --middle-index: 2;
@@ -66,6 +66,7 @@ a {
   border: 2px solid var(--secondary-color);
 }
 
+// text editor styles
 .quill {
   position: sticky;
   top: 0;

@@ -1,0 +1,42 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.rating {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.imgs {
+  svg {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+}
+
+.starsDisabled {
+  svg {
+    fill: #cacaca;
+    stroke: #cacaca;
+  }
+}
+
+.stars {
+  position: relative;
+  width: max-content;
+}
+
+.starActive {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.reviews {
+  @include mixins.tinyText;
+  color: var(--secondary-color);
+  margin: 0;
+}

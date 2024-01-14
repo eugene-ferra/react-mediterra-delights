@@ -16,6 +16,12 @@
   }
 }
 
+@mixin laptop {
+  @media screen and (max-width: 1440px) {
+    @content;
+  }
+}
+
 @mixin tinyText {
   font-size: 12px;
   line-height: 14px;
@@ -54,8 +60,8 @@
 }
 
 @mixin titleSmallText {
-  font-size: 20px;
-  line-height: 26px;
+  font-size: 18px;
+  line-height: 24px;
   font-weight: 600;
   color: var(--secondary-color);
   @include tablet {

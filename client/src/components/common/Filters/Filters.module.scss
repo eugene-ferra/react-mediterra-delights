@@ -1,0 +1,67 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.filters {
+  padding: 10px 6px !important;
+}
+
+.inner {
+  display: flex;
+  position: relative;
+  padding: 0px 50px;
+  @include mixins.tablet {
+    padding: 0;
+  }
+}
+
+.item {
+  display: block;
+  padding: 20px 10px;
+  border: 0;
+  white-space: nowrap;
+  text-align: center;
+  background: var(--primary-color);
+  border-radius: var(--radius);
+  border: 1px solid var(--secondary-color);
+  @include mixins.basicBold;
+  cursor: pointer;
+  &Active {
+    @extend .item;
+    border: 0;
+    background: var(--accent-color);
+    color: var(--primary-color);
+  }
+}
+
+.buttonPrev {
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  min-width: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 20px);
+  z-index: var(--middle-index);
+  border: 0;
+  background-color: var(--primary-color);
+  border-radius: var(--radius);
+  box-shadow: 0 0 3px 0 var(--secondary-color);
+  @include mixins.tablet {
+    display: none;
+  }
+  &:disabled {
+    opacity: 50%;
+  }
+  cursor: pointer;
+  svg {
+    path {
+      fill: var(--accent-color);
+    }
+  }
+}
+
+.buttonNext {
+  @extend .buttonPrev;
+  left: auto;
+  right: 0px;
+}
