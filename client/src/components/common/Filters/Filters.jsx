@@ -11,38 +11,41 @@ import "swiper/css/navigation";
 const Filters = ({ filters, onFilter, resetFilter, currentFilter, filterQuery }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const slides = resetFilter ? filters.length + 1 : filters.length;
+
+  console.log(nextRef);
 
   return (
     <div className={styles.inner}>
       <button ref={prevRef} className={styles.buttonPrev}>
         <PrevIcon />
       </button>
+
       <Swiper
+        keyboard={{ enabled: true }}
         spaceBetween={10}
-        slidesPerView={8}
+        slidesPerView={Math.min(7, slides)}
         grabCursor={true}
         modules={[Navigation]}
         className={styles.filters}
         breakpoints={{
           320: {
-            centeredSlides: true,
-            slidesPerView: 2,
+            slidesPerView: Math.min(2, slides),
           },
           576: {
-            centeredSlides: true,
-            slidesPerView: 3,
+            slidesPerView: Math.min(3, slides),
           },
           768: {
-            slidesPerView: 4,
+            slidesPerView: Math.min(4, slides),
           },
           992: {
-            slidesPerView: 5,
+            slidesPerView: Math.min(5, slides),
           },
           1200: {
-            slidesPerView: 6,
+            slidesPerView: Math.min(6, slides),
           },
           1440: {
-            slidesPerView: 8,
+            slidesPerView: Math.min(7, slides),
           },
         }}
         onInit={(swiper) => {
@@ -53,26 +56,29 @@ const Filters = ({ filters, onFilter, resetFilter, currentFilter, filterQuery })
         }}
       >
         {resetFilter && (
-          <SwiperSlide
-            className={
-              filters?.includes(currentFilter) ? styles.item : styles.itemActive
-            }
-            key={resetFilter}
-            onClick={() => onFilter({})}
-          >
-            {resetFilter}
+          <SwiperSlide key={resetFilter}>
+            <button
+              className={
+                filters?.includes(currentFilter) ? styles.item : styles.itemActive
+              }
+              onClick={() => onFilter({})}
+            >
+              {resetFilter}
+            </button>
           </SwiperSlide>
         )}
         {filters?.map((item) => (
-          <SwiperSlide
-            className={item === currentFilter ? styles.itemActive : styles.item}
-            key={item}
-            onClick={() => onFilter({ [filterQuery]: item })}
-          >
-            {item}
+          <SwiperSlide key={item}>
+            <button
+              className={item === currentFilter ? styles.itemActive : styles.item}
+              onClick={() => onFilter({ [filterQuery]: item })}
+            >
+              {item}
+            </button>
           </SwiperSlide>
         ))}
       </Swiper>
+
       <button ref={nextRef} className={styles.buttonNext}>
         <NextIcon />
       </button>

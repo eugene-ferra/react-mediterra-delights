@@ -9,9 +9,7 @@ import EditIcon from "../svg/EditIcon";
 
 const ArticleManage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { articles, isError, error, isLoading } = useArticles(
-    searchParams.get("page") || 1
-  );
+  const { articles, isError, error, isLoading } = useArticles(searchParams.toString());
 
   return (
     <>

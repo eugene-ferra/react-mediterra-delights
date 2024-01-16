@@ -9,10 +9,6 @@ import TimeIcon from "../svg/TimeIcon";
 import Stars from "../common/Stars/Stars";
 
 const Product = ({ product }) => {
-  if (product) {
-    product.imgCover.jpg = product.imgCover.jpg.replace("localhost", "127.0.0.1");
-  }
-
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       <div className={styles.product}>

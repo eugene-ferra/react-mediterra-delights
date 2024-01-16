@@ -4,8 +4,8 @@ export const postArticle = async (data) => {
   return await api.postForm("/api/articles/", data);
 };
 
-export const getArticles = async (page) => {
-  return await api.get(`/api/articles?page=${page}`);
+export const getArticles = async (query) => {
+  return await api.get(`/api/articles?${query}`);
 };
 
 export const getOneArticle = async (id) => {

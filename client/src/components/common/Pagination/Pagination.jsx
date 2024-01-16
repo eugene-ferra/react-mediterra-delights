@@ -79,32 +79,32 @@ const Pagination = ({ totalCount, siblingCount = 2, currPage = 1, onLink }) => {
     <div className={styles.pagination}>
       {totalCount > 1 ? (
         <>
-          <span
+          <button
             onClick={() => onLink({ page: currentPage - 1 })}
             key={"prev"}
             className={currentPage === 1 ? styles.buttonDisable : styles.button}
           >
             <PrevIcon />
-          </span>
+          </button>
 
           <div className={styles.pages}>
             {pagination.map((item) => (
-              <span
+              <button
                 onClick={() => onLink({ page: item.link })}
                 key={item.link}
                 className={item.page === currentPage ? styles.linkActive : styles.link}
               >
                 {item.page}
-              </span>
+              </button>
             ))}
           </div>
-          <span
+          <button
             onClick={() => onLink({ page: currentPage + 1 })}
             key={"next"}
             className={currentPage === totalCount ? styles.buttonDisable : styles.button}
           >
             <NextIcon />
-          </span>
+          </button>
         </>
       ) : (
         <></>

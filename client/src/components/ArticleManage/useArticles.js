@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getArticles } from "../../services/apiArticles";
 
-export const useArticles = (page) => {
+export const useArticles = (urlQuery) => {
   const query = useQuery({
-    queryFn: () => getArticles(page),
-    queryKey: ["adminArticles", page],
+    queryFn: () => getArticles(urlQuery),
+    queryKey: ["adminArticles", urlQuery],
     staleTime: 10 * 60 * 1000,
   });
 
