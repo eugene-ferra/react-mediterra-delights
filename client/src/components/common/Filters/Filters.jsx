@@ -8,7 +8,7 @@ import PrevIcon from "../../svg/PrevIcon";
 import NextIcon from "../../svg/NextIcon";
 import "swiper/css/navigation";
 
-const Filters = ({ filters, onFilter, currentFilter, filterQuery }) => {
+const Filters = ({ filters, onFilter, resetFilter, currentFilter, filterQuery }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -52,6 +52,17 @@ const Filters = ({ filters, onFilter, currentFilter, filterQuery }) => {
           swiper.navigation.update();
         }}
       >
+        {resetFilter && (
+          <SwiperSlide
+            className={
+              filters?.includes(currentFilter) ? styles.item : styles.itemActive
+            }
+            key={resetFilter}
+            onClick={() => onFilter({})}
+          >
+            {resetFilter}
+          </SwiperSlide>
+        )}
         {filters?.map((item) => (
           <SwiperSlide
             className={item === currentFilter ? styles.itemActive : styles.item}

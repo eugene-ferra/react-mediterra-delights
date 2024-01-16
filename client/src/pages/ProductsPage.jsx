@@ -21,40 +21,55 @@ const ProductsPage = () => {
     isLoading: isProductsLoading,
     error: productError,
   } = useProducts(searchParams.toString());
-
   return (
     <>
       <Header />
-      <MainLayout>
-        <Container>
-          <Title type={"global"}>Меню</Title>
-          <Filters
-            filters={options?.categories}
-            currentFilter={searchParams?.get("category") || options?.categories[0]}
-            onFilter={setSearchParams}
-            filterQuery={"category"}
-          />
-
-          {isProductsLoading ? (
-            <Loader type={"global"} />
-          ) : productError ? (
-            <ErrorMassage status={productError?.status} />
-          ) : (
-            <>
-              <Catalog>
-                {products?.[1].map((product) => (
-                  <Product product={product} key={product?.id} />
-                ))}
-              </Catalog>
-              <Pagination
-                totalCount={products?.[0].pages}
-                siblingCount={2}
-                currPage={1}
+      {isLoading ? (
+        <MainLayout
+          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+        >
+          <Loader type={"global"} />
+        </MainLayout>
+      ) : (
+        <MainLayout>
+          <Container>
+            <Title type={"global"}>Меню</Title>
+            {!error && (
+              <Filters
+                resetFilter={"Всі страви"}
+                filters={options?.categories}
+                currentFilter={searchParams?.get("category")}
+                onFilter={setSearchParams}
+                filterQuery={"category"}
               />
-            </>
-          )}
-        </Container>
-      </MainLayout>
+            )}
+            {isProductsLoading ? (
+              <div style={{ marginTop: "40px" }}>
+                <Loader type={"global"} />
+              </div>
+            ) : productError ? (
+              <div style={{ marginTop: "40px" }}>
+                <ErrorMassage status={productError?.status} />
+              </div>
+            ) : (
+              <>
+                <Catalog>
+                  {products?.[1].map((product) => (
+                    <Product product={product} key={product?.id} />
+                  ))}
+                </Catalog>
+                <Pagination
+                  totalCount={products?.[0].pages}
+                  siblingCount={2}
+                  currPage={searchParams.get("page") || 1}
+                  onLink={setSearchParams}
+                />
+              </>
+            )}
+          </Container>
+        </MainLayout>
+      )}
+
       <Footer />
     </>
   );

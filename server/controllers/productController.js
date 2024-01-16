@@ -62,7 +62,7 @@ export const addProduct = async (req, res, next) => {
   try {
     let errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() || !req?.files?.imgCover?.[0]?.buffer) {
       return res.status(400).json({
         status: "fail",
         errors: req?.files?.imgCover?.[0]?.buffer

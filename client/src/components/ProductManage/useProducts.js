@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "../../services/apiProducts";
 
-export const useProducts = (page) => {
+export const useProducts = (urlQuery) => {
   const query = useQuery({
-    queryFn: () => getProducts(page),
-    queryKey: ["adminProducts", page],
+    queryFn: () => getProducts(urlQuery),
+    queryKey: ["adminProducts", urlQuery],
     staleTime: 10 * 60 * 1000,
   });
 

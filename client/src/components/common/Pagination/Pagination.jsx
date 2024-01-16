@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import styles from "./Pagination.module.scss";
 import PrevIcon from "../../svg/PrevIcon";
 import NextIcon from "../../svg/NextIcon";

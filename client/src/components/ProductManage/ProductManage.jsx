@@ -9,9 +9,7 @@ import Pagination from "../common/Pagination/Pagination";
 
 const ProductManage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { products, isError, error, isLoading } = useProducts(
-    searchParams.get("page") || 1
-  );
+  const { products, isError, error, isLoading } = useProducts(searchParams.toString());
 
   return (
     <>
