@@ -28,3 +28,8 @@
   display: block;
   cursor: pointer;
 }
+
+.inputTitle {
+  @include mixins.basicBold;
+  margin: 0 0 5px 0;
+}

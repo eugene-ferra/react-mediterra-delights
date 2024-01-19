@@ -17,32 +17,9 @@
   position: absolute;
   top: 10px;
   left: 10px;
-}
-
-.option {
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  background-color: var(--selection-color);
-  box-shadow: 0 0 5px 0px var(--selection-color);
-  width: max-content;
-  border-radius: calc(var(--radius) - 10px);
-  padding: 5px 10px;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  @include mixins.tinyText;
-  color: var(--primary-stable-color);
-  font-weight: 500;
-  &Sale {
-    @extend .option;
-    background-color: var(--accent-color);
-    box-shadow: 0 0 5px 0px var(--accent-color);
-  }
-  &New {
-    @extend .option;
-    background-color: #50c878;
-    box-shadow: 0 0 5px 0px #50c878;
-  }
+  flex-direction: column;
+  gap: 5px;
 }
 
 .content {
@@ -93,18 +70,6 @@
   flex-wrap: wrap;
   gap: 15px;
   align-items: center;
-}
-
-.price {
-  margin: 0;
-  @include mixins.basicBold;
-  font-weight: 700;
-  &Old {
-    @extend .price;
-    @include mixins.smallText;
-    text-decoration: line-through;
-    opacity: 70%;
-  }
 }
 
 .priceBox {

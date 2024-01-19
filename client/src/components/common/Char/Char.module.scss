@@ -1,0 +1,13 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.char {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 2px dotted var(--secondary-color);
+  margin-bottom: 20px;
+  align-items: flex-end;
+  span {
+    @include mixins.smallText;
+  }
+}

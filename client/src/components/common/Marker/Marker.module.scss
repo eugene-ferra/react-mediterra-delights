@@ -1,0 +1,30 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.marker {
+  display: inline-flex;
+  justify-content: space-between;
+  gap: 10px;
+  width: max-content;
+  border-radius: calc(var(--radius) - 10px);
+  padding: 5px 10px;
+  text-transform: uppercase;
+  background-color: var(--primary-select-color);
+  color: var(--secondary-color);
+  @include mixins.tinyText;
+  font-weight: 500;
+  &Blue {
+    @extend .marker;
+    background-color: var(--selection-color);
+    color: var(--primary-stable-color);
+  }
+  &Red {
+    @extend .marker;
+    background-color: var(--accent-color);
+    color: var(--primary-stable-color);
+  }
+  &Green {
+    @extend .marker;
+    background-color: #50c878;
+    color: var(--primary-stable-color);
+  }
+}

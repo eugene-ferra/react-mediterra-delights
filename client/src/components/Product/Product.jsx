@@ -7,18 +7,20 @@ import Button from "../common/Button/Button";
 import WeightIcon from "../svg/WeightIcon";
 import TimeIcon from "../svg/TimeIcon";
 import Stars from "../common/Stars/Stars";
+import Price from "../common/Price/Price";
+import Marker from "../common/Marker/Marker";
 
 const Product = ({ product }) => {
   return (
     <div style={{ display: "flex", flexWrap: "wrap" }}>
       <div className={styles.product}>
         <div className={styles.options}>
-          {product?.isNewProduct && <div className={styles.optionNew}>Новинка</div>}
-          {product?.discountPrice && <div className={styles.optionSale}>% Акція</div>}
-          {product?.isVegan === true && <div className={styles.option}>Vegan</div>}
+          {product?.isNewProduct && <Marker type={"green"}>Новинка</Marker>}
+          {product?.discountPrice && <Marker type={"red"}>% Акція</Marker>}
+          {product?.isVegan === true && <Marker type={"blue"}>Vegan</Marker>}
         </div>
 
-        <Link to={`/product/${product?.slug}`}>
+        <Link to={`/products/${product?.slug}`}>
           <div className={styles.content}>
             <div>
               <Picture
@@ -49,14 +51,7 @@ const Product = ({ product }) => {
         </Link>
         <div className={styles.buy}>
           <div className={styles.priceBox}>
-            {product?.discountPrice ? (
-              <>
-                <p className={styles.priceOld}>{product?.price} грн</p>
-                <p className={styles.price}>{product?.discountPrice} грн</p>
-              </>
-            ) : (
-              <p className={styles.price}>{product?.price} грн</p>
-            )}
+            <Price discountPrice={product?.discountPrice} price={product?.price} />
           </div>
           <Button type={"small"} className={styles.button}>
             До кошика

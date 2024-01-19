@@ -1,0 +1,13 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.price {
+  margin: 0;
+  @include mixins.titleSmallText;
+  font-weight: 700;
+  &Old {
+    @extend .price;
+    @include mixins.smallText;
+    text-decoration: line-through;
+    opacity: 70%;
+  }
+}

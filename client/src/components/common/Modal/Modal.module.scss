@@ -1,0 +1,52 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+  z-index: 3;
+  transition: 0.3s all;
+  visibility: visible;
+  padding: 10px;
+  &Hidden {
+    @extend .overlay;
+    background-color: transparent;
+    visibility: hidden;
+  }
+}
+
+.content {
+  background: var(--primary-color);
+  padding: 20px 15px;
+  border-radius: 8px;
+  position: relative;
+  min-width: 300px;
+  max-height: calc(100vh - 40px);
+  height: max-content;
+  max-width: 500px;
+}
+
+.children {
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  font-size: 40px;
+  line-height: 100%;
+  background: none;
+  cursor: pointer;
+  border: none;
+  color: var(--accent-color);
+  padding: 5px 10px;
+}
