@@ -33,3 +33,8 @@
   @include mixins.basicBold;
   margin: 0 0 5px 0;
 }
+
+.inputError {
+  margin: 3px 0px 0px 0px;
+  color: var(--accent-color);
+}

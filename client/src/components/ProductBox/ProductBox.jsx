@@ -20,10 +20,22 @@ import { useUser } from "../../hooks/useUser";
 import Form from "../common/Form/Form";
 import TextArea from "../common/TextArea/TextArea";
 import StarRating from "../common/StarRating/StarRating";
+import { FormProvider, useForm } from "react-hook-form";
+import { usePostReview } from "./usePostReview";
 
 const ProductBox = ({ product }) => {
+  const methods = useForm();
+  const { postReview, isLoading, errors } = usePostReview(methods.reset);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useUser();
+
+  async function onSubmit(data) {
+    data["productID"] = product?.id;
+    data["userID"] = user?.id;
+    postReview(data);
+    setIsModalOpen(false);
+  }
 
   return (
     <>
@@ -127,13 +139,28 @@ const ProductBox = ({ product }) => {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {user ? (
-          <Form style={{ padding: 0 }} onSubmit={(e) => e.preventDefault()}>
-            <Title align={"center"} type={"small"}>
-              Сподобалася страва? Залиште відгук!
-            </Title>
-            <StarRating title={"Оцінка*"} />
-            <TextArea type={"text"} title={"Коментар*"} name={"review"} />
-          </Form>
+          <FormProvider {...methods}>
+            <Form onSubmit={methods.handleSubmit(onSubmit)}>
+              <Title align={"center"} type={"small"}>
+                Сподобалася страва? Залиште відгук!
+              </Title>
+              <StarRating
+                title={"Оцінка*"}
+                name={"rating"}
+                errorMessage={errors?.rating}
+                disabled={isLoading}
+              />
+              <TextArea
+                type={"text"}
+                title={"Коментар*"}
+                name={"review"}
+                register={methods.register("review")}
+                disabled={isLoading}
+                errorMessage={errors?.review}
+              />
+              <Button style={{ margin: "0 auto" }}>Залишити відгук</Button>
+            </Form>
+          </FormProvider>
         ) : (
           <div>
             <Title align={"center"} type={"small"}>
