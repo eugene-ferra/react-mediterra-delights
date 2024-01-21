@@ -16,8 +16,11 @@ export const getProducts = async (req, res, next) => {
       populateObj: {
         path: "reviews",
         match: { isModerated: true },
+        populate: { path: "userID", model: "User" },
       },
     });
+
+    console.log(data.reviews);
 
     data[1].map((doc) => addLinks(req, doc, ["imgCover", "images"]));
 

@@ -22,6 +22,7 @@ import TextArea from "../common/TextArea/TextArea";
 import StarRating from "../common/StarRating/StarRating";
 import { FormProvider, useForm } from "react-hook-form";
 import { usePostReview } from "./usePostReview";
+import Review from "../Review/Review";
 
 const ProductBox = ({ product }) => {
   const methods = useForm();
@@ -133,6 +134,19 @@ const ProductBox = ({ product }) => {
               <div className={styles.reviewsHeader}>
                 <Title type={"small"}>Відгуки</Title>
                 <Button onClick={() => setIsModalOpen(true)}>Написати відгук</Button>
+              </div>
+              <div className={styles.reviews}>
+                {product?.reviews.length > 0 ? (
+                  <>
+                    {product?.reviews.map((review) => (
+                      <Review review={review} key={review.id} />
+                    ))}
+                  </>
+                ) : (
+                  <Text align={"center"}>
+                    Відгуків ще немає. Будьте першим, хто залише відгук на цей продукт!
+                  </Text>
+                )}
               </div>
             </div>
           </div>

@@ -24,9 +24,9 @@ export class UserDTO {
     this.role = userResponse.role;
     this.password = userResponse.password;
     this.avatar = {
-      jpg: userResponse.avatar.jpg || null,
-      webp: userResponse.avatar.webp || null,
-      avif: userResponse.avatar.avif || null,
+      jpg: userResponse.avatar?.jpg || null,
+      webp: userResponse.avatar?.webp || null,
+      avif: userResponse.avatar?.avif || null,
     };
     this.savedProducts = userResponse.savedProducts || [];
     this.likedArticles = userResponse.likedArticles || [];
