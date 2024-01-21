@@ -20,6 +20,9 @@ const Button = ({ className, type, asTag, to, disabled, children, onClick, style
     case "small":
       classValue = styles.buttonSmall;
       break;
+    case "success":
+      classValue = styles.buttonSuccess;
+      break;
     default:
       classValue = styles.button;
   }

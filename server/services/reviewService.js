@@ -17,7 +17,9 @@ export class reviewService {
       throw new AppError("No documents match the current filters!", 404);
     }
 
-    return data.map((item) => new ReviewDTO(item));
+    const docs = await reviewModel.countDocuments(filterObj);
+
+    return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new ReviewDTO(item))];
   }
 
   static async getOne({ id, productID, populateObj }) {

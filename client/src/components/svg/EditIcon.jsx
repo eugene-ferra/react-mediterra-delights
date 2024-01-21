@@ -4,7 +4,7 @@ const EditIcon = () => {
       viewBox="0 0 24.00 24.00"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      stroke="#000000"
+      stroke="#c74134"
       strokeWidth="0.00024000000000000003"
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
@@ -32,7 +32,7 @@ const EditIcon = () => {
           12.9999C17.4477 12.9999 17 13.4477 17 13.9999V18.9999C17 19.5522 
           16.5523 19.9999 16 19.9999H5C4.44772 19.9999 4 19.5522 4 
           18.9999V7.99994Z"
-          fill="#000000"
+          fill="#c74134"
         ></path>{" "}
       </g>
     </svg>

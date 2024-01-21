@@ -25,16 +25,18 @@ import { usePostReview } from "./usePostReview";
 
 const ProductBox = ({ product }) => {
   const methods = useForm();
-  const { postReview, isLoading, errors } = usePostReview(methods.reset);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { postReview, isLoading, errors } = usePostReview(() => {
+    methods.reset();
+    setIsModalOpen(false);
+  });
+
   const { user } = useUser();
 
   async function onSubmit(data) {
     data["productID"] = product?.id;
     data["userID"] = user?.id;
     postReview(data);
-    setIsModalOpen(false);
   }
 
   return (

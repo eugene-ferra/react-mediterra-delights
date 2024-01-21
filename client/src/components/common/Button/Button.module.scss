@@ -70,4 +70,16 @@
     color: var(--primary-stable-color);
     font-weight: 500;
   }
+  &Success {
+    @extend .button;
+    background-color: transparent;
+    border: 2px solid #47bd6e;
+    color: #47bd6e;
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
+      box-shadow: 0 0 10px #47bd6e;
+    }
+  }
 }

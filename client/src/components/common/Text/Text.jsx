@@ -1,6 +1,6 @@
 import styles from "./Text.module.scss";
 
-const Text = ({ children, className, type, align }) => {
+const Text = ({ children, className, type, align, style }) => {
   let classValue;
 
   switch (type) {
@@ -17,7 +17,7 @@ const Text = ({ children, className, type, align }) => {
   return (
     <p
       className={`${classValue} ${className || ""}`}
-      style={{ textAlign: align || "left" }}
+      style={{ textAlign: align || "left", ...style }}
     >
       {children}
     </p>
