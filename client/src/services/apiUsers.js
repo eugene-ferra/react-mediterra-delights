@@ -21,3 +21,10 @@ export async function login({ email, password }) {
 export async function getMe() {
   return await api.get("/api/users/me");
 }
+
+export async function saveProduct(id) {
+  return await api.post(`/api/users/me/savedProducts`, { id: id });
+}
+export async function deleteProduct(id) {
+  return await api.delete(`/api/users/me/savedProducts/${id}`);
+}

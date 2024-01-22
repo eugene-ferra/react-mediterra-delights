@@ -22,8 +22,6 @@ const ArticlesPage = () => {
     error: articleError,
   } = useArticles(searchParams.toString());
 
-  console.log(articles);
-
   return (
     <>
       <Header />

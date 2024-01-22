@@ -5,7 +5,6 @@ import Text from "../common/Text/Text";
 import Stars from "../common/Stars/Stars";
 
 const Review = ({ review }) => {
-  console.log(review);
   return (
     <div className={styles.review}>
       <div>

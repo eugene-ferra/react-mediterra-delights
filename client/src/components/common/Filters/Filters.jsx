@@ -13,8 +13,6 @@ const Filters = ({ filters, onFilter, resetFilter, currentFilter, filterQuery })
   const nextRef = useRef(null);
   const slides = resetFilter ? filters.length + 1 : filters.length;
 
-  console.log(nextRef);
-
   return (
     <div className={styles.inner}>
       <button ref={prevRef} className={styles.buttonPrev}>

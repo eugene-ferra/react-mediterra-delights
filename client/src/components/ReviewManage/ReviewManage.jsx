@@ -18,8 +18,6 @@ const ReviewManage = () => {
   const { deleteReview, isLoading: isDeleting } = useDeleteReview();
   const { publishReview, isLoading: isPublishing } = usePublishReview();
 
-  console.log(reviews);
-
   return (
     <>
       <Title>Нові відгуки:</Title>

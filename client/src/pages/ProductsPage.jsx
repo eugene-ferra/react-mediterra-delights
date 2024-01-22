@@ -12,6 +12,14 @@ import { useProductsOptions } from "../hooks/useProductOptions";
 import { useSearchParams } from "react-router-dom";
 import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
 import Loader from "../components/common/Loader/Loader";
+import { useUser } from "../hooks/useUser";
+import Modal from "../components/common/Modal/Modal";
+import { useState } from "react";
+import Text from "../components/common/Text/Text";
+import Button from "../components/common/Button/Button";
+import Picture from "../components/common/Picture/Picture";
+import loginImg from "../assets/login.svg";
+import registerImg from "../assets/register.svg";
 
 const ProductsPage = () => {
   const { options, isLoading, error } = useProductsOptions();
@@ -21,6 +29,11 @@ const ProductsPage = () => {
     isLoading: isProductsLoading,
     error: productError,
   } = useProducts(searchParams.toString());
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { user } = useUser();
+
   return (
     <>
       <Header />
@@ -55,7 +68,12 @@ const ProductsPage = () => {
               <>
                 <Catalog>
                   {products?.[1].map((product) => (
-                    <Product product={product} key={product?.id} />
+                    <Product
+                      product={product}
+                      key={product?.id}
+                      isSaved={user ? user.savedProducts.includes(product.id) : false}
+                      onUserError={() => setIsModalOpen(true)}
+                    />
                   ))}
                 </Catalog>
                 <Pagination
@@ -71,6 +89,33 @@ const ProductsPage = () => {
       )}
 
       <Footer />
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "15px",
+            alignItems: "center",
+            padding: "10px 0",
+          }}
+        >
+          <Title type={"small"} align={"center"}>
+            Увійдіть в свій аккаунт!
+          </Title>
+          <Text align={"center"}>
+            Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
+          </Text>
+          <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
+            <Button asTag={"Link"} to={"/login"}>
+              Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
+            </Button>
+            <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
+              Реєстрація
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

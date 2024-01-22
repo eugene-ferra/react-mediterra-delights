@@ -23,8 +23,14 @@ import StarRating from "../common/StarRating/StarRating";
 import { FormProvider, useForm } from "react-hook-form";
 import { usePostReview } from "./usePostReview";
 import Review from "../Review/Review";
+import { useSavedProduct } from "../Product/useSavedProduct";
+import Loader from "../common/Loader/Loader";
 
-const ProductBox = ({ product }) => {
+const ProductBox = ({ product, isSaved, onUserError }) => {
+  const { saveProduct, isSaving, deleteProduct, isDeleting } = useSavedProduct(
+    product?.id
+  );
+
   const methods = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { postReview, isLoading, errors } = usePostReview(() => {
@@ -82,7 +88,17 @@ const ProductBox = ({ product }) => {
                     <Button className={styles.buyBtn}>До кошика</Button>
                   </>
                 </div>
-                <Button>В улюблені</Button>
+                {user ? (
+                  <Button
+                    onClick={isSaved ? deleteProduct : saveProduct}
+                    disabled={isDeleting || isSaving}
+                  >
+                    {(isDeleting || isSaving) && <Loader />}
+                    {isSaved ? "Видалити з улюблених" : "В улюблені"}
+                  </Button>
+                ) : (
+                  <Button onClick={onUserError}>В улюблені</Button>
+                )}
               </div>
             </div>
           </div>
