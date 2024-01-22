@@ -10,12 +10,15 @@ import registerImg from "../../assets/register.svg";
 import loginImg from "../../assets/login.svg";
 import Avatar from "../common/Avatar/Avatar";
 import Burger from "../common/Burger/Burger";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useUser } from "../../hooks/useUser";
+import { useCart } from "../../hooks/useCart";
+import { CartContext } from "../../App";
 
 const Header = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const { user } = useUser();
+  const { cart } = useCart();
 
   const handleClick = () => {
     setIsDropDownOpen((state) => !state);
@@ -27,7 +30,7 @@ const Header = () => {
         <Logo />
         <Navbar className={styles.navbar} />
 
-        <CartLink count={user?.cart?.lenght} className={styles.cart} />
+        <CartLink count={user?.cart?.lenght || cart?.length} className={styles.cart} />
         {user ? (
           <Link to={"/account"}>
             <Avatar formats={user?.avatar} />

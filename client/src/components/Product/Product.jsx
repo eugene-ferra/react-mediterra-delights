@@ -12,12 +12,22 @@ import Marker from "../common/Marker/Marker";
 import SaveIcon from "../svg/SaveIcon";
 import { useSavedProduct } from "./useSavedProduct";
 import { useUser } from "../../hooks/useUser";
+import { useCart } from "../../hooks/useCart";
+import Loader from "../common/Loader/Loader";
 
 const Product = ({ product, isSaved, onUserError }) => {
   const { saveProduct, isSaving, deleteProduct, isDeleting } = useSavedProduct(
     product?.id
   );
   const { user } = useUser();
+
+  const {
+    addToCart,
+    deleteFromCart,
+    isInCart,
+    isAdding: isAddingToCart,
+    isDeleting: isDeletingFromCart,
+  } = useCart();
 
   return (
     <>
@@ -75,14 +85,26 @@ const Product = ({ product, isSaved, onUserError }) => {
             <div className={styles.priceBox}>
               <Price discountPrice={product?.discountPrice} price={product?.price} />
             </div>
-            <Button type={"small"} className={styles.button}>
-              До кошика
+            <Button
+              type={"small"}
+              className={styles.button}
+              onClick={
+                isInCart(product?.id)
+                  ? () => deleteFromCart(product?.id)
+                  : () => addToCart({ id: product?.id, count: 1 })
+              }
+            >
+              {isAddingToCart || isDeletingFromCart ? (
+                <Loader />
+              ) : isInCart(product?.id) ? (
+                "Видалити з кошика"
+              ) : (
+                "До кошика"
+              )}
             </Button>
           </div>
         </div>
       </div>
-
-      {/* <Modal isOpen={true}>test</Modal> */}
     </>
   );
 };

@@ -27,6 +27,8 @@ import ProductManageAdd from "./components/ProductManage/ProductManageAdd.jsx";
 import ProductEdit from "./components/ProductManage/ProductEdit.jsx";
 import ArticleManageAdd from "./components/ArticleManage/ArticleManageAdd.jsx";
 import ArticleEdit from "./components/ArticleManage/ArticleEdit.jsx";
+import { createContext, useState } from "react";
+import Cookies from "js-cookie";
 
 const router = createBrowserRouter([
   {
@@ -75,12 +77,20 @@ const queryClient = new QueryClient({
   },
 });
 
+export const CartContext = createContext();
+
 const App = () => {
+  const [cart, setCart] = useState(
+    Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : []
+  );
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <CartContext.Provider value={{ cart, setCart }}>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </CartContext.Provider>
   );
 };
 

@@ -25,6 +25,7 @@ import { usePostReview } from "./usePostReview";
 import Review from "../Review/Review";
 import { useSavedProduct } from "../Product/useSavedProduct";
 import Loader from "../common/Loader/Loader";
+import { useCart } from "../../hooks/useCart";
 
 const ProductBox = ({ product, isSaved, onUserError }) => {
   const { saveProduct, isSaving, deleteProduct, isDeleting } = useSavedProduct(
@@ -39,6 +40,14 @@ const ProductBox = ({ product, isSaved, onUserError }) => {
   });
 
   const { user } = useUser();
+
+  const {
+    addToCart,
+    deleteFromCart,
+    isInCart,
+    isAdding: isAddingToCart,
+    isDeleting: isDeletingFromCart,
+  } = useCart();
 
   async function onSubmit(data) {
     data["productID"] = product?.id;
@@ -85,7 +94,22 @@ const ProductBox = ({ product, isSaved, onUserError }) => {
                       discountPrice={product?.discountPrice}
                       price={product?.price}
                     />
-                    <Button className={styles.buyBtn}>До кошика</Button>
+                    <Button
+                      className={styles.buyBtn}
+                      onClick={
+                        isInCart(product?.id)
+                          ? () => deleteFromCart(product?.id)
+                          : () => addToCart({ id: product?.id, count: 1 })
+                      }
+                    >
+                      {isAddingToCart || isDeletingFromCart ? (
+                        <Loader />
+                      ) : isInCart(product?.id) ? (
+                        "Видалити з кошика"
+                      ) : (
+                        "До кошика"
+                      )}
+                    </Button>
                   </>
                 </div>
                 {user ? (

@@ -28,3 +28,10 @@ export async function saveProduct(id) {
 export async function deleteProduct(id) {
   return await api.delete(`/api/users/me/savedProducts/${id}`);
 }
+
+export async function addToCart(id, quantity) {
+  return await api.post(`/api/users/me/cart`, { id, quantity });
+}
+export async function deleteFromCart(id) {
+  return await api.delete(`/api/users/me/cart/${id}`);
+}
