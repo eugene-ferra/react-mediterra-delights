@@ -1,14 +1,18 @@
-const LikesIcon = () => {
+const LikesIcon = ({ full = false }) => {
   return (
-    <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      viewBox="0 0 25 25"
+      fill={full ? "#3b8ae4" : "none"}
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
       <g id="SVGRepo_iconCarrier">
         {" "}
         <path
           d="M8.9707 19.42V13.89"
-          stroke="#3b8ae4"
-          strokeWidth="1.5"
+          stroke={full ? "var(--secondary-color)" : "#3b8ae4"}
+          strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"
         ></path>{" "}
@@ -24,8 +28,8 @@ const LikesIcon = () => {
           5.61735 21.8227C5.16335 21.8227 4.71411 21.7301 4.29708 21.5507C3.88006 
           21.3712 3.504 21.1086 3.19187 20.7789C2.87975 20.4492 2.63813 20.0594 
           2.48175 19.6332C2.32536 19.207 2.25751 18.7533 2.28234 18.3V12.67Z"
-          stroke="#3b8ae4"
-          strokeWidth="1.5"
+          stroke={full ? "var(--secondary-color)" : "#3b8ae4"}
+          strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"
         ></path>{" "}
@@ -42,8 +46,8 @@ const LikesIcon = () => {
           3.68036 13.3025 3.64132 13.1108 3.64001V3.64001C12.7953 3.64144 12.4889 
           3.74572 12.2381 3.93701C11.9872 4.1283 11.8056 4.39617 11.7208 
           4.70001L8.97076 13.86"
-          stroke="#3b8ae4"
-          strokeWidth="1.5"
+          stroke={full ? "var(--secondary-color)" : "#3b8ae4"}
+          strokeWidth="1"
           strokeLinecap="round"
           strokeLinejoin="round"
         ></path>{" "}

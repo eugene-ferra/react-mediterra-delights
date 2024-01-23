@@ -29,6 +29,20 @@ export async function deleteProduct(id) {
   return await api.delete(`/api/users/me/savedProducts/${id}`);
 }
 
+export async function saveArticle(id) {
+  return await api.post(`/api/users/me/savedArticles`, { id: id });
+}
+export async function deleteArticle(id) {
+  return await api.delete(`/api/users/me/savedArticles/${id}`);
+}
+
+export async function likeArticle(id) {
+  return await api.post(`/api/users/me/likedArticles`, { id: id });
+}
+export async function unLikeArticle(id) {
+  return await api.delete(`/api/users/me/likedArticles/${id}`);
+}
+
 export async function addToCart(id, quantity) {
   return await api.post(`/api/users/me/cart`, { id, quantity });
 }

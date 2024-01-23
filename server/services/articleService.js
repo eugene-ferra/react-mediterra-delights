@@ -107,7 +107,7 @@ export class articleService {
       throw new AppError("There aren't documents with this id!", 404);
     }
 
-    if (data["title"] !== doc.title) {
+    if (data["title"] !== doc.title && data["title"]) {
       const newSlug = slugify(data.title, { lower: true });
       const existingArticle = await articleModel.findOne({ slug: newSlug });
 

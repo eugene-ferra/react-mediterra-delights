@@ -17,7 +17,12 @@ export class commentService {
       throw new AppError("No documents match the current filters!", 404);
     }
 
-    return data.map((item) => new CommentDTO(item));
+    const docs = await commentModel.countDocuments(filterObj);
+
+    return [
+      { pages: Math.ceil(docs / limit) },
+      data.map((item) => new CommentDTO(item)),
+    ];
   }
 
   static async getOne({ id, articleID, populateObj }) {

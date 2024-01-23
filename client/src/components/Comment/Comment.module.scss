@@ -1,0 +1,23 @@
+.comment {
+  padding: 10px;
+  border: 2px solid var(--secondary-color);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.userData {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: capitalize;
+}
+
+.avatar {
+  max-width: 45px;
+  max-height: 45px;
+  object-fit: contain;
+  border-radius: 50%;
+}

@@ -1,17 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
-import { postReview } from "../../services/apiReviews";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postComment } from "../../services/apiComments";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export const usePostReview = (resetForm) => {
+export const usePostComment = (resetForm) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    mutationFn: (data) => postReview(data),
+    mutationFn: (data) => postComment(data),
     onSuccess: () => {
-      toast.success("Відгук успішно додано. Він буде опублікований після модерації!");
+      toast.success("Коментар успішно додано. Він буде опублікований після модерації!");
       resetForm();
     },
     onError: (errObj) => {
@@ -23,7 +23,7 @@ export const usePostReview = (resetForm) => {
   });
 
   return {
-    postReview: mutation.mutate,
+    postComment: mutation.mutate,
     isLoading: mutation.isPending,
     errors: errors,
   };

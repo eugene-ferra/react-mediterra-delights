@@ -14,7 +14,11 @@ export const getArticles = async (req, res, next) => {
       sortObj,
       page,
       limit,
-      populateObj: { path: "comments", match: { isModerated: true } },
+      populateObj: {
+        path: "comments",
+        match: { isModerated: true },
+        populate: { path: "userID", model: "User" },
+      },
     });
 
     data[1].map((doc) => addLinks(req, doc, ["imgCover"]));
