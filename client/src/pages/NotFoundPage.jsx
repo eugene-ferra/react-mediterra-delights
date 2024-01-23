@@ -3,7 +3,7 @@ import Header from "../components/Header/Header";
 import MainLayout from "../components/MainLayout/MainLayout";
 import Picture from "../components/common/Picture/Picture";
 import Title from "../components/common/Title/Title";
-import notFoundPic from "../assets/notFound.svg";
+import notFoundPic from "../assets/notFound.png";
 import Button from "../components/common/Button/Button";
 
 const NotFoundPage = () => {
