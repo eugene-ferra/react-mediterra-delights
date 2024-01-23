@@ -31,11 +31,12 @@ import { createContext, useState } from "react";
 import Cookies from "js-cookie";
 import ForbiddenPage from "./pages/ForbiddenPage.jsx";
 import AdminMain from "./components/AdminMain/AdminMain.jsx";
+import ServerErrorPage from "./pages/ServerErrorPage.jsx";
 
 const router = createBrowserRouter([
   {
     element: <AppLayout />,
-    errorElement: <NotFoundPage />,
+    errorElement: <ServerErrorPage />,
     children: [
       { path: "/", element: <HomePage /> },
       {
@@ -68,6 +69,8 @@ const router = createBrowserRouter([
       { path: "/about", element: <AboutPage /> },
       { path: "/contacts", element: <ContactPage /> },
       { path: "/forbidden", element: <ForbiddenPage /> },
+      { path: "500", element: <ServerErrorPage /> },
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);

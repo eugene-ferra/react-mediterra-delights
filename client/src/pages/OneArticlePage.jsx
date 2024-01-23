@@ -13,7 +13,7 @@ const OneArticlePage = () => {
   const { slug } = useParams();
   const { user } = useUser();
   const { articles, isLoading, error } = useArticles(`slug=${slug}`);
-  const { article } = useArticleById(articles?.[1]?.[0]?.id);
+  useArticleById(articles?.[1]?.[0]?.id);
 
   return (
     <>
