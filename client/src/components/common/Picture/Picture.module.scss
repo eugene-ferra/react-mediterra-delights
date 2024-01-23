@@ -2,6 +2,6 @@
 
 .img {
   object-fit: cover;
-  max-width: max-content;
+  max-width: 100%;
   @include mixins.tinyText;
 }

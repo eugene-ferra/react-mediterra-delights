@@ -29,6 +29,8 @@ import ArticleManageAdd from "./components/ArticleManage/ArticleManageAdd.jsx";
 import ArticleEdit from "./components/ArticleManage/ArticleEdit.jsx";
 import { createContext, useState } from "react";
 import Cookies from "js-cookie";
+import ForbiddenPage from "./pages/ForbiddenPage.jsx";
+import AdminMain from "./components/AdminMain/AdminMain.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,7 +42,7 @@ const router = createBrowserRouter([
         path: "/admin",
         element: <AdminPage />,
         children: [
-          { path: "", element: "home" },
+          { path: "", element: <AdminMain /> },
           { path: "products", element: <ProductManage /> },
           { path: "products/new", element: <ProductManageAdd /> },
           { path: "products/:id", element: <ProductEdit /> },
@@ -65,6 +67,7 @@ const router = createBrowserRouter([
       { path: "/order", element: <OrderPage /> },
       { path: "/about", element: <AboutPage /> },
       { path: "/contacts", element: <ContactPage /> },
+      { path: "/forbidden", element: <ForbiddenPage /> },
     ],
   },
 ]);

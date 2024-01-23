@@ -10,10 +10,9 @@ import registerImg from "../../assets/register.svg";
 import loginImg from "../../assets/login.svg";
 import Avatar from "../common/Avatar/Avatar";
 import Burger from "../common/Burger/Burger";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useUser } from "../../hooks/useUser";
 import { useCart } from "../../hooks/useCart";
-import { CartContext } from "../../App";
 
 const Header = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);

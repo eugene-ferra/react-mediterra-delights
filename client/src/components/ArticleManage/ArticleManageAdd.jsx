@@ -66,7 +66,7 @@ const ArticleManageAdd = () => {
             title={"Короткий зміст*"}
             errorMessage={errors?.previewText}
             register={methods.register("previewText")}
-            // disabled={isLoading}
+            disabled={isLoading}
           />
         </FieldSet>
 

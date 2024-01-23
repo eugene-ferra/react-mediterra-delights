@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./Picture.module.scss";
 
-const Picture = ({ formats, alt, defaultImg, className }) => {
+const Picture = ({ formats, alt, defaultImg, className, style }) => {
   const [imageLoaded, setImageLoaded] = useState(true);
 
   const handleImageError = () => {
@@ -17,6 +17,7 @@ const Picture = ({ formats, alt, defaultImg, className }) => {
           srcSet={`${formats?.avif || ""}, ${formats?.webp || ""}, ${formats?.jpg}`}
           alt={alt || "image"}
           onError={handleImageError}
+          style={style}
         />
       ) : (
         <>
@@ -28,6 +29,7 @@ const Picture = ({ formats, alt, defaultImg, className }) => {
               "https://media.istockphoto.com/id/1354776457/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=w3OW0wX3LyiFRuDHo9A32Q0IUMtD4yjXEvQlqyYk9O4="
             }
             alt={alt || "image"}
+            style={style}
           />
         </>
       )}

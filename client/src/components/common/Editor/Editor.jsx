@@ -4,7 +4,6 @@ import "react-quill/dist/quill.snow.css";
 import { Controller, useFormContext } from "react-hook-form";
 import styles from "./Editor.module.scss";
 
-// Регистрируем плагин blotFormatter
 Quill.register("modules/blotFormatter", BlotFormatter);
 
 const modules = {

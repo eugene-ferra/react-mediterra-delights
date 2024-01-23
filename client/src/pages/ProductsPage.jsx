@@ -19,7 +19,6 @@ import Text from "../components/common/Text/Text";
 import Button from "../components/common/Button/Button";
 import Picture from "../components/common/Picture/Picture";
 import loginImg from "../assets/login.svg";
-import registerImg from "../assets/register.svg";
 
 const ProductsPage = () => {
   const { options, isLoading, error } = useProductsOptions();

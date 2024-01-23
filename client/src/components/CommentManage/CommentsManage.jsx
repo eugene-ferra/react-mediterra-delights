@@ -1,5 +1,11 @@
+import Title from "../common/Title/Title";
+
 const CommentManage = () => {
-  return <>Comments</>;
+  return (
+    <>
+      <Title>Сторінка в розробці</Title>
+    </>
+  );
 };
 
 export default CommentManage;

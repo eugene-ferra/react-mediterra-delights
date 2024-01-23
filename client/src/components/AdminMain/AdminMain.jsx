@@ -1,6 +1,7 @@
+import React from "react";
 import Title from "../common/Title/Title";
 
-const OrdersManage = () => {
+const AdminMain = () => {
   return (
     <>
       <Title>Сторінка в розробці</Title>
@@ -8,4 +9,4 @@ const OrdersManage = () => {
   );
 };
 
-export default OrdersManage;
+export default AdminMain;

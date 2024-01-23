@@ -53,7 +53,7 @@ const SelectComponent = ({
           isSelected || isFocused ? "var(--selection-color)" : "var(--secondary-color)",
       },
       borderColor: disabled
-        ? "#848588" // Set to red when disabled
+        ? "#848588"
         : isSelected || isFocused
         ? "var(--selection-color)"
         : "var(--secondary-color)",
