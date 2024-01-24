@@ -29,14 +29,14 @@ app.use(
   })
 );
 
-app.use(
-  "/api",
-  rateLimit({
-    max: 500,
-    windowMs: 60 * 60 * 1000,
-    message: "Too many requests from this IP, please try again in an hour!",
-  })
-);
+// app.use(
+//   "/api",
+//   rateLimit({
+//     max: 500,
+//     windowMs: 60 * 60 * 1000,
+//     message: "Too many requests from this IP, please try again in an hour!",
+//   })
+// );
 
 app.use(express.json({ limit: "10000kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10000kb" }));

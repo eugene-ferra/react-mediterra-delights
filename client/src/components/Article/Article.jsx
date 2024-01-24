@@ -9,7 +9,7 @@ import Text from "../common/Text/Text";
 
 const Article = ({ article }) => {
   return (
-    <Link className={styles.article} to={`/articles/${article.slug}`}>
+    <Link className={styles.article} to={`/articles/${article?.slug}`}>
       <div>
         <Picture
           formats={article?.imgCover}
@@ -36,7 +36,7 @@ const Article = ({ article }) => {
           <Text type={"small"}>{article?.previewText}</Text>
         </div>
       </div>
-      <p className={styles.info}>{new Date(article.createdAt).toLocaleString()}</p>
+      <p className={styles.info}>{new Date(article?.createdAt).toLocaleString()}</p>
     </Link>
   );
 };

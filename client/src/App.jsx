@@ -32,6 +32,10 @@ import Cookies from "js-cookie";
 import ForbiddenPage from "./pages/ForbiddenPage.jsx";
 import AdminMain from "./components/AdminMain/AdminMain.jsx";
 import ServerErrorPage from "./pages/ServerErrorPage.jsx";
+import AccountMain from "./components/AccountMain/AccountMain.jsx";
+import AccountFavourite from "./components/AccountFavourite/AccountFavourite.jsx";
+import AccountSaved from "./components/AccountSaved/AccountSaved.jsx";
+import AccountOrders from "./components/AccountOrders/AccountOrders.jsx";
 
 const router = createBrowserRouter([
   {
@@ -55,7 +59,16 @@ const router = createBrowserRouter([
           { path: "orders", element: <OrdersManage /> },
         ],
       },
-      { path: "/account", element: <AccountPage /> },
+      {
+        path: "/account",
+        element: <AccountPage />,
+        children: [
+          { path: "", element: <AccountMain /> },
+          { path: "favourite", element: <AccountFavourite /> },
+          { path: "saved", element: <AccountSaved /> },
+          { path: "orders", element: <AccountOrders /> },
+        ],
+      },
       { path: "/signup", element: <SignUpPage /> },
       { path: "/login", element: <LoginPage /> },
       { path: "/forgot-password", element: <ForgotPasswordPage /> },

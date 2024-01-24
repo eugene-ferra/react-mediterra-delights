@@ -19,4 +19,24 @@
   @include mixins.smallMobile {
     grid-template-columns: 300px;
   }
+  &Small {
+    @extend .catalog;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    @include mixins.laptop {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @include mixins.tablet {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @include mixins.mobile {
+      grid-template-columns: 1fr 1fr;
+    }
+    @include mixins.smallMobile {
+      justify-content: center;
+      grid-template-columns: 1fr;
+      & > div {
+        justify-content: center;
+      }
+    }
+  }
 }
