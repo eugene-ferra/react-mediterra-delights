@@ -2,8 +2,10 @@
   height: 45px;
   img {
     display: inline;
-    height: 100%;
+    height: 45px;
+    width: 45px;
     max-width: max-content;
-    object-fit: contain;
+    object-fit: cover;
+    border-radius: 50%;
   }
 }

@@ -14,7 +14,7 @@ import multer from "multer";
 const userRouter = express.Router();
 
 userRouter.use(protect());
-userRouter.use(multer({ storage: multer.memoryStorage() }).none());
+// userRouter.use(multer({ storage: multer.memoryStorage() }).none());
 userRouter
   .route("/me")
   .get(userController.getMe)

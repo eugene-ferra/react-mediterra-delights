@@ -9,6 +9,7 @@ const Input = ({
   register,
   disabled,
   className,
+  style,
 }) => {
   const errorClass = errorMessage ? styles.error : "";
 
@@ -22,6 +23,7 @@ const Input = ({
         name={name}
         {...register}
         disabled={disabled}
+        style={style}
       />
       <p className={styles.inputError}>{errorMessage}</p>
     </label>

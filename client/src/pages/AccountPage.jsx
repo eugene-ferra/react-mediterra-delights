@@ -5,8 +5,6 @@ import { useUser } from "../hooks/useUser";
 import Loader from "../components/common/Loader/Loader";
 import Panel from "../components/Panel/Panel";
 import HomeIcon from "../components/svg/HomeIcon";
-import CommenIcon from "../components/svg/CommenIcon";
-import ReviewIcon from "../components/svg/ReviewIcon";
 import OrderIcon from "../components/svg/OrderIcon";
 import SaveArticleIcon from "../components/svg/SaveArticleIcon";
 import FavouriteIcon from "../components/svg/FavouriteIcon";

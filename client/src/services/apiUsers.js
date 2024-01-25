@@ -21,6 +21,9 @@ export async function login({ email, password }) {
 export async function getMe() {
   return await api.get("/api/users/me");
 }
+export async function updateMe(data) {
+  return await api.patch("/api/users/me", data);
+}
 
 export async function saveProduct(id) {
   return await api.post(`/api/users/me/savedProducts`, { id: id });

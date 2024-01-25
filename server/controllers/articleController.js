@@ -22,6 +22,7 @@ export const getArticles = async (req, res, next) => {
     });
 
     data[1].map((doc) => addLinks(req, doc, ["imgCover"]));
+
     data[1].map((doc) => addLinksToMarkup(req, doc, "markup"));
 
     res.status(200).json({ status: "success", data });
