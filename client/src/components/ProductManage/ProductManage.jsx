@@ -40,7 +40,7 @@ const ProductManage = () => {
             {item.weight}
           </Link>,
           <Link to={`${item.id}`} key={item.avgRating}>
-            {item.avgRating}
+            {item.avgRating?.toFixed(2)}
           </Link>,
         ])}
       >

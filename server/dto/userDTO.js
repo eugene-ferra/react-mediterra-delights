@@ -16,17 +16,17 @@ export class UserDTO {
   cart;
 
   constructor(userResponse) {
-    this.id = userResponse?._id || null;
-    this.name = userResponse.name || "test";
-    this.lastName = userResponse.lastName || "testsss";
-    this.phone = userResponse?.phone || null;
-    this.email = userResponse.email || "test";
-    this.role = userResponse.role || "test";
-    this.password = userResponse.password || "test";
+    this.id = userResponse._id;
+    this.name = userResponse.name;
+    this.lastName = userResponse.lastName;
+    this.phone = userResponse?.phone;
+    this.email = userResponse.email;
+    this.role = userResponse.role;
+    this.password = userResponse.password;
     this.avatar = {
-      jpg: userResponse.avatar?.jpg || null,
-      webp: userResponse.avatar?.webp || null,
-      avif: userResponse.avatar?.avif || null,
+      jpg: userResponse.avatar?.jpg,
+      webp: userResponse.avatar?.webp,
+      avif: userResponse.avatar?.avif,
     };
     this.savedProducts = userResponse.savedProducts || [];
     this.likedArticles = userResponse.likedArticles || [];

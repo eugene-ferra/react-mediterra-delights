@@ -104,6 +104,8 @@
   overflow: hidden auto;
   background-color: var(--primary-color);
   padding: 10px 10px 10px 20px;
+  scrollbar-width: thin;
+
   @include mixins.tablet {
     padding: 5px 0px 5px 10px;
     left: 50px;
