@@ -4,6 +4,7 @@ export default function addLinks(req, data, fieldsToModify) {
 
   const processField = (fieldValue) => {
     if (typeof fieldValue === "string") {
+      if (fieldValue.startsWith(linkBegin)) return fieldValue.replace(/\\/g, "/");
       return `${linkBegin}/${fieldValue.replace(/\\/g, "/")}`;
     } else if (Array.isArray(fieldValue)) {
       return fieldValue.map((item) => processField(item));

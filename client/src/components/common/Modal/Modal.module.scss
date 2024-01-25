@@ -25,9 +25,10 @@
   padding: 20px 15px;
   border-radius: 8px;
   position: relative;
-  min-width: 300px;
+  min-width: 280px;
   max-height: calc(100vh - 40px);
   height: max-content;
+  width: calc(100% - 20px);
   max-width: 500px;
 }
 

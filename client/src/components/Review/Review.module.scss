@@ -15,8 +15,8 @@
 }
 
 .avatar {
-  max-width: 45px;
-  max-height: 45px;
-  object-fit: contain;
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
   border-radius: 50%;
 }

@@ -34,7 +34,7 @@ export const userValidationSchema = {
   },
   phone: {
     isMobilePhone: {
-      if: body("phone").exists(),
+      if: body("phone").notEmpty(),
       options: ["uk-UA", { strictMode: false }],
     },
   },

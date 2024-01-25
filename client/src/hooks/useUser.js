@@ -6,6 +6,7 @@ export const useUser = () => {
     queryKey: ["user"],
     queryFn: getMe,
     retry: false,
+    staleTime: 0,
   });
 
   return {

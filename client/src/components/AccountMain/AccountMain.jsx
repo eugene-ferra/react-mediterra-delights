@@ -9,15 +9,32 @@ import DropZone from "../common/DropZone/DropZone";
 import { useUpdateUser } from "./useUpdateUser";
 import { getFormData } from "../../utils/getFormData";
 import toast from "react-hot-toast";
+import { useLogoutUser } from "./useLogout";
+import Modal from "../common/Modal/Modal";
+import { useState } from "react";
+import Title from "../common/Title/Title";
+import Text from "../common/Text/Text";
+import { Link } from "react-router-dom";
+import { useDeleteUser } from "./useDeleteUser";
 
 const AccountMain = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const methods = useForm();
-  const { avatar } = useAccountUser(methods.setValue);
+  const { avatar, user } = useAccountUser(methods.setValue);
+  const { logout, isLoading: isLoadingOut } = useLogoutUser();
+  const { deleteMe, isLoading: isDeleting } = useDeleteUser();
 
   const { updateUser, isLoading, errors } = useUpdateUser();
 
   async function onDataChange(data) {
-    updateUser({ name: data?.name, lastName: data?.lastName, phone: data?.phone });
+    updateUser(
+      getFormData({
+        name: data?.name,
+        lastName: data?.lastName,
+        phone: data?.phone,
+        avatar: [data?.avatar?.[0]],
+      })
+    );
   }
   async function onPasswordChange(data) {
     if (data?.password != data?.passwordConfirm) {
@@ -26,30 +43,29 @@ const AccountMain = () => {
       updateUser({ password: data?.password, oldPassword: data?.oldPassword });
     }
   }
-  async function onAvatarChange(data) {
-    updateUser(getFormData({ avatar: [data?.avatar?.[0]] }));
-  }
 
   return (
     <>
       <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onAvatarChange)}>
-          <FieldSet title={"Фото профілю"}>
+        <Form onSubmit={methods.handleSubmit(onDataChange)}>
+          {user?.role === "admin" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+              <Title type={"small"}>Ви є одним з адміністраторів сайту.</Title>
+              <Button asTag={"Link"} to={"/admin"}>
+                До адмін-панелі
+              </Button>
+            </div>
+          )}
+          <FieldSet title={"Персональні дані"}>
             <DropZone
               maxPhotos={1}
               name={"avatar"}
               initialFiles={avatar}
               disabled={isLoading}
               errorMessage={errors?.avatar}
+              title={"Фото профілю"}
             />
-          </FieldSet>
-          <Button>Зберегти</Button>
-        </Form>
-      </FormProvider>
-
-      <FormProvider {...methods}>
-        <Form onSubmit={methods.handleSubmit(onDataChange)}>
-          <FieldSet title={"Контактні дані"}>
+            <div></div>
             <Input
               name={"name"}
               title={"Ваше ім'я"}
@@ -80,7 +96,7 @@ const AccountMain = () => {
               register={methods.register("email")}
             />
           </FieldSet>
-          <Button>Зберегти</Button>
+          <Button disabled={isLoading}>Зберегти</Button>
         </Form>
       </FormProvider>
 
@@ -108,9 +124,50 @@ const AccountMain = () => {
               disabled={isLoading}
             />
           </FieldSet>
-          <Button>Змінити пароль</Button>
+          <Button disabled={isLoading}>Змінити пароль</Button>
         </Form>
       </FormProvider>
+
+      <Form
+        onSubmit={(e) => e.preventDefault()}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "10px",
+          flexWrap: "wrap",
+        }}
+      >
+        <Button onClick={logout} disabled={isLoadingOut}>
+          Вийти з аккаунта
+        </Button>
+        <Button onClick={() => setIsModalOpen(true)} type={"outline-red"}>
+          Видалити аккаунт
+        </Button>
+      </Form>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <Title align={"center"}>Ви впевнені?</Title>
+          <Text align={"center"}>
+            У разі видалення аккаунта ви більше не зможете його відновити. Всі дані з
+            вашого профілю буде втрачено назавжди!
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              flexWrap: "wrap",
+            }}
+          >
+            <Button onClick={() => setIsModalOpen(false)}>Cкасувати</Button>
+            <Button type={"outline-red"} onClick={deleteMe} disabled={isDeleting}>
+              Видалити мій аккаунт
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

@@ -22,6 +22,9 @@ export const getArticles = async (req, res, next) => {
     });
 
     data[1].map((doc) => addLinks(req, doc, ["imgCover"]));
+    data[1].map((doc) =>
+      doc.comments.map((item) => addLinks(req, item.userID, ["avatar"]))
+    );
 
     data[1].map((doc) => addLinksToMarkup(req, doc, "markup"));
 

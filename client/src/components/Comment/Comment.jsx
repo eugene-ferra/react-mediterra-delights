@@ -14,8 +14,9 @@ const Comment = ({ comment }) => {
             alt={comment?.userID?.name}
             defaultImg={defaultUser}
           />
-          <Text>
-            {comment?.userID?.name} {comment?.userID?.lastName}
+          <Text style={{ textTransform: "capitalize" }}>
+            {comment?.userID?.name || "видалений"}{" "}
+            {comment?.userID?.lastName || "користувач"}
           </Text>
         </div>
       </div>

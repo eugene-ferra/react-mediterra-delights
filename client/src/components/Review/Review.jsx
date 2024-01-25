@@ -15,8 +15,9 @@ const Review = ({ review }) => {
             alt={review?.userID?.name}
             defaultImg={defaultUser}
           />
-          <Text>
-            {review?.userID?.name} {review?.userID?.lastName}
+          <Text style={{ textTransform: "capitalize" }}>
+            {review?.userID?.name || "Видалений"}{" "}
+            {review?.userID?.lastName || "Користувач"}
           </Text>
         </div>
       </div>

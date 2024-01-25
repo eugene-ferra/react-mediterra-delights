@@ -21,8 +21,17 @@ export async function login({ email, password }) {
 export async function getMe() {
   return await api.get("/api/users/me");
 }
+
+export async function logout() {
+  return await api.get("/api/auth/logout");
+}
+
 export async function updateMe(data) {
   return await api.patch("/api/users/me", data);
+}
+
+export async function deleteMe() {
+  return await api.delete("/api/users/me");
 }
 
 export async function saveProduct(id) {
