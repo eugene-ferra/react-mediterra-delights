@@ -16,6 +16,9 @@
   @include mixins.tablet {
     padding: 6px 10px;
   }
+  @include mixins.smallMobile {
+    gap: 15px;
+  }
 }
 
 .navbar {

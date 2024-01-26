@@ -13,6 +13,7 @@ import Burger from "../common/Burger/Burger";
 import { useState } from "react";
 import { useUser } from "../../hooks/useUser";
 import { useCart } from "../../hooks/useCart";
+import SwitchMode from "../common/SwitchMode/SwitchMode";
 
 const Header = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -31,11 +32,15 @@ const Header = () => {
 
         <CartLink count={user?.cart?.lenght || cart?.length} className={styles.cart} />
         {user ? (
-          <Link to={"/account"}>
-            <Avatar formats={user?.avatar} />
-          </Link>
+          <>
+            <Link to={"/account"}>
+              <Avatar formats={user?.avatar} />
+            </Link>
+            <SwitchMode />
+          </>
         ) : (
           <>
+            <SwitchMode />
             <Button asTag={"Link"} to={"/signup"} className={styles.signup}>
               Реєстрація {<Picture alt={"register"} formats={{ jpg: registerImg }} />}
             </Button>

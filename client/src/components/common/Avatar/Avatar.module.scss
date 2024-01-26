@@ -1,3 +1,5 @@
+@use "../../../scss/mixins.scss" as mixins;
+
 .avatar {
   height: 45px;
   img {
@@ -6,5 +8,12 @@
     width: 45px;
     object-fit: cover;
     border-radius: 50%;
+  }
+  @include mixins.mobile {
+    height: 40px;
+    img {
+      height: 40px;
+      width: 40px;
+    }
   }
 }

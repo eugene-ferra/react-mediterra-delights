@@ -38,6 +38,7 @@
     color: var(--primary-stable-color);
     border: 0;
     &:hover {
+      color: var(--primary-stable-color);
       background-color: var(--accent-color);
     }
   }

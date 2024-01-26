@@ -10,5 +10,8 @@
     @include mixins.mobile {
       max-width: 110px;
     }
+    @include mixins.smallMobile {
+      max-width: 100px;
+    }
   }
 }
