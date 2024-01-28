@@ -53,7 +53,7 @@ export class articleService {
     data["slug"] = slugify(data.title, { lower: true });
 
     const testDoc = await articleModel.findOne({ slug: data.slug });
-    if (testDoc) throw new AppError("This article already exist!", 409);
+    if (testDoc) throw new AppError("Стаття з такою назвою вже існує!", 409);
 
     const payload = data.slug;
 
@@ -112,7 +112,7 @@ export class articleService {
       const existingArticle = await articleModel.findOne({ slug: newSlug });
 
       if (existingArticle) {
-        throw new AppError("This article already exists!", 409);
+        throw new AppError("Стаття з такою назвою вже існує!", 409);
       }
 
       data["slug"] = newSlug;

@@ -42,7 +42,10 @@ export const addArticle = async (req, res, next) => {
         status: "fail",
         errors: req?.files?.imgCover?.[0]?.buffer
           ? errors.array()
-          : [...errors.array(), { path: "imgCover", msg: "imgCover is required" }],
+          : [
+              ...errors.array(),
+              { path: "imgCover", msg: "Будь-ласка, додайте зображення до статті!" },
+            ],
       });
     }
 
@@ -148,7 +151,7 @@ export const getOptions = (req, res, next) => {
     const data = articleService.getOptions();
 
     res.status(200).json({
-      status: "succes",
+      status: "success",
       data,
     });
   } catch (err) {

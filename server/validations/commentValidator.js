@@ -5,12 +5,11 @@ export const commentValidationSchema = {
     matches: {
       if: body("comment").exists(),
       options: [/^[\s\d\p{L}\p{P}]*$/u],
-      errorMessage:
-        "comment can contain only ukrainian and english letters, numbers and specials symbols!",
+      errorMessage: "Використовуйте лише кирилицю, латинські символи та цифри!",
     },
     isString: {
       if: body("comment").exists(),
-      errorMessage: "comment should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("comment").exists(),
@@ -18,14 +17,14 @@ export const commentValidationSchema = {
         min: 1,
         max: 500,
       },
-      errorMessage: "comment must contain from 0 to 500 characters",
+      errorMessage: "Довжина коментаря має бути від 1 до 500 символів!",
     },
     trim: true,
   },
   isModerated: {
     isBoolean: {
       if: body("isModerated").exists(),
-      errorMessage: "isModerated should be a boolean!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };
@@ -34,7 +33,7 @@ export const postCommentValidationSchema = {
   ...commentValidationSchema,
   comment: {
     exists: {
-      errorMessage: "comment is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     ...commentValidationSchema.comment,
   },
@@ -42,23 +41,23 @@ export const postCommentValidationSchema = {
   id: {
     isMongoId: {
       if: param("id").exists(),
-      errorMessage: "Incorrect comment id!",
+      errorMessage: "Некоректне значення!",
     },
   },
   articleID: {
     exists: {
-      errorMessage: "articleID is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     isMongoId: {
-      errorMessage: "articleID should be a mongo id!",
+      errorMessage: "Некоректне значення!",
     },
   },
   userID: {
     exists: {
-      errorMessage: "userID is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     isMongoId: {
-      errorMessage: "userID should be a mongo id!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };

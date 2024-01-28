@@ -3,11 +3,11 @@ import { body } from "express-validator";
 export const emailValidationSchema = {
   email: {
     exists: {
-      errorMessage: "Email is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isEmail: {
-      errorMessage: "Email should be correct!",
+      errorMessage: "Вкажіть коректний e-mail!",
     },
     normalizeEmail: true,
   },
@@ -16,16 +16,16 @@ export const emailValidationSchema = {
 export const passwordValidationSchema = {
   password: {
     exists: {
-      errorMessage: "Password is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isString: {
-      errorMessage: "Password should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isStrongPassword: {
       options: { minLowercase: 0, minUppercase: 0 },
       errorMessage:
-        "Password should contain at least 8 characters including numbers and letters and symbols",
+        "Пароль повинен мати хоча б 1 цифру, літеру та спеціальний символ, а також бути довшим за 8 символів",
     },
   },
 };
@@ -34,11 +34,11 @@ export const loginValidationSchema = {
   ...emailValidationSchema,
   password: {
     exists: {
-      errorMessage: "Password is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isString: {
-      errorMessage: "Password should be a string!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };
@@ -47,39 +47,39 @@ export const registerValidationSchema = {
   ...loginValidationSchema,
   name: {
     exists: {
-      errorMessage: "Name is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     matches: {
       if: body("name").exists(),
       options: [/^[-'\p{L}]*$/u],
-      errorMessage: "Name can contain only letters, ' and - symbols!",
+      errorMessage: "Будь-ласка, вкажіть коректне ім'я!",
     },
     isLength: {
       options: {
         min: 3,
         max: 20,
       },
-      errorMessage: "Name should contain 3-20 characters",
+      errorMessage: "Довжина ім'я має бути від 3 до 20 символів!",
     },
     toLowerCase: true,
   },
   lastName: {
     exists: {
-      errorMessage: "LastName is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     matches: {
       if: body("lastName").exists(),
       options: [/^[-'\p{L}]*$/u],
-      errorMessage: "LastName can contain only letters, ' and - symbols!",
+      errorMessage: "Будь-ласка, вкажіть коректне прізвище!",
     },
     isLength: {
       options: {
         min: 3,
         max: 20,
       },
-      errorMessage: "Name should contain 3-20 characters",
+      errorMessage: "Довжина прізвища має бути від 3 до 20 символів!",
     },
     toLowerCase: true,
   },
@@ -88,7 +88,7 @@ export const registerValidationSchema = {
     isStrongPassword: {
       options: { minLowercase: 0, minUppercase: 0 },
       errorMessage:
-        "Password should contain at least 8 characters including numbers and letters and symbols",
+        "Пароль повинен мати хоча б 1 цифру, літеру та спеціальний символ, а також бути довшим за 8 символів",
     },
   },
 };

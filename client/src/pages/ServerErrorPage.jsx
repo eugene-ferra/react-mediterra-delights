@@ -18,7 +18,9 @@ const ServerErrorPage = () => {
           gap: "30px",
         }}
       >
-        <Title>Сталася помилка... Ми вже працюємо над її вирішенням</Title>
+        <Title align={"center"}>
+          Сталася помилка... Ми вже працюємо над її вирішенням
+        </Title>
         <Picture
           formats={{ jpg: serverErrorPic }}
           alt={"404"}

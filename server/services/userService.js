@@ -64,10 +64,10 @@ export default class userService {
   static async login(email, password, device) {
     const user = await userModel.findOne({ email });
 
-    if (!user) throw new AppError("Invalid email", 400);
+    if (!user) throw new AppError("Непривильний email або пароль!", 400);
 
     const isPassEquals = await bcrypt.compare(password, user.password);
-    if (!isPassEquals) throw new AppError("Invalid password", 400);
+    if (!isPassEquals) throw new AppError("Непривильний email або пароль!", 400);
 
     const payload = new AuthDTO(user);
     const tokens = authService.generateTokens({ ...payload });
@@ -100,7 +100,7 @@ export default class userService {
 
   static async sendResetToken(email) {
     const user = await userModel.findOne({ email });
-    if (!user) throw new AppError("User with this e-mail does not exists!", 404);
+    if (!user) throw new AppError("Користувача з таким email не знайдено!", 404);
 
     const plainResetToken = crypto.randomBytes(32).toString("hex");
     const hashedResetToken = crypto

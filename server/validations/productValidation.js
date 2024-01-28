@@ -4,19 +4,18 @@ export const productValidationSchema = {
   id: {
     isMongoId: {
       if: param("id").exists(),
-      errorMessage: "incorrect product id!",
+      errorMessage: "Некоректне значення!",
     },
   },
   title: {
     matches: {
       if: body("title").exists(),
       options: [/^[\s\d\p{L}\p{P}]*$/u],
-      errorMessage:
-        "Title can contain only ukrainian and english letters, numbers and specials symbols!",
+      errorMessage: "Використовуйте лише кирилицю, латинські символи та цифри!",
     },
     isString: {
       if: body("title").exists(),
-      errorMessage: "title should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("title").exists(),
@@ -24,7 +23,7 @@ export const productValidationSchema = {
         min: 3,
         max: 60,
       },
-      errorMessage: "Title must contain from 3 to 60 characters",
+      errorMessage: "Довжина назви має бути від 1 до 60 символів!",
     },
     trim: true,
   },
@@ -44,19 +43,18 @@ export const productValidationSchema = {
           "Десерти",
         ],
       ],
-      errorMessage: "This value is not allowed!",
+      errorMessage: "Некоректне значення!",
     },
   },
   description: {
     matches: {
       if: body("description").exists(),
       options: [/^[\s\d\p{L}\p{P}]*$/u],
-      errorMessage:
-        "Description can contain only ukrainian and english letters, numbers and specials symbols!",
+      errorMessage: "Використовуйте лише кирилицю, латинські символи та цифри!",
     },
     isString: {
       if: body("description").exists(),
-      errorMessage: "Description should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("description").exists(),
@@ -64,14 +62,14 @@ export const productValidationSchema = {
         min: 0,
         max: 350,
       },
-      errorMessage: "Description should contain from 0 to 350 characters!",
+      errorMessage: "Довжина тексту має бути від 1 до 350 символів!",
     },
     trim: true,
   },
   fullText: {
     isString: {
       if: body("fullText").exists(),
-      errorMessage: "Fulltext should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("fullText").exists(),
@@ -79,7 +77,7 @@ export const productValidationSchema = {
         min: 0,
         max: 1500,
       },
-      errorMessage: "FullText should contain from 0 to 1500 characters!",
+      errorMessage: "Довжина тексту має бути від 1 до 1500 символів!",
     },
     trim: true,
   },
@@ -87,7 +85,7 @@ export const productValidationSchema = {
     isInt: {
       if: body("weight").exists(),
       options: { min: 1 },
-      errorMessage: "Weight should be an integer and be greater than 0!",
+      errorMessage: "Вага товару має бути більше за 0!",
     },
   },
 
@@ -95,14 +93,14 @@ export const productValidationSchema = {
     isFloat: {
       if: body("price").exists(),
       options: { min: 1 },
-      errorMessage: "Price should be float and be greater than 0!",
+      errorMessage: "Ціна товару має бути більше за 0!",
     },
   },
   discountPrice: {
     isFloat: {
       if: body("discountPrice").exists().notEmpty(),
       options: { min: 1 },
-      errorMessage: "DiscountPrice should be a float and be greater than 0!",
+      errorMessage: "Знижка має бути більше за 0!",
     },
     custom: {
       if: body("discountPrice").exists(),
@@ -112,7 +110,7 @@ export const productValidationSchema = {
         if (!price) return true;
 
         if (+value > +price) {
-          throw new Error("DiscountPrice cannot be greater than the regular price!");
+          throw new Error("Знижка не може бути більшою за ціну!");
         }
         return true;
       },
@@ -121,7 +119,7 @@ export const productValidationSchema = {
   nutrients: {
     isObject: {
       if: body("nutriens").exists(),
-      errorMessage: "Nutrients should be an object!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "nutrients.calories": {
@@ -130,7 +128,7 @@ export const productValidationSchema = {
       options: {
         min: 0,
       },
-      errorMessage: "Calories should be an integer!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "nutrients.carbohydrates": {
@@ -139,7 +137,7 @@ export const productValidationSchema = {
       options: {
         min: 0,
       },
-      errorMessage: "Carbohydrates should be an integer!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "nutrients.protein": {
@@ -148,7 +146,7 @@ export const productValidationSchema = {
       options: {
         min: 0,
       },
-      errorMessage: "Protein should be an integer!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "nutrients.fats": {
@@ -157,13 +155,13 @@ export const productValidationSchema = {
       options: {
         min: 0,
       },
-      errorMessage: "Fats should be an integer!",
+      errorMessage: "Некоректне значення!",
     },
   },
   isVegan: {
     isBoolean: {
       if: body("isVegan").exists(),
-      errorMessage: "IsVegan should be a boolean!",
+      errorMessage: "Некоректне значення!",
     },
   },
   cookTime: {
@@ -172,27 +170,26 @@ export const productValidationSchema = {
       options: {
         min: 1,
       },
-      errorMessage: "CookTime should be an integer and be greater than 0!",
+      errorMessage: "Час приготування має бути більше за 0!",
     },
   },
   isNewProduct: {
     isBoolean: {
       if: body("isNewProduct").exists(),
-      errorMessage: "IsNewProduct should be a boolean!",
+      errorMessage: "Некоректне значення!",
     },
   },
   compound: {
     isArray: {
       if: body("compound").exists(),
-      errorMessage: "Compound should be an array!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "compound.*": {
     matches: {
       if: body("compound").exists(),
       options: [/^[\s\d\p{L}\p{P}]*$/u],
-      errorMessage:
-        "Compound item can contain only ukrainian and english letters, numbers and specials symbols!",
+      errorMessage: "Використовуйте лише кирилицю, латинські символи та цифри!",
     },
     trim: true,
   },
@@ -202,14 +199,14 @@ export const productValidationStrictSchema = {
   ...productValidationSchema,
   title: {
     exists: {
-      errorMessage: "Title is required",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...productValidationSchema.title,
   },
   category: {
     exists: {
-      errorMessage: "Category is required",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...productValidationSchema.category,
@@ -217,35 +214,35 @@ export const productValidationStrictSchema = {
   description: {
     exists: {
       options: { values: "falsy" },
-      errorMessage: "Description is required",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...productValidationSchema.description,
   },
   weight: {
     exists: {
-      errorMessage: "Weight is required",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...productValidationSchema.weight,
   },
   price: {
     exists: {
-      errorMessage: "Price is required",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...productValidationSchema.price,
   },
   isVegan: {
     exists: {
-      errorMessage: "Isvegan is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...productValidationSchema.isVegan,
   },
   cookTime: {
     exists: {
-      errorMessage: "CookTime is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...productValidationSchema.cookTime,

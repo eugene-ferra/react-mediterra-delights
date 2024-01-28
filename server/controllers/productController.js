@@ -71,7 +71,10 @@ export const addProduct = async (req, res, next) => {
         status: "fail",
         errors: req?.files?.imgCover?.[0]?.buffer
           ? errors.array()
-          : [...errors.array(), { path: "imgCover", msg: "imgCover is required" }],
+          : [
+              ...errors.array(),
+              { path: "imgCover", msg: "Будь-ласка, додайте зображення до товару!" },
+            ],
       });
     }
 

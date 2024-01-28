@@ -11,12 +11,11 @@ export const articleValidationSchema = {
     matches: {
       if: body("title").exists(),
       options: [/^[\s\d\p{L}\p{P}]*$/u],
-      errorMessage:
-        "Title can contain only ukrainian and english letters, numbers and specials symbols!",
+      errorMessage: "Використовуйте лише кирилицю, латинські символи та цифри!",
     },
     isString: {
       if: body("title").exists(),
-      errorMessage: "title should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("title").exists(),
@@ -24,7 +23,7 @@ export const articleValidationSchema = {
         min: 1,
         max: 100,
       },
-      errorMessage: "Title must contain from 0 to 60 characters",
+      errorMessage: "Довжина заголовку має бути від 1 до 100 символів!",
     },
     trim: true,
   },
@@ -32,32 +31,31 @@ export const articleValidationSchema = {
     isIn: {
       if: body("topic").exists(),
       options: [["Рецепти", "Поради", "Новини", "Інше"]],
-      errorMessage: "This value is not allowed!",
+      errorMessage: "Некоректне значення!",
     },
   },
   markup: {
     isString: {
       if: body("markup").exists(),
-      errorMessage: "markup should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("markup").exists(),
       options: {
         min: 1,
       },
-      errorMessage: "markup cannot be empty",
+      errorMessage: "Поле не може бути пустим!",
     },
   },
   previewText: {
     matches: {
       if: body("previewText").exists(),
       options: [/^[\s\d\p{L}\p{P}]*$/u],
-      errorMessage:
-        "PreviewText can contain only ukrainian and english letters, numbers and specials symbols!",
+      errorMessage: "Використовуйте лише кирилицю, латинські символи та цифри!",
     },
     isString: {
       if: body("previewText").exists(),
-      errorMessage: "PreviewText should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("previewText").exists(),
@@ -65,7 +63,7 @@ export const articleValidationSchema = {
         min: 1,
         max: 200,
       },
-      errorMessage: "PreviewText must contain from 0 to 60 characters",
+      errorMessage: "Довжина тексту має бути від 1 до 100 символів!",
     },
     trim: true,
   },
@@ -75,21 +73,21 @@ export const articleValidationStrictSchema = {
   ...articleValidationSchema,
   title: {
     exists: {
-      errorMessage: "Title is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...articleValidationSchema.title,
   },
   topic: {
     exists: {
-      errorMessage: "topic is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...articleValidationSchema.topic,
   },
   markup: {
     exists: {
-      errorMessage: "markup is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       options: {
         values: "falsy",
       },
@@ -99,7 +97,7 @@ export const articleValidationStrictSchema = {
   },
   previewText: {
     exists: {
-      errorMessage: "previewText is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...articleValidationSchema.previewText,

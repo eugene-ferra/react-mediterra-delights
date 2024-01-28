@@ -4,7 +4,7 @@ export const orderProceedValidation = {
   isPayed: {
     isBoolean: {
       if: body("isPayed").exists(),
-      errorMessage: "isPayed should be a boolean value!",
+      errorMessage: "Некоректне значення!",
     },
   },
   status: {
@@ -20,7 +20,7 @@ export const orderProceedValidation = {
           "Замовлення отримано",
         ],
       ],
-      errorMessage: "This value is not allowed!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };
@@ -30,7 +30,7 @@ export const orderValidationSchema = {
     matches: {
       if: body("name").exists(),
       options: [/^[-'\p{L}]*$/u],
-      errorMessage: "Name can contain only letters, ' and - symbols!",
+      errorMessage: "Вкажіть коректне ім'я",
     },
     isLength: {
       if: body("name").exists(),
@@ -38,7 +38,7 @@ export const orderValidationSchema = {
         min: 3,
         max: 20,
       },
-      errorMessage: "Name should contain 3-20 characters",
+      errorMessage: "Довжина ім'я має бути від 1 до 20 символів!",
     },
     toLowerCase: true,
   },
@@ -46,7 +46,7 @@ export const orderValidationSchema = {
     matches: {
       if: body("lastName").exists(),
       options: [/^[-'\p{L}]*$/u],
-      errorMessage: "LastName can contain only letters, ' and - symbols!",
+      errorMessage: "Будь-ласка, вкажіть коректне ім'я!",
     },
     isLength: {
       if: body("lastName").exists(),
@@ -54,7 +54,7 @@ export const orderValidationSchema = {
         min: 3,
         max: 20,
       },
-      errorMessage: "lastName should contain 3-20 characters",
+      errorMessage: "Довжина прізвища має бути від 1 до 100 символів!",
     },
     toLowerCase: true,
   },
@@ -62,12 +62,13 @@ export const orderValidationSchema = {
     isMobilePhone: {
       if: body("phone").exists(),
       options: ["uk-UA", { strictMode: false }],
+      errorMessage: "Вкажіть коректний телефон!",
     },
   },
   email: {
     isEmail: {
       if: body("email").exists(),
-      errorMessage: "Email should be correct!",
+      errorMessage: "Вкажіть коректний email!",
     },
     normalizeEmail: true,
   },
@@ -75,20 +76,20 @@ export const orderValidationSchema = {
     isIn: {
       if: body("deliveryType").exists(),
       options: [["Самовивіз", "Доставка кур'єром"]],
-      errorMessage: "This value is not allowed!",
+      errorMessage: "Некоректне значення!",
     },
   },
   products: {
     isArray: {
       if: body("products").exists(),
       options: { min: 1 },
-      errorMessage: "Products should be an array and contain products!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "products.*.id": {
     isMongoId: {
       if: body("products").exists(),
-      errorMessage: "Product id should be a mongo id!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "products.*.quantity": {
@@ -97,47 +98,47 @@ export const orderValidationSchema = {
       options: {
         min: 1,
       },
-      errorMessage: "Product quantity should be bigger than 0!",
+      errorMessage: "Кількість товарів має бути більше ніж 0!",
     },
   },
   deliveryAddress: {
     isObject: {
       if: body("deliveryAddress").exists(),
-      errorMessage: "DeliveryAddress should be an object!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "deliveryAddress.street": {
     exists: {
       if: body("deliveryType").equals("Доставка кур'єром"),
-      errorMessage: "street is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     matches: {
       options: [/^[-'\p{L}]*$/u],
-      errorMessage: "String can contain only letters, ' and - symbols!",
+      errorMessage: "Будь-ласка, вкажіть коректну вулицю!",
     },
   },
   "deliveryAddress.home": {
     exists: {
       if: body("deliveryType").equals("Доставка кур'єром"),
-      errorMessage: "home is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     matches: {
       options: [/^[0-9]+[A-Za-z]*([\/\-][0-9]+[A-Za-z]*)*$/],
-      errorMessage: "Invalid format of home!",
+      errorMessage: "Будь-ласка, вкажіть коректний номер будинку!",
     },
   },
   "deliveryAddress.flat": {
     matches: {
       if: body("deliveryAddress.flat").exists(),
       options: [/^[0-9]+[A-Z]*$/],
-      errorMessage: "Invalid format of flat",
+      errorMessage: "Будь-ласка, вкажіть коректний номер квартири!",
     },
   },
   pickupLocation: {
     isIn: {
       if: body("pickupLocation").exists(),
       options: [["Харків, вул. Сумська, 123", "Харків, вул. Пушкінська 55"]],
-      errorMessage: "This value is not allowed!",
+      errorMessage: "Некоректне значення!",
     },
   },
   deliveryTime: {
@@ -146,7 +147,7 @@ export const orderValidationSchema = {
       options: {
         strictMode: true,
       },
-      errorMessage: "invalid format of date!",
+      errorMessage: "Некоректне значення!",
     },
     custom: {
       options: (value) => {
@@ -161,7 +162,7 @@ export const orderValidationSchema = {
           throw new Error("Invalid date!");
         }
         if (hours < openingTime || hours >= closingTime) {
-          throw new Error("Our delivery service is closed. Try again later!");
+          throw new Error("Ми вже зачинені! Спробуйте зробити замовлення в інший час!");
         }
 
         return true;
@@ -172,7 +173,7 @@ export const orderValidationSchema = {
     isIn: {
       if: body("paymentType").exists(),
       options: [["При отриманні", "Карткою на сайті"]],
-      errorMessage: "This value is not allowed!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };
@@ -181,35 +182,35 @@ export const orderValidationStrictSchema = {
   ...orderValidationSchema,
   name: {
     exists: {
-      errorMessage: "Name is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...orderValidationSchema.name,
   },
   lastName: {
     exists: {
-      errorMessage: "LastName is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...orderValidationSchema.lastName,
   },
   phone: {
     exists: {
-      errorMessage: "Phone is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...orderValidationSchema.phone,
   },
   email: {
     exists: {
-      errorMessage: "Email is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...orderValidationSchema.email,
   },
   deliveryType: {
     exists: {
-      errorMessage: "DeliveryType is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     ...orderValidationSchema.deliveryType,
@@ -217,57 +218,57 @@ export const orderValidationStrictSchema = {
   deliveryAddress: {
     exists: {
       if: body("deliveryType").equals("Доставка кур'єром"),
-      errorMessage: "DeliveryAddres is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     ...orderValidationSchema.deliveryAddress,
   },
   products: {
     exists: {
-      errorMessage: "Products is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isArray: {
       options: { min: 1 },
-      errorMessage: "Products should be an array and contain products!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "products.*.id": {
     exists: {
-      errorMessage: "Product id is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isMongoId: {
-      errorMessage: "Product id should be a mongo id!",
+      errorMessage: "Некоректне значення!",
     },
   },
   "products.*.quantity": {
     exists: {
-      errorMessage: "Product quantity is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isInt: {
       options: {
         min: 1,
       },
-      errorMessage: "Product quantity should be bigger than 0!",
+      errorMessage: "Кількість товарів має бути більше за 0!",
     },
   },
   pickupLocation: {
     exists: {
       if: body("deliveryType").equals("Самовивіз"),
-      errorMessage: "pickupLocation is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     ...orderValidationSchema.pickupLocation,
   },
   deliveryTime: {
     exists: {
-      errorMessage: "deliveryTime is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     ...orderValidationSchema.deliveryTime,
   },
   paymentType: {
     exists: {
-      errorMessage: "paymentType is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     ...orderValidationSchema.paymentType,
   },

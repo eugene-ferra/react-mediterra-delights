@@ -7,7 +7,12 @@ export const imageUpload = multer({
   storage: multer.memoryStorage(),
   fileFilter: (req, file, cb) => {
     if (!whitelist.includes(file.mimetype)) {
-      return cb(new AppError(`${file.originalname} : this file is not allowed!`, 400));
+      return cb(
+        new AppError(
+          `${file.originalname} : ви не можете прикріпити файл такого формату!`,
+          400
+        )
+      );
     }
 
     cb(null, true);

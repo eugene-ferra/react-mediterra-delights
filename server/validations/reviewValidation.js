@@ -5,12 +5,11 @@ export const reviewValidationSchema = {
     matches: {
       if: body("review").exists(),
       options: [/^[\s\d\p{L}\p{P}]*$/u],
-      errorMessage:
-        "review can contain only ukrainian and english letters, numbers and specials symbols!",
+      errorMessage: "Використовуйте лише кирилицю, латинські символи та цифри!",
     },
     isString: {
       if: body("review").exists(),
-      errorMessage: "review should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isLength: {
       if: body("review").exists(),
@@ -18,7 +17,7 @@ export const reviewValidationSchema = {
         min: 1,
         max: 500,
       },
-      errorMessage: "review must contain from 0 to 500 characters",
+      errorMessage: "Довжина відгуку має бути від 1 до 500 символів!",
     },
     trim: true,
   },
@@ -26,13 +25,13 @@ export const reviewValidationSchema = {
     isIn: {
       if: body("rating").exists(),
       options: [[1, 2, 3, 4, 5]],
-      errorMessage: "This value is not allowed!",
+      errorMessage: "Некоректне значення!",
     },
   },
   isModerated: {
     isBoolean: {
       if: body("isModerated").exists(),
-      errorMessage: "isModerated should be a boolean!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };
@@ -41,13 +40,13 @@ export const postReviewValidationSchema = {
   ...reviewValidationSchema,
   review: {
     exists: {
-      errorMessage: "review is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     ...reviewValidationSchema.review,
   },
   rating: {
     exists: {
-      errorMessage: "rating is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
     },
     ...reviewValidationSchema.rating,
   },
@@ -55,25 +54,25 @@ export const postReviewValidationSchema = {
   id: {
     isMongoId: {
       if: param("id").exists(),
-      errorMessage: "Incorrect review id!",
+      errorMessage: "Некоректне значення!",
     },
   },
   productID: {
     exists: {
-      errorMessage: "productID is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isMongoId: {
-      errorMessage: "productID should be a mongo id!",
+      errorMessage: "Некоректне значення!",
     },
   },
   userID: {
     exists: {
-      errorMessage: "userID is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isMongoId: {
-      errorMessage: "userID should be a mongo id!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };

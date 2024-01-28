@@ -117,7 +117,7 @@ const ArticleBox = ({ article, isLiked, isSaved }) => {
           <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
               <Title align={"center"} type={"small"}>
-                Є що додати? Залиште коментар до цієї статті₴
+                Є що додати? Залиште коментар до цієї статті!
               </Title>
               <TextArea
                 type={"text"}

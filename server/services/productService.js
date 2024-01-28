@@ -38,7 +38,7 @@ export class productService {
 
     const testDoc = await productModel.findOne({ slug: textData.slug });
 
-    if (testDoc) throw new AppError("This product already exist!", 409);
+    if (testDoc) throw new AppError("Страва з такою назвою вже існує!", 409);
 
     const payload = textData.slug;
 
@@ -66,7 +66,7 @@ export class productService {
     if (data["title"] != doc.title) {
       const newSlug = slugify(data.title, { lower: true });
       if (await productModel.findOne({ slug: newSlug }))
-        throw new AppError("this product already exist!", 409);
+        throw new AppError("Страва з такою назвою вже існує!", 409);
 
       data["slug"] = newSlug;
     }

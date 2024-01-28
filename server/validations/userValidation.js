@@ -6,14 +6,14 @@ export const userValidationSchema = {
     matches: {
       if: body("name").exists(),
       options: [/^[-'\p{L}]*$/u],
-      errorMessage: "Name can contain only letters, ' and - symbols!",
+      errorMessage: "Будь-ласка, вкажіть коректне ім'я!",
     },
     isLength: {
       options: {
         min: 3,
         max: 20,
       },
-      errorMessage: "Name should contain 3-20 characters",
+      errorMessage: "Довжина ім'я має бути від 1 до 20 символів!",
     },
     toLowerCase: true,
   },
@@ -21,14 +21,14 @@ export const userValidationSchema = {
     matches: {
       if: body("lastName").exists(),
       options: [/^[-'\p{L}]*$/u],
-      errorMessage: "LastName can contain only letters, ' and - symbols!",
+      errorMessage: "Будь-ласка, вкажіть коректне прізвище!",
     },
     isLength: {
       options: {
         min: 3,
         max: 20,
       },
-      errorMessage: "Name should contain 3-20 characters",
+      errorMessage: "Довжина прізвища має бути від 1 до 20 символів!",
     },
     toLowerCase: true,
   },
@@ -36,28 +36,29 @@ export const userValidationSchema = {
     isMobilePhone: {
       if: body("phone").notEmpty(),
       options: ["uk-UA", { strictMode: false }],
+      errorMessage: "Будь-ласка, вкажіть коректний телефон!",
     },
   },
   password: {
     isString: {
       if: body("password").exists(),
-      errorMessage: "Password should be a string!",
+      errorMessage: "Некоректне значення!",
     },
     isStrongPassword: {
       options: { minLowercase: 0, minUppercase: 0 },
       errorMessage:
-        "Password should contain at least 8 characters including numbers and letters and symbols",
+        "Пароль повинен мати хоча б 1 цифру, літеру та спеціальний символ, а також бути довшим за 8 символів",
     },
   },
 
   oldPassword: {
     exists: {
       if: body("password").exists(),
-      errorMessage: "oldPassword is required!",
+      errorMessage: "Поле обов'язкове для заповнення!",
       bail: true,
     },
     isString: {
-      errorMessage: "Password should be a string!",
+      errorMessage: "Некоректне значення!",
     },
   },
 };
@@ -70,7 +71,7 @@ export const cartValidationSchema = {
       options: {
         min: 1,
       },
-      errorMessage: "quantity should be an integer and be greater than 0!",
+      errorMessage: "Кількість товарів має бути більшою за 0!",
     },
   },
 };

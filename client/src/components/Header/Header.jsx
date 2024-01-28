@@ -20,6 +20,8 @@ const Header = () => {
   const { user } = useUser();
   const { cart } = useCart();
 
+  console.log(user);
+
   const handleClick = () => {
     setIsDropDownOpen((state) => !state);
   };
@@ -34,7 +36,7 @@ const Header = () => {
         {user ? (
           <>
             <Link to={"/account"}>
-              <Avatar formats={user?.avatar} />
+              <Avatar formats={user?.avatar?.jpg ? user?.avatar : { jpg: null }} />
             </Link>
             <SwitchMode />
           </>
