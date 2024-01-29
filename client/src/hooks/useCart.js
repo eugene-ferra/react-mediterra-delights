@@ -20,6 +20,7 @@ export const useCart = () => {
   const adding = useMutation({
     mutationFn: (newItem) => addToCartApi(newItem.id, newItem.quantity),
     onSuccess: () => {
+      toast.success("Товар успішно додано до кошика!");
       queryClient.invalidateQueries("user");
     },
     onError: (errObj) => {

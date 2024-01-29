@@ -8,11 +8,19 @@ import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
 import ArticleBox from "../components/ArticleBox/ArticleBox";
 import { useUser } from "../hooks/useUser";
 import { useArticleById } from "../hooks/useArticleById";
+import Gallery from "../components/Gallery/Gallery";
+import BlockHeader from "../components/common/BlockHeader/BlockHeader";
+import Article from "../components/Article/Article";
 
 const OneArticlePage = () => {
   const { slug } = useParams();
   const { user } = useUser();
   const { articles, isLoading, error } = useArticles(`slug=${slug}`);
+  const {
+    articles: more,
+    isLoading: moreLoading,
+    error: moreError,
+  } = useArticles(`topic=${articles?.[1]?.[0]?.topic}`);
   useArticleById(articles?.[1]?.[0]?.id);
 
   return (
@@ -36,6 +44,14 @@ const OneArticlePage = () => {
             article={articles?.[1]?.[0]}
             isLiked={user ? user.likedArticles.includes(articles?.[1]?.[0]?.id) : false}
             isSaved={user ? user.savedArticles.includes(articles?.[1]?.[0]?.id) : false}
+          />
+          <Gallery
+            isLoading={moreLoading}
+            error={moreError}
+            top={<BlockHeader title={"Схожі статті"} />}
+            items={more?.[1]?.map((item) => (
+              <Article article={item} key={item?.id} />
+            ))}
           />
         </MainLayout>
       )}

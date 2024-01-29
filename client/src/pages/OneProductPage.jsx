@@ -14,6 +14,9 @@ import Text from "../components/common/Text/Text";
 import Button from "../components/common/Button/Button";
 import Picture from "../components/common/Picture/Picture";
 import loginImg from "../assets/login.svg";
+import Gallery from "../components/Gallery/Gallery";
+import BlockHeader from "../components/common/BlockHeader/BlockHeader";
+import Product from "../components/Product/Product";
 
 const OneProductPage = () => {
   const { slug } = useParams();
@@ -21,6 +24,12 @@ const OneProductPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { products, isLoading, error } = useProducts(`slug=${slug}`);
+
+  const {
+    products: categoryProducts,
+    error: categoryError,
+    isLoading: categoryLoading,
+  } = useProducts(`category=${products?.[1]?.[0]?.category}&sort=-avgRating`);
   return (
     <>
       <Header />
@@ -42,6 +51,20 @@ const OneProductPage = () => {
             product={products?.[1]?.[0]}
             isSaved={user ? user.savedProducts.includes(products?.[1]?.[0]?.id) : false}
             onUserError={() => setIsModalOpen(true)}
+          />
+
+          <Gallery
+            isLoading={categoryLoading}
+            error={categoryError}
+            top={<BlockHeader title={"Схожі страви"} />}
+            items={categoryProducts?.[1]?.map((item) => (
+              <Product
+                product={item}
+                key={item?.id}
+                isSaved={user?.savedProducts?.includes(item?.id)}
+                onUserError={() => setIsModalOpen(true)}
+              />
+            ))}
           />
         </MainLayout>
       )}
