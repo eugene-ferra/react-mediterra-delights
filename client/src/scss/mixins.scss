@@ -16,6 +16,12 @@
   }
 }
 
+@mixin smallLaptop {
+  @media screen and (max-width: 1200px) {
+    @content;
+  }
+}
+
 @mixin laptop {
   @media screen and (max-width: 1440px) {
     @content;

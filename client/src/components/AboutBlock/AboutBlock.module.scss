@@ -1,0 +1,28 @@
+@use "../../scss/mixins.scss" as mixins;
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px 0;
+}
+
+.aboutItem {
+  display: flex;
+  justify-content: center;
+  gap: 30px 40px;
+  flex-wrap: wrap;
+  &:nth-child(2n-1) {
+    flex-direction: row-reverse;
+  }
+  p {
+    flex: 1 1 600px;
+  }
+  img {
+    flex: 0 1 400px;
+    object-fit: cover;
+    height: 100%;
+    max-height: 300px;
+    border-radius: var(--radius);
+  }
+}

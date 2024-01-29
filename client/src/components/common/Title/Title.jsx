@@ -10,6 +10,9 @@ const Title = ({ children, className, align, type }) => {
     case "global":
       classType = styles.titleGlobal;
       break;
+    case "big":
+      classType = styles.titleBig;
+      break;
     default:
       classType = styles.title;
   }

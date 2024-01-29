@@ -10,6 +10,9 @@ const Text = ({ children, className, type, align, style }) => {
     case "normal":
       classValue = styles.text;
       break;
+    case "big":
+      classValue = styles.big;
+      break;
     default:
       classValue = styles.text;
   }

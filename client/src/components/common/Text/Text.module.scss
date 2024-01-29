@@ -11,3 +11,7 @@
   @extend .text;
   @include mixins.smallText;
 }
+.big {
+  @extend .text;
+  @include mixins.titleSmallText;
+}

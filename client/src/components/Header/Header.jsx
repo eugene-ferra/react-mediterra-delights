@@ -20,8 +20,6 @@ const Header = () => {
   const { user } = useUser();
   const { cart } = useCart();
 
-  console.log(user);
-
   const handleClick = () => {
     setIsDropDownOpen((state) => !state);
   };
