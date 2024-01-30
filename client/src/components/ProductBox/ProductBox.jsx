@@ -99,7 +99,7 @@ const ProductBox = ({ product, isSaved, onUserError }) => {
                       onClick={
                         isInCart(product?.id)
                           ? () => deleteFromCart(product?.id)
-                          : () => addToCart({ id: product?.id, count: 1 })
+                          : () => addToCart({ id: product?.id, quantity: 1 })
                       }
                     >
                       {isAddingToCart || isDeletingFromCart ? (
@@ -173,7 +173,15 @@ const ProductBox = ({ product, isSaved, onUserError }) => {
             <div className={styles.reviews}>
               <div className={styles.reviewsHeader}>
                 <Title type={"small"}>Відгуки</Title>
-                <Button onClick={() => setIsModalOpen(true)}>Написати відгук</Button>
+                {user ? (
+                  !product?.reviews
+                    ?.map((item) => item?.userID?.id)
+                    .includes(user?.id) && (
+                    <Button onClick={() => setIsModalOpen(true)}>Написати відгук</Button>
+                  )
+                ) : (
+                  <Button onClick={() => setIsModalOpen(true)}>Написати відгук</Button>
+                )}
               </div>
               <div className={styles.reviews}>
                 {product?.reviews.length > 0 ? (

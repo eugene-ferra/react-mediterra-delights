@@ -91,7 +91,7 @@ const Product = ({ product, isSaved, onUserError }) => {
               onClick={
                 isInCart(product?.id)
                   ? () => deleteFromCart(product?.id)
-                  : () => addToCart({ id: product?.id, count: 1 })
+                  : () => addToCart({ id: product?.id, quantity: 1 })
               }
             >
               {isAddingToCart || isDeletingFromCart ? (

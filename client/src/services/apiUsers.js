@@ -58,6 +58,9 @@ export async function unLikeArticle(id) {
 export async function addToCart(id, quantity) {
   return await api.post(`/api/users/me/cart`, { id, quantity });
 }
+export async function updateCart(id, quantity) {
+  return await api.patch(`/api/users/me/cart/${id}`, { id, quantity });
+}
 export async function deleteFromCart(id) {
   return await api.delete(`/api/users/me/cart/${id}`);
 }

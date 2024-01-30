@@ -11,9 +11,6 @@
   background-color: var(--primary-select-color);
   transition: var(--transition);
   box-shadow: 0 0 5px -2px var(--secondary-color);
-  &:hover {
-    box-shadow: 0 0 5px 0px var(--accent-color);
-  }
 }
 
 .body {
