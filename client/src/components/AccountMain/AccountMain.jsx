@@ -1,5 +1,4 @@
 import { FormProvider, useForm } from "react-hook-form";
-import { useUser } from "../../hooks/useUser";
 import Button from "../common/Button/Button";
 import FieldSet from "../common/FieldSet/FieldSet";
 import Form from "../common/Form/Form";
@@ -14,7 +13,6 @@ import Modal from "../common/Modal/Modal";
 import { useState } from "react";
 import Title from "../common/Title/Title";
 import Text from "../common/Text/Text";
-import { Link } from "react-router-dom";
 import { useDeleteUser } from "./useDeleteUser";
 
 const AccountMain = () => {
@@ -23,6 +21,10 @@ const AccountMain = () => {
   const { avatar, user } = useAccountUser(methods.setValue);
   const { logout, isLoading: isLoadingOut } = useLogoutUser();
   const { deleteMe, isLoading: isDeleting } = useDeleteUser();
+
+  const [isPassShow, setIsPassShow] = useState(false);
+  const [isNewShow, setIsNewPassShow] = useState(false);
+  const [isConfirmPassShow, setIsConfirmPassShow] = useState(false);
 
   const { updateUser, isLoading, errors } = useUpdateUser();
 
@@ -105,23 +107,32 @@ const AccountMain = () => {
           <FieldSet title={"Зміна паролю"}>
             <Input
               name={"password"}
+              type={"password"}
               title={"Старий пароль"}
               register={methods.register("oldPassword")}
               disabled={isLoading}
               errorMessage={errors?.oldPassword}
+              onShow={() => setIsPassShow((state) => !state)}
+              isShow={isPassShow}
             />
             <Input
               name={"password"}
               title={"Новий пароль"}
+              type={"password"}
               register={methods.register("password")}
               disabled={isLoading}
               errorMessage={errors?.password}
+              onShow={() => setIsNewPassShow((state) => !state)}
+              isShow={isNewShow}
             />
             <Input
               name={"passwordConfirm"}
+              type={"password"}
               title={"Підтвердження пароля"}
               register={methods.register("passwordConfirm")}
               disabled={isLoading}
+              onShow={() => setIsConfirmPassShow((state) => !state)}
+              isShow={isConfirmPassShow}
             />
           </FieldSet>
           <Button disabled={isLoading}>Змінити пароль</Button>

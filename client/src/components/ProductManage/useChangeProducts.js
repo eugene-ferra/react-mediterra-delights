@@ -14,6 +14,8 @@ export const useChangeProduct = () => {
     onSuccess: () => {
       toast.success("Товар успішно оновлено!");
       queryClient.invalidateQueries("adminProducts");
+      queryClient.invalidateQueries("products");
+      queryClient.invalidateQueries("product");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

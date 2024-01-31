@@ -11,6 +11,10 @@ export const useDeleteUser = () => {
     onSuccess: () => {
       toast.success("Аккаунт успішно видалено!");
       queryClient.clear("user");
+      queryClient.invalidateQueries("product");
+      queryClient.invalidateQueries("products");
+      queryClient.invalidateQueries("article");
+      queryClient.invalidateQueries("articles");
       navigate("/");
     },
     onError: (errObj) => {

@@ -12,6 +12,8 @@ export const useDeleteReview = () => {
     onSuccess: () => {
       toast.success("Відгук успішно видалено!");
       queryClient.invalidateQueries("adminReviews");
+      queryClient.invalidateQueries("products");
+      queryClient.invalidateQueries("product");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

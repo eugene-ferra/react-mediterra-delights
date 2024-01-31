@@ -119,6 +119,10 @@ a {
   fill: var(--secondary-color) !important;
 }
 
+.blot-formatter__toolbar-button line.ql-stroke {
+  stroke: var(--secondary-stable-color) !important;
+}
+
 .ql-active {
   .ql-stroke {
     stroke: var(--selection-color) !important;

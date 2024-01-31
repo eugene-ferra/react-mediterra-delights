@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { getOneProduct } from "../services/apiProducts";
 
 export const useManyProductsByIds = (ids = []) => {

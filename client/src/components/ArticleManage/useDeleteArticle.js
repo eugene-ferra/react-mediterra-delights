@@ -14,6 +14,8 @@ export const useDeleteArticle = () => {
     onSuccess: () => {
       toast.success("Статтю успішно видалено!");
       queryClient.invalidateQueries("adminArticles");
+      queryClient.invalidateQueries("articles");
+      queryClient.invalidateQueries("article");
       navigate("/admin/articles");
     },
     onError: (errObj) => {

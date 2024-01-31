@@ -17,8 +17,12 @@ import Editor from "../common/Editor/Editor";
 import { useChangeArticle } from "./useChangeArticle";
 import { getFormData } from "../../utils/getFormData";
 import { useDeleteArticle } from "./useDeleteArticle";
+import Modal from "../common/Modal/Modal";
+import { useState } from "react";
 
 const ArticleEdit = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { id } = useParams();
   const { options } = useArticleOptions();
   const methods = useForm();
@@ -102,19 +106,16 @@ const ArticleEdit = () => {
             </Form>
           </FormProvider>
 
-          <Form
-            style={{ gap: "10px" }}
-            onSubmit={methods.handleSubmit(() => deleteArticle(id))}
-          >
-            <FieldSet title={"Видалення продукту"}>
+          <Form style={{ gap: "10px" }} onSubmit={(e) => e.preventDefault()}>
+            <FieldSet title={"Видалення статті"}>
               <div>
-                <Text type={"normal"}>Ви справді хочете видалити цю статтю?</Text>
                 <Button
                   disabled={isDeleting}
                   type={"outline-red"}
                   style={{ marginTop: "10px" }}
+                  onClick={() => setIsModalOpen(true)}
                 >
-                  Так, видалити
+                  Видалити
                 </Button>
               </div>
             </FieldSet>
@@ -123,6 +124,34 @@ const ArticleEdit = () => {
       ) : (
         <ErrorMassage status={404} />
       )}
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <Title align={"center"}>Ви впевнені?</Title>
+          <Text align={"center"}>
+            У разі видалення статті ви більше не зможете її відновити. Всі коментарі,
+            лайки та перегляди будуть втрачені!
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              flexWrap: "wrap",
+            }}
+          >
+            <Button onClick={() => setIsModalOpen(false)}>Cкасувати</Button>
+            <Button
+              type={"outline-red"}
+              onClick={() => deleteArticle(id)}
+              disabled={isDeleting}
+            >
+              Так, видалити
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

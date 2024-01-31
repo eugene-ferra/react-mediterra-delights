@@ -1,6 +1,5 @@
 import { useCart } from "../../hooks/useCart";
 import { useManyProductsByIds } from "../../hooks/useManyProductsByIds";
-import { useProductById } from "../../hooks/useProductById";
 import CartItem from "../CartItem/CartItem";
 import Button from "../common/Button/Button";
 import Container from "../common/Container/Container";
@@ -23,7 +22,6 @@ const CartBox = () => {
     ? cart?.reduce((acc, item) => {
         const product = products?.find((p) => p.id === item.id);
         if (product) {
-          // Используйте с учетом скидки, если она есть
           const price = product.discountPrice || product.price;
           acc += price * item.quantity;
         }
@@ -36,10 +34,17 @@ const CartBox = () => {
       <Title type={"global"}>Товари у кошику</Title>
       {productError[0]?.status && <ErrorMassage status={productError?.status} />}
       {isProductLoading ? (
-        <Loader type={"global"} />
+        <div>
+          <Loader type={"global"} />
+        </div>
       ) : (
         <div className={styles.inner}>
           <div className={styles.cards}>
+            {cart?.length === 0 && (
+              <Text align={"center"} className={styles.noItems}>
+                В кошику немає жодного товару!
+              </Text>
+            )}
             {cart?.map((item) => (
               <CartItem
                 id={item?.id}
@@ -58,9 +63,13 @@ const CartBox = () => {
               <Text>Загальна сума</Text>
               <Text> {totalSum} грн</Text>
             </div>
-            <Button asTag={"Link"} to={"/order"}>
-              Оформити замовлення
-            </Button>
+            {cart?.length === 0 ? (
+              <Button disabled={true}>Оформити замовлення</Button>
+            ) : (
+              <Button asTag={"Link"} to={"/order"} disabled={true}>
+                Оформити замовлення
+              </Button>
+            )}
           </div>
         </div>
       )}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./Picture.module.scss";
+import errorImg from "../../../assets/default.jpg";
 
 const Picture = ({ formats, alt, defaultImg, className, style }) => {
   const [imageLoaded, setImageLoaded] = useState(true);
@@ -24,10 +25,7 @@ const Picture = ({ formats, alt, defaultImg, className, style }) => {
           {" "}
           <img
             className={`${styles.img} ${className || ""}`}
-            src={
-              defaultImg ||
-              "https://media.istockphoto.com/id/1354776457/vector/default-image-icon-vector-missing-picture-page-for-website-design-or-mobile-app-no-photo.jpg?s=612x612&w=0&k=20&c=w3OW0wX3LyiFRuDHo9A32Q0IUMtD4yjXEvQlqyYk9O4="
-            }
+            src={defaultImg || errorImg}
             alt={alt || "image"}
             style={style}
           />

@@ -14,6 +14,8 @@ export const useDeleteProduct = () => {
     onSuccess: () => {
       toast.success("Товар успішно видалено!");
       queryClient.invalidateQueries("adminProducts");
+      queryClient.invalidateQueries("products");
+      queryClient.invalidateQueries("product");
       navigate("/admin/products");
     },
     onError: (errObj) => {

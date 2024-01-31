@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Title from "../common/Title/Title";
 import { useAdminReviews } from "./useAdminReviews";
 import ManageItem from "../ManageItem/ManageItem";

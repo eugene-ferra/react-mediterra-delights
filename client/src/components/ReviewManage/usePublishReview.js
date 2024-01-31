@@ -12,6 +12,8 @@ export const usePublishReview = () => {
     onSuccess: () => {
       toast.success("Відгук успішно опубліковано!");
       queryClient.invalidateQueries("adminReviews");
+      queryClient.invalidateQueries("products");
+      queryClient.invalidateQueries("product");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

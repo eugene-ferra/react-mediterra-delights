@@ -12,6 +12,8 @@ export const usePublishComment = () => {
     onSuccess: () => {
       toast.success("Коментар успішно опубліковано!");
       queryClient.invalidateQueries("adminComments");
+      queryClient.invalidateQueries("articles");
+      queryClient.invalidateQueries("article");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

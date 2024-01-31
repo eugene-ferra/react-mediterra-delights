@@ -14,6 +14,10 @@ export const useUpdateUser = () => {
     onSuccess: () => {
       toast.success("Персональну інформацію успішно оновлено!");
       queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries("product");
+      queryClient.invalidateQueries("products");
+      queryClient.invalidateQueries("article");
+      queryClient.invalidateQueries("articles");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

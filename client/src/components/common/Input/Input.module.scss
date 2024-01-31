@@ -1,5 +1,25 @@
 @use "../../../scss/mixins.scss" as mixins;
 
+.wrapper {
+  position: relative;
+}
+
+.show {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 5px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  cursor: pointer;
+  img {
+    height: 24px;
+  }
+}
+
 .input {
   width: 100%;
   border: 2px solid var(--secondary-color);

@@ -14,6 +14,8 @@ export const useChangeArticle = () => {
     onSuccess: () => {
       toast.success("Статтю успішно оновлено!");
       queryClient.invalidateQueries("adminArticles");
+      queryClient.invalidateQueries("articles");
+      queryClient.invalidateQueries("article");
       navigate("/admin/articles");
     },
     onError: (errObj) => {

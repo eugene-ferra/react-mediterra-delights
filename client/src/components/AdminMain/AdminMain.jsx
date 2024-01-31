@@ -1,4 +1,3 @@
-import React from "react";
 import Title from "../common/Title/Title";
 
 const AdminMain = () => {

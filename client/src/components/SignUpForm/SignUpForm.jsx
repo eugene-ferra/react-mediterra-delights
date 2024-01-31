@@ -9,8 +9,11 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useRegister } from "./useRegister";
 import Loader from "../common/Loader/Loader";
+import { useState } from "react";
 
 const SignUpForm = () => {
+  const [isPassShow, setIsPassShow] = useState(false);
+
   const { signup, isLoading, errors } = useRegister();
   const { register, handleSubmit } = useForm();
 
@@ -60,6 +63,8 @@ const SignUpForm = () => {
           errorMessage={errors?.password}
           register={register("password")}
           disabled={isLoading}
+          isShow={isPassShow}
+          onShow={() => setIsPassShow((state) => !state)}
         />
         <Button disabled={isLoading} style={{ width: "100%" }}>
           {isLoading ? <Loader /> : "Реєстрація"}

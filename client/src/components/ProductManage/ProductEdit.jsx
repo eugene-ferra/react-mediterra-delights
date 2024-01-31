@@ -17,8 +17,12 @@ import { useAdminProduct } from "./useAdminProduct";
 import { useParams } from "react-router-dom";
 import { getFormData } from "../../utils/getFormData";
 import { useDeleteProduct } from "./useDeleteProduct";
+import Modal from "../common/Modal/Modal";
+import { useState } from "react";
 
 const ProductEdit = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { id } = useParams();
   const { options } = useProductsOptions();
   const methods = useForm();
@@ -203,10 +207,7 @@ const ProductEdit = () => {
             </Form>
           </FormProvider>
 
-          <Form
-            style={{ gap: "10px" }}
-            onSubmit={methods.handleSubmit(() => deleteProduct(id))}
-          >
+          <Form style={{ gap: "10px" }} onSubmit={(e) => e.preventDefault()}>
             <FieldSet title={"Видалення продукту"}>
               <div>
                 <Text type={"normal"}>Ви справді хочете видалити цей продукт?</Text>
@@ -214,6 +215,7 @@ const ProductEdit = () => {
                   disabled={isDeleting}
                   type={"outline-red"}
                   style={{ marginTop: "10px" }}
+                  onClick={() => setIsModalOpen(true)}
                 >
                   Так, видалити
                 </Button>
@@ -224,6 +226,34 @@ const ProductEdit = () => {
       ) : (
         <ErrorMessage status={404} />
       )}
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <Title align={"center"}>Ви впевнені?</Title>
+          <Text align={"center"}>
+            У разі видалення страви ви більше не зможете її відновити. Всі відгуки, лайки
+            та перегляди будуть втрачені!
+          </Text>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              flexWrap: "wrap",
+            }}
+          >
+            <Button onClick={() => setIsModalOpen(false)}>Cкасувати</Button>
+            <Button
+              type={"outline-red"}
+              onClick={() => deleteProduct(id)}
+              disabled={isDeleting}
+            >
+              Так, видалити
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

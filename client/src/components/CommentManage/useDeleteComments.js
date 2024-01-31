@@ -12,6 +12,8 @@ export const useDeleteComment = () => {
     onSuccess: () => {
       toast.success("Коментар успішно видалено!");
       queryClient.invalidateQueries("adminComments");
+      queryClient.invalidateQueries("articles");
+      queryClient.invalidateQueries("article");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

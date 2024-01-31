@@ -9,10 +9,13 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useLogin } from "./useLogin";
 import Loader from "../common/Loader/Loader";
+import { useState } from "react";
 
 const LoginForm = () => {
   const { login, isLoading, errors } = useLogin();
   const { register, handleSubmit } = useForm();
+
+  const [isPassShow, setIsPassShow] = useState(false);
 
   async function onSubmit(data) {
     login(data);
@@ -39,6 +42,8 @@ const LoginForm = () => {
           errorMessage={errors?.password}
           register={register("password")}
           disabled={isLoading}
+          isShow={isPassShow}
+          onShow={() => setIsPassShow((state) => !state)}
         />
         {errors?.all ? <Text type={"small"}>{errors?.all}</Text> : null}
 

@@ -14,6 +14,8 @@ export const usePostProduct = (resetForm) => {
     onSuccess: () => {
       toast.success("Товар успішно додано!");
       queryClient.invalidateQueries("adminProducts");
+      queryClient.invalidateQueries("products");
+      queryClient.invalidateQueries("product");
       resetForm();
       navigate("/admin/products");
     },

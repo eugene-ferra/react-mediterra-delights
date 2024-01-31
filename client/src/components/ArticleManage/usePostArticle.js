@@ -14,6 +14,8 @@ export const usePostArticle = (resetForm) => {
     onSuccess: () => {
       toast.success("Cтаттю успішно додано!");
       queryClient.invalidateQueries("adminArticles");
+      queryClient.invalidateQueries("articles");
+      queryClient.invalidateQueries("article");
       resetForm();
       navigate("/admin/articles");
     },

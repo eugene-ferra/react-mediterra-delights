@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { postComment } from "../../services/apiComments";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
