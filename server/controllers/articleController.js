@@ -4,6 +4,28 @@ import { getQueryData } from "../utils/getQueryData.js";
 import addLinks from "../utils/addLinks.js";
 import addLinksToMarkup from "../utils/addLinksToMarkup.js";
 import { validationResult } from "express-validator";
+import { fileService } from "../services/fileService.js";
+
+export const handleImages = async (req, res, next) => {
+  try {
+    const fileName = await fileService.saveOneFormatImage(
+      req.file.buffer,
+      "articles",
+      req.body?.name || "article"
+    );
+
+    const port = process.env.PORT || 3000;
+    const linkBegin = `${req.protocol}://${req.hostname}:${port}`;
+
+    res.status(200).json({
+      data: {
+        location: `${linkBegin}/${fileName}`,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const getArticles = async (req, res, next) => {
   try {
@@ -25,8 +47,6 @@ export const getArticles = async (req, res, next) => {
     data[1].map((doc) =>
       doc.comments.map((item) => addLinks(req, item.userID, ["avatar"]))
     );
-
-    data[1].map((doc) => addLinksToMarkup(req, doc, "markup"));
 
     res.status(200).json({ status: "success", data });
   } catch (err) {
@@ -84,7 +104,6 @@ export const getArticle = async (req, res, next) => {
     });
 
     data = addLinks(req, data[0], ["imgCover"]);
-    data = addLinksToMarkup(req, data, "markup");
 
     res.status(200).json({
       status: "success",

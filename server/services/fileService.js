@@ -8,6 +8,24 @@ export class fileService {
   static _imageFormats = ["avif", "webp", "jpg"];
   static _staticFolder = "public";
 
+  static async saveOneFormatImage(buffer, folder = "", payload) {
+    const baseName = `${Date.now()}-${slugify(payload, { lower: true })}`;
+    try {
+      const sharpInstance = sharp(buffer);
+
+      const localPath = path.join(folder, `${baseName}.jpg`);
+
+      await sharpInstance
+        .resize(null, null, { fit: "contain" })
+        .toFormat("jpg")
+        .toFile(path.join(this._staticFolder, localPath));
+
+      return localPath;
+    } catch (err) {
+      return {};
+    }
+  }
+
   static async saveOneImage(buffer, folder = "", payload, width = null) {
     const baseName = `${Date.now()}-${slugify(payload, { lower: true })}`;
     const fullNameObj = {};

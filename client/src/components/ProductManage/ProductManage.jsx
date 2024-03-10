@@ -24,7 +24,7 @@ const ProductManage = () => {
           <Link to={`${item.id}`} key={item.id}>
             <EditIcon />
           </Link>,
-          <Link to={`${item.id}`} key={item.title}>
+          <Link to={`${item.id}`} key={item.title} style={{ textAlign: "left" }}>
             {item.title}
           </Link>,
           <Link to={`${item.id}`} key={item.category}>

@@ -34,19 +34,6 @@ export const articleValidationSchema = {
       errorMessage: "Некоректне значення!",
     },
   },
-  markup: {
-    isString: {
-      if: body("markup").exists(),
-      errorMessage: "Некоректне значення!",
-    },
-    isLength: {
-      if: body("markup").exists(),
-      options: {
-        min: 1,
-      },
-      errorMessage: "Поле не може бути пустим!",
-    },
-  },
   previewText: {
     matches: {
       if: body("previewText").exists(),
@@ -84,16 +71,6 @@ export const articleValidationStrictSchema = {
       bail: true,
     },
     ...articleValidationSchema.topic,
-  },
-  markup: {
-    exists: {
-      errorMessage: "Поле обов'язкове для заповнення!",
-      options: {
-        values: "falsy",
-      },
-      bail: true,
-    },
-    ...articleValidationSchema.markup,
   },
   previewText: {
     exists: {

@@ -27,6 +27,10 @@ articleRouter
 articleRouter.route("/options").get(articleController.getOptions);
 
 articleRouter
+  .route("/images")
+  .post(imageUpload.single("image"), articleController.handleImages);
+
+articleRouter
   .route("/:id")
   .get(checkSchema(idValidationSchema), articleController.getArticle)
   .patch(

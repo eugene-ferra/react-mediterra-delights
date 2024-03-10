@@ -13,12 +13,12 @@ import DropZone from "../common/DropZone/DropZone";
 import TextArea from "../common/TextArea/TextArea";
 import Text from "../common/Text/Text";
 import ErrorMassage from "../common/ErrorMassage/ErrorMassage";
-import Editor from "../common/Editor/Editor";
 import { useChangeArticle } from "./useChangeArticle";
 import { getFormData } from "../../utils/getFormData";
 import { useDeleteArticle } from "./useDeleteArticle";
 import Modal from "../common/Modal/Modal";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import TextEditor from "../TextEditor/TextEditor";
 
 const ArticleEdit = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,21 +27,19 @@ const ArticleEdit = () => {
   const { options } = useArticleOptions();
   const methods = useForm();
 
+  const editorRef = useRef(null);
+
   const {
     article,
     imgCover,
     isLoading: isArticleLoading,
   } = useAdminArticle(id, methods.setValue);
 
-  const { isLoading, errors, patchArticle } = useChangeArticle();
+  const { isLoading, errors, patchArticle } = useChangeArticle(editorRef);
 
   const { isLoading: isDeleting, deleteArticle } = useDeleteArticle();
 
   async function onSubmit(data) {
-    if (!data?.markup.startsWith("<article>")) {
-      data.markup = `<article>${data.markup}</article>`;
-    }
-
     patchArticle({ id: id, data: getFormData(data) });
   }
 
@@ -94,15 +92,18 @@ const ArticleEdit = () => {
                   disabled={isLoading || isDeleting}
                 />
               </FieldSet>
-              <Editor
-                name={"markup"}
+
+              <TextEditor
                 title={"Контент статті*"}
-                defaultValue={article?.markup}
-                errorText={errors?.markup}
+                ref={editorRef}
                 disabled={isLoading || isDeleting}
+                initialValue={article?.markup}
+                imgName={() => methods.getValues()?.title}
               />
 
-              <Button disabled={isLoading}>{isLoading ? <Loader /> : "Оновити"}</Button>
+              <Button disabled={isLoading || isDeleting}>
+                {isLoading ? <Loader /> : "Оновити"}
+              </Button>
             </Form>
           </FormProvider>
 
@@ -110,7 +111,7 @@ const ArticleEdit = () => {
             <FieldSet title={"Видалення статті"}>
               <div>
                 <Button
-                  disabled={isDeleting}
+                  disabled={isDeleting || isLoading}
                   type={"outline-red"}
                   style={{ marginTop: "10px" }}
                   onClick={() => setIsModalOpen(true)}

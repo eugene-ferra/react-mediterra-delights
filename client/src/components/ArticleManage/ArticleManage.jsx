@@ -24,7 +24,7 @@ const ArticleManage = () => {
           <Link to={`${item.id}`} key={item.id}>
             <EditIcon />
           </Link>,
-          <Link to={`${item.id}`} key={item.id}>
+          <Link to={`${item.id}`} key={item.id} style={{ textAlign: "left" }}>
             {item?.title}
           </Link>,
           <Link to={`${item.id}`} key={item.id}>

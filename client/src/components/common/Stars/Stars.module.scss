@@ -7,8 +7,11 @@
 }
 
 .imgs {
+  display: flex;
   svg {
     width: 20px;
+    min-width: 20px;
+    max-width: 20px;
     height: 20px;
     object-fit: contain;
   }
@@ -28,7 +31,7 @@
 
 .starActive {
   position: absolute;
-  width: 0%;
+  width: 100%;
   height: 100%;
   top: 0;
   left: 0;

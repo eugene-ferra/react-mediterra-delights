@@ -16,6 +16,7 @@ export const useChangeProduct = () => {
       queryClient.invalidateQueries("adminProducts");
       queryClient.invalidateQueries("products");
       queryClient.invalidateQueries("product");
+      navigate("/admin/products");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

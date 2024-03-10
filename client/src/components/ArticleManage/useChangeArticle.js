@@ -4,13 +4,17 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { patchArticle } from "../../services/apiArticles";
 
-export const useChangeArticle = () => {
+export const useChangeArticle = (editorRef) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (data) => patchArticle(data.id, data.data),
+    mutationFn: async (data) => {
+      await patchArticle(data.id, data.data);
+      await editorRef.current.uploadImages();
+      await patchArticle(data.id, { markup: editorRef.current.getContent() });
+    },
     onSuccess: () => {
       toast.success("Статтю успішно оновлено!");
       queryClient.invalidateQueries("adminArticles");
