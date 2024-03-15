@@ -64,3 +64,6 @@ export async function updateCart(id, quantity) {
 export async function deleteFromCart(id) {
   return await api.delete(`/api/users/me/cart/${id}`);
 }
+export async function clearCart() {
+  return await api.delete("/api/users/me/cart");
+}

@@ -1,0 +1,56 @@
+@use "../../scss/mixins.scss" as mixins;
+
+.inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: nowrap;
+  padding: 20px 0;
+  justify-content: center;
+
+  @include mixins.mobile {
+    flex-wrap: wrap;
+  }
+}
+
+.form {
+  flex: 1 0 400px;
+  max-width: 100%;
+}
+
+.reciept {
+  padding-left: 20px;
+  border-left: 2px solid var(--secondary-color);
+  flex: 1 0 300px;
+  max-width: 400px;
+  padding: 0px 0px 0px 20px;
+  position: sticky;
+  top: 100px;
+  align-items: flex-start;
+  @include mixins.mobile {
+    flex: 1 0 100%;
+    max-width: 100%;
+    padding-left: 0px;
+    border-left: none;
+  }
+}
+
+.recieptItems {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+.sum {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}

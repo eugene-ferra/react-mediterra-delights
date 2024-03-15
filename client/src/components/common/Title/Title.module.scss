@@ -10,6 +10,9 @@
   &Global {
     @extend .title;
     padding: 20px 0;
+    @include mixins.tablet {
+      padding: 10px 0;
+    }
   }
   &Big {
     @extend .title;

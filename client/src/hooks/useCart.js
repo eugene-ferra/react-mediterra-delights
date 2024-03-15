@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import {
   addToCart as addToCartApi,
   deleteFromCart as deleteFromCartApi,
+  clearCart as clearCartApi,
   updateCart as updateProductApi,
 } from "../services/apiUsers";
 import toast from "react-hot-toast";
@@ -34,6 +35,17 @@ export const useCart = () => {
     mutationFn: (itemId) => deleteFromCartApi(itemId),
     onSuccess: () => {
       toast.success("Товар успішно видалено із кошика!");
+      queryClient.invalidateQueries("user");
+    },
+    onError: (errObj) => {
+      if (errObj?.navTo) navigate(errObj.navTo);
+      if (errObj?.message) toast.error(errObj.message);
+    },
+  });
+
+  const clearing = useMutation({
+    mutationFn: clearCartApi,
+    onSuccess: () => {
       queryClient.invalidateQueries("user");
     },
     onError: (errObj) => {
@@ -71,6 +83,11 @@ export const useCart = () => {
     }
   };
 
+  const clearCart = () => {
+    setCart([]);
+    Cookies.set("cart", JSON.stringify([]));
+  };
+
   const updateCart = (item) => {
     const newData = cart.map((cartItem) =>
       item.id === cartItem.id ? { ...cartItem, ...item } : cartItem
@@ -93,6 +110,7 @@ export const useCart = () => {
     addToCart: user ? adding.mutate : addToCart,
     updateCart: user ? updating.mutate : updateCart,
     deleteFromCart: user ? deleting.mutate : deleteFromCart,
+    clearCart: user ? clearing.mutate : clearCart,
     isInCart: user ? isInCart : isInCookieCart,
     isAdding: user ? adding.isPending : false,
     isDeleting: user ? deleting.isPending : false,

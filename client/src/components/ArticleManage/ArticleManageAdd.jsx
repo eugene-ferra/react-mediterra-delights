@@ -1,4 +1,3 @@
-import "react-quill/dist/quill.snow.css";
 import { useForm, FormProvider } from "react-hook-form";
 import Form from "../common/Form/Form";
 import { useArticleOptions } from "../../hooks/useArticleOptions";

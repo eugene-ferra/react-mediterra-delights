@@ -242,6 +242,15 @@ export default class userService {
     return [new UserDTO(updatedUser)];
   }
 
+  static async clearCart(userId) {
+    const user = await userModel.findById(userId);
+    if (!user) throw new AppError("User with this id does not exist!", 404);
+
+    const updatedUser = await userModel.findByIdAndUpdate(userId, { cart: [] });
+
+    return [new UserDTO(updatedUser)];
+  }
+
   static async updateOne(id, data, avatar) {
     const doc = await userModel.findById(id);
     if (!doc) throw new AppError(`There aren't users with this id!`, 404);

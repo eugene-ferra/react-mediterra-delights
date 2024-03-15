@@ -146,8 +146,6 @@ export class articleService {
       links.push(path.join(folder, element.attribs.src.split(`${folder}\\`)[1]));
     });
 
-    console.log(links);
-
     await fileService.deleteFiles(links);
     await fileService.deleteFiles(doc.imgCover);
 

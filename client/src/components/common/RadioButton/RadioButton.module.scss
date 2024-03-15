@@ -1,0 +1,102 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.radio,
+.radio * {
+  box-sizing: content-box !important;
+}
+
+.inner {
+  padding: 10px 0;
+  min-width: max-content;
+}
+
+.radio input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.radio span {
+  @include mixins.basicText;
+}
+
+.radio {
+  max-height: max-content;
+  display: table;
+  position: relative;
+  padding-left: 38px;
+  cursor: pointer;
+  margin-bottom: 0px;
+}
+
+.radio input[type="radio"] ~ .radioInput {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background: transparent;
+  transition: var(--transition);
+  border: 2px solid var(--secondary-color);
+  border-radius: 0px;
+  border-radius: 50%;
+}
+
+.radio input[type="radio"] ~ .radioInput::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 4px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  transition: var(--transition);
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+}
+
+.radio input[type="radio"]:disabled ~ .radioInput::after {
+  border-color: var(--secondary-light-color);
+}
+
+.radio input:checked ~ .radioInput::after {
+  display: block;
+}
+
+.radio:hover input[type="radio"]:not([disabled]) ~ .radioInput,
+.radio input[type="radio"]:focus ~ .radioInput {
+  border-color: var(--selection-color);
+  background: transparent;
+}
+
+.radio input:focus ~ .radioInput {
+  box-shadow: 0 0 0 2px var(--selection-color);
+}
+
+.radio input[type="radio"]:checked ~ .radioInput {
+  background: transparent;
+  border-color: var(--secondary-color);
+}
+
+.radio input[type="radio"]:disabled ~ .radioInput {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radio:hover input[type="radio"]:not([disabled]):checked ~ .radioInput,
+.radio input[type="radio"]:checked:focus ~ .radioInput {
+  background: transparent;
+  border-color: var(--selection-color);
+}
+
+.inputTitle {
+  @include mixins.basicBold;
+  margin-bottom: 10px;
+  display: inline-block;
+  width: max-content;
+}
+
+.inputError {
+  margin-top: 10px;
+  color: var(--accent-color);
+}

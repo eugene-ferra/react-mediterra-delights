@@ -56,11 +56,8 @@ userRouter
     checkSchema(cartValidationSchema),
     userController.updateCartItem
   )
-  .delete(
-    "/me/cart/:id",
-    checkSchema(idValidationSchema),
-    userController.deleteFromCart
-  );
+  .delete("/me/cart/:id", checkSchema(idValidationSchema), userController.deleteFromCart)
+  .delete("/me/cart", userController.clearCart);
 
 userRouter.route("/").get(restrictTo("admin"), userController.getUsers);
 

@@ -17,7 +17,7 @@ export class orderService {
 
     let addedProducts = [];
 
-    data.products = await Promise.all(
+    data["products"] = await Promise.all(
       data.products.map(async (item) => {
         const product = await productService.getOne({ id: item.id });
         if (!product) throw new AppError("incorrect products!", 400);
@@ -25,13 +25,13 @@ export class orderService {
         addedProducts.push({
           title: product[0].title,
           quantity: item.quantity,
-          price: product[0]?.discountPrice || product[0].price * item.quantity,
+          price: (product[0]?.discountPrice || product[0].price) * item.quantity,
         });
 
         return {
           id: item.id,
           quantity: item.quantity,
-          price: product[0]?.discountPrice || product[0].price * item.quantity,
+          price: (product[0]?.discountPrice || product[0].price) * item.quantity,
         };
       })
     );

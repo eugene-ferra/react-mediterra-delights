@@ -270,6 +270,15 @@ export const updateCartItem = async (req, res, next) => {
   }
 };
 
+export const clearCart = async (req, res, next) => {
+  try {
+    await userService.clearCart(req.user._id);
+    res.status(204).json({ status: "success" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const updateUserInfo = async (req, res, next) => {
   try {
     const errors = validationResult(req);

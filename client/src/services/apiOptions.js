@@ -17,3 +17,12 @@ export async function getArticleOptions() {
     throw { status: err.response.status };
   }
 }
+
+export async function getOrderOptions() {
+  try {
+    const response = await axios.get("/api/orders/options");
+    return response.data.data;
+  } catch (err) {
+    throw { status: err.response.status };
+  }
+}

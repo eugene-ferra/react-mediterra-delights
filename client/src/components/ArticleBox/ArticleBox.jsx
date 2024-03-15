@@ -2,7 +2,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import Container from "../common/Container/Container";
 import Title from "../common/Title/Title";
 import styles from "./ArticleBox.module.scss";
-import "react-quill/dist/quill.core.css";
 import { useState } from "react";
 import { useUser } from "../../hooks/useUser";
 import Button from "../common/Button/Button";

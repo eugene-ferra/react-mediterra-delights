@@ -13,7 +13,7 @@ export const orderProceedValidation = {
       options: [
         [
           "Замовлення в обробці",
-          "Замволення скасовано",
+          "Замовлення скасовано",
           "Замовлення підтверджено",
           "Замовлення готове",
           "Замовлення прямує до вас",
@@ -116,6 +116,12 @@ export const orderValidationSchema = {
       options: [/^[-'\p{L}]*$/u],
       errorMessage: "Будь-ласка, вкажіть коректну вулицю!",
     },
+    isLength: {
+      options: {
+        min: 1,
+      },
+      errorMessage: "Будь-ласка, вкажіть коректну вулицю!",
+    },
   },
   "deliveryAddress.home": {
     exists: {
@@ -152,16 +158,17 @@ export const orderValidationSchema = {
     custom: {
       options: (value) => {
         const openingTime = 8;
-        const closingTime = 22;
+        const closingTime = 23;
 
         const date = new Date(value);
         const hours = date.getUTCHours();
-        const currDate = date.getUTCDay();
+        const currentDate = new Date(Date.now());
 
-        if (new Date(Date.now()).getUTCDay() !== currDate) {
-          throw new Error("Invalid date!");
+        if (date <= currentDate) {
+          throw new Error("Неможливо обрати дату та час, які вже минули");
         }
-        if (hours < openingTime || hours >= closingTime) {
+
+        if (hours < openingTime || hours > closingTime) {
           throw new Error("Ми вже зачинені! Спробуйте зробити замовлення в інший час!");
         }
 

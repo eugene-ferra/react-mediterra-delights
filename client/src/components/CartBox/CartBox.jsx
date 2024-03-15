@@ -5,6 +5,7 @@ import Button from "../common/Button/Button";
 import Container from "../common/Container/Container";
 import ErrorMassage from "../common/ErrorMassage/ErrorMassage";
 import Loader from "../common/Loader/Loader";
+import Price from "../common/Price/Price";
 import Text from "../common/Text/Text";
 import Title from "../common/Title/Title";
 import styles from "./CartBox.module.scss";
@@ -18,11 +19,22 @@ const CartBox = () => {
     error: productError,
   } = useManyProductsByIds(cart?.map((item) => item?.id));
 
+  const totalDiscountPrice = !isProductLoading
+    ? cart?.reduce((acc, item) => {
+        const product = products?.find((p) => p.id === item.id);
+        if (product) {
+          const price = product.discountPrice || product?.price;
+          acc += price * item.quantity;
+        }
+        return acc;
+      }, 0)
+    : 0;
+
   const totalSum = !isProductLoading
     ? cart?.reduce((acc, item) => {
         const product = products?.find((p) => p.id === item.id);
         if (product) {
-          const price = product.discountPrice || product.price;
+          const price = product.price;
           acc += price * item.quantity;
         }
         return acc;
@@ -61,7 +73,7 @@ const CartBox = () => {
             </Title>
             <div className={styles.sum}>
               <Text>Загальна сума</Text>
-              <Text> {totalSum} грн</Text>
+              <Price discountPrice={totalDiscountPrice} price={totalSum} />
             </div>
             {cart?.length === 0 ? (
               <Button disabled={true}>Оформити замовлення</Button>
