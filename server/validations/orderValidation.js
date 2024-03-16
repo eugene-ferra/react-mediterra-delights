@@ -113,7 +113,7 @@ export const orderValidationSchema = {
       errorMessage: "Поле обов'язкове для заповнення!",
     },
     matches: {
-      options: [/^[-'\p{L}]*$/u],
+      options: [/^([\wа-яёіїА-ЯЁІЇ\s-']+)$/i],
       errorMessage: "Будь-ласка, вкажіть коректну вулицю!",
     },
     isLength: {
@@ -129,7 +129,7 @@ export const orderValidationSchema = {
       errorMessage: "Поле обов'язкове для заповнення!",
     },
     matches: {
-      options: [/^[0-9]+[A-Za-z]*([\/\-][0-9]+[A-Za-z]*)*$/],
+      options: [/^([\wа-яёіїА-ЯЁІЇ\s-']+)$/i],
       errorMessage: "Будь-ласка, вкажіть коректний номер будинку!",
     },
   },
