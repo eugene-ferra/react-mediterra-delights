@@ -39,4 +39,10 @@ orderRouter.patch(
   orderController.proceedOrder
 );
 
+orderRouter.post(
+  "/create-checkout",
+  checkSchema(orderValidationStrictSchema),
+  orderController.createCheckout
+);
+
 export default orderRouter;

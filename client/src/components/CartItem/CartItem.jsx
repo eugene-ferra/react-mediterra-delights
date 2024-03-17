@@ -15,7 +15,7 @@ const CartItem = ({ id, quantity, updateCart, deleteFromCart }) => {
       {product && quantity && (
         <div className={styles.cartItem}>
           <div className={styles.content}>
-            <Link to={`/product/${product?.slug}`}>
+            <Link to={`/products/${product?.slug}`}>
               <Picture
                 formats={product?.imgCover}
                 alt={product?.title}
@@ -23,7 +23,7 @@ const CartItem = ({ id, quantity, updateCart, deleteFromCart }) => {
               />
             </Link>
             <div className={styles.main}>
-              <Link to={`/product/${product?.slug}`} className={styles.text}>
+              <Link to={`/products/${product?.slug}`} className={styles.text}>
                 <Title type={"small"}>{product?.title}</Title>
                 <div className={styles.markers}>
                   {product?.isNewProduct && <Marker type={"green"}>Новинка</Marker>}

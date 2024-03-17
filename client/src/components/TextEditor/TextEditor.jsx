@@ -31,7 +31,7 @@ const TextEditor = forwardRef(function TextEditor(
           ref={ref}
           onInit={(evt, editor) => (ref.current = editor)}
           initialValue={initialValue}
-          apiKey="vlac75sd0cbvwhdum4kibmzbu5nd31v9hnw2az9xxt8k37bb"
+          apiKey={`${import.meta.env.VITE_TINYMCE_API_KEY}`}
           init={{
             height: "65vh",
             images_file_types: "jpg,webp,png",

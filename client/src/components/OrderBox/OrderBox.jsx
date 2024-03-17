@@ -30,6 +30,7 @@ const OrderBox = () => {
 
   const {
     createOrder,
+    createCheckout,
     isLoading: isCreating,
     errors,
   } = useCreateOrder(clearCart, methods.reset);
@@ -44,7 +45,18 @@ const OrderBox = () => {
 
   async function onSubmit(data) {
     data["products"] = [...cart];
-    createOrder(data);
+
+    if (data["deliveryType"] == options["deliveryType"][0]) {
+      data["deliveryAddress"] = {};
+    } else {
+      data["pickupLocation"] = null;
+    }
+
+    if (data["paymentType"] == options["paymentType"][1]) {
+      createCheckout(data);
+    } else {
+      createOrder(data);
+    }
   }
 
   const totalDiscountPrice = !isProductLoading
@@ -191,7 +203,9 @@ const OrderBox = () => {
                   ))}
                 </FieldSet>
 
-                <Button>{isCreating ? <Loader /> : "Підтверджую замовлення"}</Button>
+                <Button disabled={isCreating}>
+                  {isCreating ? <Loader /> : "Підтверджую замовлення"}
+                </Button>
               </Form>
             </FormProvider>
 

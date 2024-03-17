@@ -5,6 +5,7 @@ import AppError from "../utils/appError.js";
 import { authService } from "./authService.js";
 import Mailer from "./mailerService.js";
 import userService from "../services/userService.js";
+import Stripe from "stripe";
 
 export class orderService {
   static async addOrder(data, userToken) {
@@ -146,5 +147,59 @@ export class orderService {
     );
 
     return [new OrderDTO(order)];
+  }
+
+  static async createCheckout(orderData) {
+    const newOrder = await this.addOrder(orderData);
+
+    const orderItems = orderData.products.map(async (item) => {
+      const product = await productService.getOne({ id: item.id });
+      return {
+        price_data: {
+          currency: "uah",
+          unit_amount: (product[0]?.discountPrice || product[0].price) * 100,
+          product_data: {
+            name: product[0].title,
+            description: product[0]?.description,
+          },
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET);
+
+    const session = await stripe.checkout.sessions.create({
+      client_reference_id: `${newOrder.number}`,
+      payment_method_types: ["card"],
+      success_url: `${process.env.CLIENT_URL}/order/success`,
+      customer_email: orderData.email,
+      line_items: await Promise.all(orderItems),
+      mode: "payment",
+      locale: "ru",
+    });
+
+    return session;
+  }
+
+  static async proceedHook(body, sign) {
+    let stripeEvent;
+    try {
+      stripeEvent = Stripe.webhooks.constructEvent(
+        body,
+        sign,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (err) {
+      throw new AppError(`Webhook Error: ${err.message}`);
+    }
+
+    if (stripeEvent.type === "checkout.session.completed") {
+      await orderModel.findOneAndUpdate(
+        { number: stripeEvent.data.object.client_reference_id },
+        { isPayed: true },
+        { runValidators: true, new: true }
+      );
+    }
   }
 }

@@ -4,6 +4,10 @@ export const postOrder = async (data) => {
   return await api.postForm("/api/orders/", data);
 };
 
+export const createCheckout = async (data) => {
+  return await api.postForm("/api/orders/create-checkout", data);
+};
+
 export const getOrders = async (query) => {
   return await api.get(`/api/orders?${query}`);
 };

@@ -17,6 +17,8 @@ import userRouter from "./routers/userRouter.js";
 import orderRouter from "./routers/orderRouter.js";
 import morgan from "morgan";
 import cors from "cors";
+import Stripe from "stripe";
+import { proceedPayment } from "./controllers/orderController.js";
 const app = express();
 
 app.set("trust proxy", 1);
@@ -38,7 +40,10 @@ app.use(
 //   })
 // );
 
+app.post("/webhook", express.raw({ type: "application/json" }), proceedPayment);
+
 app.use(express.json({ limit: "10000kb" }));
+
 app.use(express.urlencoded({ extended: true, limit: "10000kb" }));
 app.use(cookieParser());
 
