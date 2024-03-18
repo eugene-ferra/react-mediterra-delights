@@ -14,12 +14,13 @@ const Input = ({
   style,
   isShow,
   onShow,
+  onChange,
 }) => {
   const errorClass = errorMessage ? styles.error : "";
 
   return (
     <label className={` ${className || ""} `}>
-      <p className={styles.inputTitle}>{title}</p>
+      {title && <p className={styles.inputTitle}>{title}</p>}
 
       <div className={styles.wrapper}>
         {type === "password" && onShow && (
@@ -40,11 +41,12 @@ const Input = ({
           placeholder={placeholder}
           name={name}
           {...register}
+          onChange={onChange}
           disabled={disabled}
           style={style}
         ></input>
       </div>
-      <p className={styles.inputError}>{errorMessage}</p>
+      {errorMessage && <p className={styles.inputError}>{errorMessage}</p>}
     </label>
   );
 };

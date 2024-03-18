@@ -54,7 +54,7 @@ const OrderSuccessPage = () => {
                   objectFit: "contain",
                 }}
               />
-              <p style={{ flex: "1 1 300px" }}>
+              <div style={{ flex: "1 1 300px" }}>
                 <Title>Ваше замовлення прийнято. Очікуйте на дзвінок менеджера!</Title>
                 <Text style={{ marginTop: "20px" }} type={"big"}>
                   Номер замовлення - {orderNumber}
@@ -79,7 +79,7 @@ const OrderSuccessPage = () => {
                   </Link>
                   , або в особистому кабінеті
                 </Text>
-              </p>
+              </div>
             </div>
           </Container>
         )}

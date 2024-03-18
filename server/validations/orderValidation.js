@@ -136,7 +136,7 @@ export const orderValidationSchema = {
   "deliveryAddress.flat": {
     matches: {
       if: body("deliveryAddress.flat").exists(),
-      options: [/^[0-9]+[A-Z]*$/],
+      options: [/^([\wа-яёіїА-ЯЁІЇ\s-']+)$/i],
       errorMessage: "Будь-ласка, вкажіть коректний номер квартири!",
     },
   },

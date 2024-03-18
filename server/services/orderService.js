@@ -52,7 +52,9 @@ export class orderService {
     }
     data["number"] = new Date().valueOf();
 
-    const order = await orderModel.create(data);
+    const order = await (
+      await orderModel.create(data)
+    ).populate({ path: "products.id" });
 
     if (decoded)
       await userService.updateOne(decoded.id, { $push: { ["orders"]: order._id } });
@@ -81,11 +83,11 @@ export class orderService {
     return data.map((item) => new OrderDTO(item));
   }
 
-  static async getOne(id) {
-    let doc = await orderModel.findOne({ number: id });
+  static async getOne(id, populateObj) {
+    let doc = await orderModel.findOne({ number: id }).populate(populateObj);
 
     if (!doc) {
-      doc = await orderModel.findById(id).exec();
+      doc = await orderModel.findById(id).populate(populateObj).exec();
       if (!doc) throw new AppError("There aren't documents with this id!", 404);
     }
 
@@ -157,6 +159,7 @@ export class orderService {
 
     const orderItems = orderData.products.map(async (item) => {
       const product = await productService.getOne({ id: item.id });
+
       return {
         price_data: {
           currency: "uah",

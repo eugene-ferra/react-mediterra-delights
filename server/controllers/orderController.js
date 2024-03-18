@@ -2,6 +2,7 @@ import { orderService } from "../services/orderService.js";
 import { getOrderData } from "../utils/getOrderData.js";
 import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
+import addLinks from "../utils/addLinks.js";
 
 export const createCheckout = async (req, res, next) => {
   try {
@@ -75,7 +76,10 @@ export const getAllOrders = async (req, res, next) => {
 
 export const getOrder = async (req, res, next) => {
   try {
-    let data = await orderService.getOne(req.params.id);
+    let data = await orderService.getOne(req.params.id, { path: "products.id" });
+    data?.[0].products?.map((item) =>
+      addLinks(req, item?.product, ["imgCover", "images"])
+    );
 
     res.status(200).json({ status: "success", data });
   } catch (error) {

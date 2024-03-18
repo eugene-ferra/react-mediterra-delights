@@ -37,6 +37,7 @@ import AccountFavourite from "./components/AccountFavourite/AccountFavourite.jsx
 import AccountSaved from "./components/AccountSaved/AccountSaved.jsx";
 import AccountOrders from "./components/AccountOrders/AccountOrders.jsx";
 import OrderSuccessPage from "./pages/OrderSuccessPage.jsx";
+import CheckOrderPage from "./pages/CheckOrderPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,7 @@ const router = createBrowserRouter([
       { path: "/cart", element: <CartPage /> },
       { path: "/order", element: <OrderPage /> },
       { path: "/order/success/:orderNumber", element: <OrderSuccessPage /> },
+      { path: "/check-order", element: <CheckOrderPage /> },
       { path: "/about", element: <AboutPage /> },
       { path: "/contacts", element: <ContactPage /> },
       { path: "/forbidden", element: <ForbiddenPage /> },

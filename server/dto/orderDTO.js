@@ -1,3 +1,4 @@
+import { ProductDTO } from "./productDTO.js";
 export class OrderDTO {
   id;
   name;
@@ -21,7 +22,11 @@ export class OrderDTO {
     this.lastName = responseOrder.lastName;
     this.phone = responseOrder.phone;
     this.products = responseOrder.products.map((item) => {
-      return { id: item.id, quantity: item.quantity, price: item.price };
+      return {
+        product: new ProductDTO(item.id),
+        quantity: item.quantity,
+        price: item.price,
+      };
     });
     this.deliveryType = responseOrder.deliveryType;
     this.deliveryAddress = {

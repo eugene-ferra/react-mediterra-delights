@@ -12,16 +12,18 @@ export const useCreateOrder = (clearCart, resetForm) => {
 
   const adding = useMutation({
     mutationFn: async (data) => {
-      await postOrder(data);
+      const order = await postOrder(data);
       await clearCart();
+
+      return order;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries("adminArticles");
       queryClient.invalidateQueries("articles");
       queryClient.invalidateQueries("article");
 
       resetForm();
-      navigate("/order/success");
+      navigate(`/order/success/${data?.number}`);
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
