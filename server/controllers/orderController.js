@@ -75,15 +75,6 @@ export const getAllOrders = async (req, res, next) => {
 
 export const getOrder = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
     let data = await orderService.getOne(req.params.id);
 
     res.status(200).json({ status: "success", data });

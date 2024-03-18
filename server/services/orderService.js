@@ -82,9 +82,12 @@ export class orderService {
   }
 
   static async getOne(id) {
-    const doc = await orderModel.findById(id).exec();
+    let doc = await orderModel.findOne({ number: id });
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (!doc) {
+      doc = await orderModel.findById(id).exec();
+      if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    }
 
     return [new OrderDTO(doc)];
   }
@@ -172,7 +175,7 @@ export class orderService {
     const session = await stripe.checkout.sessions.create({
       client_reference_id: `${newOrder.number}`,
       payment_method_types: ["card"],
-      success_url: `${process.env.CLIENT_URL}/order/success`,
+      success_url: `${process.env.CLIENT_URL}/order/success/${newOrder.number}`,
       customer_email: orderData.email,
       line_items: await Promise.all(orderItems),
       mode: "payment",

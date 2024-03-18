@@ -23,7 +23,7 @@ orderRouter.get("/options", orderController.getOptions);
 
 orderRouter
   .route("/:id")
-  .get(protect(), checkSchema(idValidationSchema), orderController.getOrder)
+  .get(protect(), orderController.getOrder)
   .patch(
     protect(),
     restrictTo("admin"),
