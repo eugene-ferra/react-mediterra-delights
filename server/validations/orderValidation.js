@@ -129,14 +129,14 @@ export const orderValidationSchema = {
       errorMessage: "Поле обов'язкове для заповнення!",
     },
     matches: {
-      options: [/^([\wа-яёіїА-ЯЁІЇ\s-']+)$/i],
+      options: [/^([\wа-яёіїА-ЯЁІЇ\s-/']+)$/i],
       errorMessage: "Будь-ласка, вкажіть коректний номер будинку!",
     },
   },
   "deliveryAddress.flat": {
     matches: {
-      if: body("deliveryAddress.flat").exists(),
-      options: [/^([\wа-яёіїА-ЯЁІЇ\s-']+)$/i],
+      if: body("deliveryAddress.flat").exists().notEmpty(),
+      options: [/^([\wа-яёіїА-ЯЁІЇ\s-/']+)$/i],
       errorMessage: "Будь-ласка, вкажіть коректний номер квартири!",
     },
   },

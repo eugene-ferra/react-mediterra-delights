@@ -21,6 +21,7 @@ export class OrderDTO {
     this.name = responseOrder.name;
     this.lastName = responseOrder.lastName;
     this.phone = responseOrder.phone;
+    this.email = responseOrder.email;
     this.products = responseOrder.products.map((item) => {
       return {
         product: new ProductDTO(item.id),

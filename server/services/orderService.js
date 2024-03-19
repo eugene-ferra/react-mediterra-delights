@@ -4,8 +4,8 @@ import { productService } from "../services/productService.js";
 import AppError from "../utils/appError.js";
 import { authService } from "./authService.js";
 import Mailer from "./mailerService.js";
-import userService from "../services/userService.js";
 import Stripe from "stripe";
+import userModel from "../models/userModel.js";
 
 export class orderService {
   static async addOrder(data, userToken) {
@@ -57,7 +57,9 @@ export class orderService {
     ).populate({ path: "products.id" });
 
     if (decoded)
-      await userService.updateOne(decoded.id, { $push: { ["orders"]: order._id } });
+      await userModel.findByIdAndUpdate(decoded.id, {
+        $push: { ["orders"]: order._id },
+      });
 
     await Mailer.sendMail(data.email, "Замовлення прийнято!", "orderEmail.ejs", {
       name: data.name,
@@ -154,8 +156,8 @@ export class orderService {
     return [new OrderDTO(order)];
   }
 
-  static async createCheckout(orderData) {
-    const newOrder = await this.addOrder(orderData);
+  static async createCheckout(orderData, userToken) {
+    const newOrder = await this.addOrder(orderData, userToken);
 
     const orderItems = orderData.products.map(async (item) => {
       const product = await productService.getOne({ id: item.id });

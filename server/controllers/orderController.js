@@ -15,7 +15,7 @@ export const createCheckout = async (req, res, next) => {
       });
     }
 
-    const session = await orderService.createCheckout(req.body);
+    const session = await orderService.createCheckout(req.body, req?.cookies?.access);
 
     res.status(200).json({ status: "success", data: { session: session } });
   } catch (error) {
@@ -46,10 +46,7 @@ export const addOrder = async (req, res, next) => {
 
     const data = getOrderData(req);
 
-    const order = await orderService.addOrder(
-      data,
-      req?.headers?.authorization?.split(" ")[1]
-    );
+    const order = await orderService.addOrder(data, req?.cookies?.access);
 
     res.status(201).json({ status: "success", data: order });
   } catch (error) {
