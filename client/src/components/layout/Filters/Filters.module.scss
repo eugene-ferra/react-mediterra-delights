@@ -1,0 +1,74 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.filters {
+  width: 100% !important;
+}
+
+.inner {
+  @include mixins.flexRow(10px, flex-start, stretch);
+  flex-wrap: nowrap;
+  position: relative;
+  padding: 10px 0;
+  @include mixins.mobile {
+    padding: 0;
+  }
+}
+
+.item {
+  display: block;
+  padding: 20px 10px;
+  width: 100%;
+  border: 0;
+  white-space: nowrap;
+  text-align: center;
+  background-color: var(--primary-color);
+  border-radius: var(--radius);
+  border: 1px solid var(--secondary-color);
+  @include mixins.basicBold;
+  cursor: pointer;
+  &:hover {
+    transition: var(--transition);
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+  }
+  &Active {
+    @extend .item;
+    border: 0;
+    background-color: var(--accent-color);
+    color: var(--primary-stable-color);
+    border: 0;
+    &:hover {
+      color: var(--primary-stable-color);
+      background-color: var(--accent-color);
+    }
+  }
+}
+
+.buttonPrev {
+  @include mixins.flexRow(0, center, center);
+  min-width: 45px;
+  min-height: calc(100% - 20px);
+  z-index: var(--middle-index);
+  border: 0;
+  background-color: var(--primary-color);
+  border-radius: var(--radius);
+  box-shadow: 0 0 3px 0 var(--secondary-color);
+  @include mixins.mobile {
+    display: none;
+  }
+  &:disabled {
+    opacity: 50%;
+  }
+  cursor: pointer;
+  svg {
+    path {
+      fill: var(--accent-color);
+    }
+  }
+}
+
+.buttonNext {
+  @extend .buttonPrev;
+  left: auto;
+  right: 0px;
+}

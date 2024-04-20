@@ -1,36 +1,18 @@
-import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import MainLayout from "../components/MainLayout/MainLayout";
-import Picture from "../components/common/Picture/Picture";
-import Title from "../components/common/Title/Title";
+import Footer from "../components/layout/Footer/Footer";
+import Header from "../components/layout/Header/Header";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
 import serverErrorPic from "../assets/serverError.png";
+import PageError from "../components/layout/PageError/PageError";
 
 const ServerErrorPage = () => {
   return (
     <>
       <Header />
-      <MainLayout
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "column",
-          padding: "50px 10px",
-          gap: "30px",
-        }}
-      >
-        <Title align={"center"}>
-          Сталася помилка... Ми вже працюємо над її вирішенням
-        </Title>
-        <Picture
-          formats={{ jpg: serverErrorPic }}
-          alt={"404"}
-          style={{
-            width: "100%",
-            maxWidth: "700px",
-            maxHeight: "400px",
-            height: "100%",
-            objectFit: "contain",
-          }}
+      <MainLayout>
+        <PageError
+          title={"Сталася помилка... Ми вже працюємо над її вирішенням"}
+          pic={serverErrorPic}
+          alt={"500"}
         />
       </MainLayout>
       <Footer />

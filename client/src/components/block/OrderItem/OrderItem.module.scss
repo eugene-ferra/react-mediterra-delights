@@ -1,0 +1,9 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.orderItem {
+  @include mixins.flexRow(10px, space-between, center);
+}
+
+.title {
+  flex: 0 0 45%;
+}

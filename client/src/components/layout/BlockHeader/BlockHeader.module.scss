@@ -1,0 +1,26 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.blockHeader {
+  @include mixins.flexRow(5px 25px, space-between, center, wrap);
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.link {
+  @include mixins.titleSmallText;
+  @include mixins.flexRow(10px, flex-start, center);
+  text-transform: none;
+  transition: var(--transition);
+  &:hover {
+    color: var(--accent-color);
+    svg path {
+      fill: var(--accent-color);
+    }
+  }
+  svg {
+    @include mixins.image(25px, 100%, contain);
+    path {
+      fill: var(--secondary-color);
+    }
+  }
+}

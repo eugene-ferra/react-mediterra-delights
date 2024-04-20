@@ -1,0 +1,7 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.form {
+  @include mixins.flexColumn(20px, flex-start, stretch);
+  width: 100%;
+  padding: 10px 10px;
+}

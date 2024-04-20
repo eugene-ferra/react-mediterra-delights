@@ -5,14 +5,11 @@
 }
 
 .show {
-  position: absolute;
-  top: 50%;
+  @include mixins.position(absolute, 50%, 5px);
+  @include mixins.flexRow(0px, flex-start, center);
   transform: translateY(-50%);
-  right: 5px;
   background: transparent;
   border: none;
-  display: flex;
-  align-items: center;
   height: 24px;
   cursor: pointer;
   img {
@@ -41,18 +38,4 @@
   &:disabled {
     opacity: 0.5;
   }
-}
-
-.inputTitle {
-  @include mixins.basicBold;
-  margin: 0 0 5px 0;
-}
-
-.inputError {
-  margin: 3px 0px 0px 0px;
-  color: var(--accent-color);
-}
-
-.react-datepicker-wrapper {
-  width: 100% !important;
 }

@@ -1,0 +1,39 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.inner {
+  @include mixins.flexRow(40px, center);
+  @include mixins.mobile {
+    flex-wrap: wrap;
+  }
+}
+
+.form {
+  flex: 1 0 400px;
+  max-width: 100%;
+}
+
+.reciept {
+  @include mixins.position(sticky, 100px);
+  padding-left: 20px;
+  border-left: 2px solid var(--secondary-color);
+  flex: 1 0 300px;
+  max-width: 400px;
+  padding: 0px 0px 0px 20px;
+  @include mixins.mobile {
+    flex: 1 0 100%;
+    max-width: 100%;
+    padding-left: 0px;
+    border-left: none;
+  }
+}
+
+.recieptItems {
+  @include mixins.flexColumn(20px, flex-start, stretch);
+  padding-bottom: 20px;
+  margin: 10px 0 10px;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+.sum {
+  @include mixins.flexRow(20px, space-between, center, wrap);
+}

@@ -1,22 +1,23 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProducts } from "../hooks/useProducts";
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import Loader from "../components/common/Loader/Loader";
-import ProductBox from "../components/ProductBox/ProductBox";
-import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
-import MainLayout from "../components/MainLayout/MainLayout";
 import { useUser } from "../hooks/useUser";
-import { useState } from "react";
-import Modal from "../components/common/Modal/Modal";
+import Header from "../components/layout/Header/Header";
+import Footer from "../components/layout/Footer/Footer";
+import ProductBox from "../components/layout/ProductBox/ProductBox";
+import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
+import Modal from "../components/block/Modal/Modal";
 import Title from "../components/common/Title/Title";
 import Text from "../components/common/Text/Text";
 import Button from "../components/common/Button/Button";
 import Picture from "../components/common/Picture/Picture";
 import loginImg from "../assets/login.svg";
-import Gallery from "../components/Gallery/Gallery";
-import BlockHeader from "../components/common/BlockHeader/BlockHeader";
-import Product from "../components/Product/Product";
+import Gallery from "../components/layout/Gallery/Gallery";
+import BlockHeader from "../components/layout/BlockHeader/BlockHeader";
+import Product from "../components/block/Product/Product";
+import PageLoader from "../components/layout/PageLoader/PageLoader";
+import BtnBlock from "../components/layout/BtnBlock/BtnBlock";
 
 const OneProductPage = () => {
   const { slug } = useParams();
@@ -33,19 +34,20 @@ const OneProductPage = () => {
   return (
     <>
       <Header />
-      {isLoading ? (
-        <MainLayout
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
-          <Loader type={"global"} />
+
+      {isLoading && (
+        <MainLayout>
+          <PageLoader />
         </MainLayout>
-      ) : error ? (
-        <MainLayout
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
+      )}
+
+      {error && (
+        <MainLayout>
           <ErrorMassage status={error.status} />
         </MainLayout>
-      ) : (
+      )}
+
+      {!isLoading && !error && products && (
         <MainLayout>
           <ProductBox
             product={products?.[1]?.[0]}
@@ -71,31 +73,21 @@ const OneProductPage = () => {
 
       <Footer />
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-            alignItems: "center",
-            padding: "10px 0",
-          }}
-        >
-          <Title type={"small"} align={"center"}>
-            Увійдіть в свій аккаунт!
-          </Title>
-          <Text align={"center"}>
-            Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
-          </Text>
-          <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-            <Button asTag={"Link"} to={"/login"}>
-              Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
-            </Button>
-            <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
-              Реєстрація
-            </Button>
-          </div>
-        </div>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} align="center">
+        <Title type={"small"} align={"center"}>
+          Увійдіть в свій аккаунт!
+        </Title>
+        <Text align={"center"}>
+          Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
+        </Text>
+        <BtnBlock>
+          <Button asTag={"Link"} to={"/login"}>
+            Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
+          </Button>
+          <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
+            Реєстрація
+          </Button>
+        </BtnBlock>
       </Modal>
     </>
   );

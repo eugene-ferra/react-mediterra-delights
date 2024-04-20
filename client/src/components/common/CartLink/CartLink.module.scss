@@ -1,13 +1,9 @@
 @use "../../../scss/mixins.scss" as mixins;
 
 .cart {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 45px;
-  min-height: 45px;
-  max-width: 45px;
-  max-height: 45px;
+  @include mixins.flexRow(0px, center, center);
+  width: 45px;
+  height: 45px;
   background-color: var(--primary-stable-color);
   border-radius: 50%;
   position: relative;
@@ -23,20 +19,15 @@
     }
   }
   @include mixins.mobile {
-    min-width: 40px;
-    min-height: 40px;
-    max-width: 40px;
-    max-height: 40px;
+    width: 40px;
+    height: 40px;
   }
 }
 
 .num {
-  position: absolute;
-  bottom: -5px;
-  right: -8px;
-  max-width: max-content;
+  @include mixins.position(absolute, unset, -8px, -5px, unset);
   background-color: var(--accent-color);
-  color: #f2f2f2 !important;
+  color: var(--primary-stable-color);
   border-radius: var(--radius);
   padding: 4px 5px;
 }

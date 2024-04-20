@@ -1,0 +1,7 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.inner {
+  @include mixins.flexRow(0, center, center);
+  width: 100%;
+  height: 100%;
+}

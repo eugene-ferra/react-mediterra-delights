@@ -3,6 +3,8 @@ import { useDropzone } from "react-dropzone";
 import { Controller, useFormContext } from "react-hook-form";
 import styles from "./DropZone.module.scss";
 import trash from "../../../assets/trash.svg";
+import Title from "../Title/Title";
+import Text from "../Text/Text";
 
 const DropZone = ({
   maxPhotos,
@@ -95,7 +97,7 @@ const Drop = ({
 
   return (
     <div>
-      <p className={styles.inputTitle}>{title}</p>
+      {title && <Title type={"input"}>{title}</Title>}
 
       <div
         className={`${
@@ -156,8 +158,8 @@ const Drop = ({
               ))}
         </aside>
       </div>
-      {error && <p className={styles.inputError}>{error}</p>}
-      <p className={styles.inputError}>{errorMessage}</p>
+      {error && <Text type={"error"}>{errorMessage}</Text>}
+      {errorMessage && <Text type={"error"}>{errorMessage}</Text>}
     </div>
   );
 };

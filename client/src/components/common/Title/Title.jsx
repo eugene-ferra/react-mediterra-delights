@@ -13,6 +13,9 @@ const Title = ({ children, className, align, type }) => {
     case "big":
       classType = styles.titleBig;
       break;
+    case "input":
+      className = styles.titleInput;
+      break;
     default:
       classType = styles.title;
   }

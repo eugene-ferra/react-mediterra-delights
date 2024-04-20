@@ -1,0 +1,9 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.inner {
+  @include mixins.flexColumn(20px, flex-start, stretch);
+}
+
+.form {
+  @include mixins.flexRow(15px, flex-start, flex-end, wrap);
+}

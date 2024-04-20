@@ -1,0 +1,68 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.order {
+  padding: 10px;
+  border: 1px solid var(--secondary-color);
+}
+
+.header {
+  @include mixins.flexRow(10px 30px, flex-start, space-between, wrap);
+  margin-bottom: 10px;
+  padding: 0 30px 10px 0;
+  border-bottom: 1px solid var(--secondary-color);
+  position: relative;
+}
+
+.headerDrop {
+  padding-right: 30px;
+}
+
+.drop {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  @include mixins.position(absolute, 0, 0);
+  cursor: pointer;
+  svg {
+    @include mixins.image(28px, 28px, contain);
+  }
+  &Close {
+    @extend .drop;
+    svg {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.mainData {
+  @include mixins.flexRow(10px 50px, flex-start, space-between, wrap);
+  padding: 0px 0 10px;
+  border-bottom: 1px solid var(--secondary-color);
+}
+
+.body {
+  @include mixins.flexRow(20px 30px, flex-start, flex-start, wrap);
+}
+
+.products {
+  flex: 1 0 350px;
+  max-width: 100%;
+  padding: 10px 0;
+}
+
+.orderInfo {
+  @include mixins.flexColumn(5px);
+  flex: 1 0 400px;
+  max-width: 100%;
+  padding: 10px 0;
+}
+
+.total {
+  @include mixins.flexRow(0, flex-start, space-between);
+  padding: 10px 0 0;
+}
+
+.bold {
+  font-weight: 500;
+}

@@ -30,9 +30,7 @@
 }
 
 .radio input[type="radio"] ~ .radioInput {
-  position: absolute;
-  top: 2px;
-  left: 0;
+  @include mixins.position(absolute, 2px, unset, unset, 0px);
   height: 18px;
   width: 18px;
   background: transparent;
@@ -44,10 +42,8 @@
 
 .radio input[type="radio"] ~ .radioInput::after {
   content: "";
-  position: absolute;
+  @include mixins.position(absolute, 4px, unset, unset, 4px);
   display: none;
-  left: 4px;
-  top: 4px;
   width: 10px;
   height: 10px;
   transition: var(--transition);
@@ -87,16 +83,4 @@
 .radio input[type="radio"]:checked:focus ~ .radioInput {
   background: transparent;
   border-color: var(--selection-color);
-}
-
-.inputTitle {
-  @include mixins.basicBold;
-  margin-bottom: 10px;
-  display: inline-block;
-  width: max-content;
-}
-
-.inputError {
-  margin-top: 10px;
-  color: var(--accent-color);
 }

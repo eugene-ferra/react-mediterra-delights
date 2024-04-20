@@ -1,0 +1,11 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.main {
+  @include mixins.flexColumn(0);
+  width: 100%;
+  background-color: var(--primary-color);
+  & > * {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+}

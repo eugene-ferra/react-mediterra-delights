@@ -30,9 +30,7 @@
 }
 
 .checkBox input[type="checkbox"] ~ .checkBoxInput {
-  position: absolute;
-  top: -2px;
-  left: 0;
+  @include mixins.position(absolute, -2px, unset, unset, 0);
   height: 24px;
   width: 24px;
   background: transparent;
@@ -43,10 +41,8 @@
 
 .checkBox input[type="checkbox"] ~ .checkBoxInput::after {
   content: "";
-  position: absolute;
+  @include mixins.position(absolute, 3px, unset, unset, 8px);
   display: none;
-  left: 8px;
-  top: 3px;
   width: 6px;
   height: 12px;
   border: solid var(--secondary-color);
@@ -87,16 +83,4 @@
 .checkBox input[type="checkbox"]:checked:focus ~ .checkBoxInput {
   background: transparent;
   border-color: var(--selection-color);
-}
-
-.inputTitle {
-  @include mixins.basicBold;
-  margin-bottom: 10px;
-  display: inline-block;
-  width: max-content;
-}
-
-.inputError {
-  margin-top: 10px;
-  color: var(--accent-color);
 }

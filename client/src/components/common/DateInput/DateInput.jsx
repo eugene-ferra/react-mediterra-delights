@@ -5,6 +5,8 @@ import styles from "./DateInput.module.scss";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { Controller, useFormContext } from "react-hook-form";
+import Title from "../Title/Title";
+import Text from "../Text/Text";
 
 registerLocale("el", el);
 
@@ -59,7 +61,7 @@ const DateComponent = ({
   const [startDate, setStartDate] = useState(null);
   return (
     <label className={`${className || ""} `}>
-      <p className={styles.inputTitle}>{title}</p>
+      {title && <Title type={"input"}>{title}</Title>}
 
       <DatePicker
         selected={startDate}
@@ -71,8 +73,8 @@ const DateComponent = ({
             ).toISOString()
           );
         }}
-        className={styles.input}
         showTimeSelect
+        className={styles.input}
         placeholderText={placeholder}
         timeFormat="p"
         timeIntervals={20}
@@ -85,7 +87,7 @@ const DateComponent = ({
         timeCaption="Час"
       />
 
-      <p className={styles.inputError}>{errorMessage}</p>
+      {errorMessage && <Text type={"error"}>{errorMessage}</Text>}
     </label>
   );
 };

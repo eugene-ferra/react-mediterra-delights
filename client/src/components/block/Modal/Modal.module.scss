@@ -1,0 +1,44 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.overlay {
+  @include mixins.flexRow(0, center, center);
+  @include mixins.position(fixed, 0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: var(--last-index);
+  transition: var(--transition);
+  visibility: visible;
+  padding: 10px;
+  &Hidden {
+    @extend .overlay;
+    background-color: transparent;
+    visibility: hidden;
+  }
+}
+
+.content {
+  background: var(--primary-color);
+  padding: 20px 15px;
+  border-radius: 8px;
+  position: relative;
+  height: max-content;
+  max-height: calc(100vh - 40px);
+  min-width: 280px;
+  width: calc(100% - 20px);
+  max-width: 500px;
+}
+
+.children {
+  @include mixins.flexColumn();
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+.close {
+  @include mixins.flexRow(0, center, center);
+  @include mixins.position(absolute, -30px, -30px);
+  font-size: 40px;
+  background: none;
+  cursor: pointer;
+  border: none;
+  color: var(--accent-color);
+  padding: 5px 10px;
+}

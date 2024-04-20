@@ -1,0 +1,37 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.article {
+  @include mixins.flexColumn();
+  padding: 8px;
+  max-width: 380px;
+  border-radius: var(--radius);
+  position: relative;
+  background-color: var(--primary-select-color);
+  transition: var(--transition);
+  box-shadow: 0 0 5px -2px var(--secondary-color);
+}
+
+.body {
+  @include mixins.flexColumn(10px);
+  margin: 5px 0 15px;
+}
+
+.img {
+  @include mixins.image(100%, 170px, cover);
+  margin-bottom: 10px;
+  border-radius: calc(var(--radius) - 10px);
+}
+
+.infos {
+  @include mixins.flexRow(10px 20px, flex-start, flex-start, wrap);
+}
+
+.info {
+  @include mixins.flexRow(8px, center, center);
+  @include mixins.tinyText;
+  margin: auto 0 0;
+  color: var(--secondary-color);
+  svg {
+    @include mixins.image(20px, 20px, contain);
+  }
+}

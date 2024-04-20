@@ -1,0 +1,32 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.fieldSet {
+  @include mixins.flexRow(20px 40px, flex-start, flex-start, wrap);
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  & > * {
+    width: calc(50% - 20px);
+    @include mixins.tablet {
+      width: 100%;
+    }
+  }
+}
+
+.title {
+  @include mixins.titleSmallText;
+  color: var(--secondary-color);
+  margin: 0;
+  margin-bottom: 20px;
+  display: block;
+  position: relative;
+  width: max-content;
+  &::after {
+    content: "";
+    @include mixins.position(absolute, auto, auto, -5px, 0px);
+    width: 100%;
+    height: 2px;
+    background-color: var(--secondary-color);
+  }
+}

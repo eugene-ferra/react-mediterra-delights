@@ -1,0 +1,27 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.navbar {
+  @include mixins.flexRow(10px 20px, center, center, wrap);
+  a {
+    @include mixins.basicBold;
+    transition: var(--transition);
+    color: var(--primary-stable-color);
+    border-bottom: 2px solid transparent;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+    &:hover {
+      color: var(--accent-color);
+    }
+    &:focus {
+      color: var(--accent-color);
+    }
+    &:global.active {
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+  }
+}

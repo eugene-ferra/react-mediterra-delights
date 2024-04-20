@@ -1,20 +1,19 @@
-import { useQueries } from "@tanstack/react-query";
-import { getOneProduct } from "../services/apiProducts";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "../services/apiProducts";
 
 export const useManyProductsByIds = (ids = []) => {
-  const results = useQueries({
-    queries: ids?.map((id, i) => {
-      return {
-        queryKey: ["product", id],
-        queryFn: () => getOneProduct(id),
-        retry: 2,
-      };
-    }),
+  let queryStr = ids?.length ? ids.map((id) => `_id[in]=${id}`).join("&") : false;
+
+  const result = useQuery({
+    queryKey: ["products", [...ids]],
+    queryFn: ids?.length == 0 ? () => [] : () => getProducts(queryStr),
+    staleTime: 0,
+    retry: 2,
   });
 
   return {
-    products: results.map((result) => result.data) || [],
-    isLoading: results.some((result) => result.isPending),
-    error: results.map((result) => result.error),
+    products: result.data,
+    isLoading: result.isPending,
+    error: result.error,
   };
 };

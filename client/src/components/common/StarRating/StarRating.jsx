@@ -3,6 +3,8 @@ import styles from "./StarRating.module.scss";
 import StarFullIcon from "../../svg/StarFullIcon";
 import StarOutlinedIcon from "../../svg/StarOutlinedIcon";
 import { Controller, useFormContext } from "react-hook-form";
+import Title from "../Title/Title";
+import Text from "../Text/Text";
 
 const StarRating = ({ title, name, disabled, errorMessage }) => {
   const { control } = useFormContext();
@@ -38,7 +40,7 @@ const Rating = ({ onSetRating, title, disabled, errorMessage }) => {
 
   return (
     <div className={styles.inner}>
-      <p className={styles.inputTitle}>{title}</p>
+      {title && <Title type={"input"}>{title}</Title>}
       <div className={styles.container}>
         <div className={styles.stars}>
           {Array.from({ length: maxRating }, (_, i) => (
@@ -63,7 +65,7 @@ const Rating = ({ onSetRating, title, disabled, errorMessage }) => {
             : tempRating || rating || ""}
         </p>
       </div>
-      <p className={styles.inputError}>{errorMessage}</p>
+      {errorMessage && <Text type={"error"}>{errorMessage}</Text>}
     </div>
   );
 };

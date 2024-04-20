@@ -1,0 +1,47 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.catalog {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  justify-content: center;
+  align-items: stretch;
+  padding: 40px 0;
+  gap: 20px 10px;
+  @include mixins.laptop {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  @include mixins.tablet {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @include mixins.mobile {
+    grid-template-columns: 1fr 1fr;
+  }
+  @include mixins.smallMobile {
+    grid-template-columns: 300px;
+  }
+  &Small {
+    @extend .catalog;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    @include mixins.laptop {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @include mixins.tablet {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @include mixins.mobile {
+      grid-template-columns: 1fr 1fr;
+    }
+    @include mixins.smallMobile {
+      justify-content: center;
+      grid-template-columns: 1fr;
+      & > div {
+        justify-content: center;
+      }
+    }
+  }
+  &NoItems {
+    @include mixins.flexRow(0, center, center);
+    padding: 40px 0;
+  }
+}

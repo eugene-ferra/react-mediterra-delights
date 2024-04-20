@@ -1,17 +1,18 @@
 import { useSearchParams } from "react-router-dom";
-import Header from "../components/Header/Header";
-import MainLayout from "../components/MainLayout/MainLayout";
-import Loader from "../components/common/Loader/Loader";
-import Container from "../components/common/Container/Container";
-import Title from "../components/common/Title/Title";
-import Filters from "../components/common/Filters/Filters";
-import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
-import Catalog from "../components/Catalog/Catalog";
-import Footer from "../components/Footer/Footer";
-import Pagination from "../components/common/Pagination/Pagination";
-import { useArticleOptions } from "../hooks/useArticleOptions";
 import { useArticles } from "../hooks/useArticles";
-import Article from "../components/Article/Article";
+import { useArticleOptions } from "../hooks/useArticleOptions";
+import Header from "../components/layout/Header/Header";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
+import Loader from "../components/common/Loader/Loader";
+import Container from "../components/layout/Container/Container";
+import Title from "../components/common/Title/Title";
+import Filters from "../components/layout/Filters/Filters";
+import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
+import Catalog from "../components/layout/Catalog/Catalog";
+import Footer from "../components/layout/Footer/Footer";
+import Pagination from "../components/block/Pagination/Pagination";
+import Article from "../components/block/Article/Article";
+import PageLoader from "../components/layout/PageLoader/PageLoader";
 
 const ArticlesPage = () => {
   const { options, isLoading, error } = useArticleOptions();
@@ -25,17 +26,18 @@ const ArticlesPage = () => {
   return (
     <>
       <Header />
-      {isLoading ? (
-        <MainLayout
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
-          <Loader type={"global"} />
+
+      {isLoading && (
+        <MainLayout>
+          <PageLoader />
         </MainLayout>
-      ) : (
+      )}
+
+      {!isLoading && (
         <MainLayout>
           <Container>
             <Title type={"global"}>Статті</Title>
-            {!error && (
+            {!error && options && (
               <Filters
                 resetFilter={"Всі статті"}
                 filters={options?.topic}
@@ -44,15 +46,20 @@ const ArticlesPage = () => {
                 filterQuery={"topic"}
               />
             )}
-            {isArticleLoading ? (
-              <div style={{ marginTop: "40px" }}>
+
+            {isArticleLoading && (
+              <Catalog type={"no-items"}>
                 <Loader type={"global"} />
-              </div>
-            ) : articleError ? (
-              <div style={{ marginTop: "40px" }}>
+              </Catalog>
+            )}
+
+            {articleError && (
+              <Catalog type={"no-items"}>
                 <ErrorMassage status={articleError?.status} />
-              </div>
-            ) : (
+              </Catalog>
+            )}
+
+            {articles && (
               <>
                 <Catalog>
                   {articles?.[1].map((article) => (

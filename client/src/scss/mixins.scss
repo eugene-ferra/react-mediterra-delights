@@ -75,3 +75,35 @@
     line-height: 24px;
   }
 }
+
+@mixin flexRow($gap: 0px, $justify: flex-start, $align: flex-start, $wrap: nowrap) {
+  display: flex;
+  flex-direction: row;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+  gap: $gap;
+}
+
+@mixin flexColumn($gap: 0px, $justify: flex-start, $align: flex-start) {
+  display: flex;
+  flex-direction: column;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+}
+
+@mixin image($width: 100%, $height: 100%, $fit) {
+  display: block;
+  width: $width;
+  height: $height;
+  object-fit: $fit;
+}
+
+@mixin position($position, $top: unset, $right: unset, $bottom: unset, $left: unset) {
+  position: $position;
+  top: $top;
+  left: $left;
+  bottom: $bottom;
+  right: $right;
+}

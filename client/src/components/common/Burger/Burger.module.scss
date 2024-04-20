@@ -1,3 +1,5 @@
+@use "../../../scss/mixins.scss" as mixins;
+
 .burger {
   min-height: 28px;
   min-width: 28px;
@@ -6,21 +8,19 @@
   position: relative;
   cursor: pointer;
   span {
+    @include mixins.position(absolute, unset, 0px, unset, 0px);
     user-select: none;
     transition: var(--transition);
     display: block;
     height: 3px;
     width: 100%;
     background-color: var(--primary-stable-color);
-    position: absolute;
-    left: 0;
-    right: 0;
     border-radius: var(--radius);
     &:first-child {
-      top: 0;
+      @include mixins.position(absolute, 0px, 0px, unset, 0px);
     }
     &:last-child {
-      bottom: 0;
+      @include mixins.position(absolute, unset, 0px, 0px, 0px);
     }
   }
   &Active {

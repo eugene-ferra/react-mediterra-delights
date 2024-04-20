@@ -1,0 +1,25 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.wrapper {
+  @include mixins.flexRow(40px 70px, center, flex-start, wrap);
+  padding: 40px 0;
+}
+
+.img {
+  flex: 0 0 300px;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.info {
+  @include mixins.flexColumn(10px);
+  padding: 20px 0;
+}
+
+.link {
+  @include mixins.basicBold;
+  color: var(--accent-color);
+  &:hover {
+    text-decoration: underline;
+  }
+}

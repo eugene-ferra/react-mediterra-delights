@@ -1,0 +1,67 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.content {
+  color: var(--secondary-color);
+  h2 {
+    @include mixins.titleSmallText;
+  }
+  h1 {
+    @include mixins.titleText;
+  }
+  blockquote {
+    border-left: 3px solid var(--accent-color);
+    padding-left: 20px !important;
+  }
+  margin-bottom: 20px;
+}
+
+.coments {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-top: 1px solid var(--secondary-color);
+}
+
+.stats {
+  margin-bottom: 10px;
+}
+
+.commentsContent {
+  @include mixins.flexColumn(15px, center);
+}
+
+.stat {
+  @include mixins.flexRow(10px, center, center);
+  padding: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  svg {
+    @include mixins.image(28px, 28px, contain);
+  }
+  &Loading {
+    @extend .stat;
+    svg {
+      animation: save 0.5s ease-in-out infinite;
+    }
+  }
+}
+
+.stats {
+  @include mixins.flexRow(5px);
+}
+
+.addComment {
+  margin: 0 auto;
+}
+
+@keyframes save {
+  0% {
+    transform: rotateZ(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

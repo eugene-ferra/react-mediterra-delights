@@ -23,4 +23,9 @@
       line-height: 44px;
     }
   }
+  &Input {
+    @include mixins.basicBold;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
 }

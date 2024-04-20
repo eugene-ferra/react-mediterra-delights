@@ -1,6 +1,8 @@
 import styles from "./Input.module.scss";
 import eye from "../../../assets/eye.svg";
 import eyeClose from "../../../assets/eye-close.svg";
+import Title from "../Title/Title";
+import Text from "../Text/Text";
 
 const Input = ({
   type,
@@ -20,7 +22,7 @@ const Input = ({
 
   return (
     <label className={` ${className || ""} `}>
-      {title && <p className={styles.inputTitle}>{title}</p>}
+      {title && <Title type={"input"}>{title}</Title>}
 
       <div className={styles.wrapper}>
         {type === "password" && onShow && (
@@ -46,7 +48,7 @@ const Input = ({
           style={style}
         ></input>
       </div>
-      {errorMessage && <p className={styles.inputError}>{errorMessage}</p>}
+      {errorMessage && <Text type={"error"}>{errorMessage}</Text>}
     </label>
   );
 };

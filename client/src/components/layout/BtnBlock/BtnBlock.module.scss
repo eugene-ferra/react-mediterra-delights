@@ -1,0 +1,6 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.btnBlock {
+  @include mixins.flexRow(10px, center, center, wrap);
+  width: 100%;
+}

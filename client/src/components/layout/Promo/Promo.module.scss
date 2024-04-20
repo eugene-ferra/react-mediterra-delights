@@ -1,0 +1,50 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.promo {
+  @include mixins.flexRow(0px, flex-start, center);
+  padding: 40px 0;
+  min-height: 670px;
+  max-height: 100vh;
+  padding: 40px 0;
+  position: relative;
+  z-index: 0;
+  @include mixins.smallLaptop {
+    min-height: 500px;
+  }
+}
+
+.content {
+  @include mixins.flexColumn(40px);
+  width: 50%;
+  max-width: 650px;
+  @include mixins.mobile {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+.title,
+.text {
+  @include mixins.tablet {
+    color: var(--primary-stable-color);
+  }
+}
+
+.img {
+  @include mixins.position(absolute, 0, -10px);
+  height: 100%;
+  width: calc(50% - 40px);
+  object-fit: cover;
+  border-top-left-radius: 50%;
+  z-index: -1;
+  border-left: 5px solid var(--accent-color);
+  @include mixins.tablet {
+    border-left: none;
+    max-width: none;
+    width: calc(100% + 20px);
+    left: -10px;
+    right: -10px;
+    border-radius: 0;
+    filter: brightness(0.4);
+  }
+}

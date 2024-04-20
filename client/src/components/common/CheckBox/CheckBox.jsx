@@ -1,3 +1,5 @@
+import Title from "../Title/Title";
+import Text from "../Text/Text";
 import styles from "./CheckBox.module.scss";
 
 const CheckBox = ({
@@ -13,7 +15,7 @@ const CheckBox = ({
 
   return (
     <div className={styles.inner}>
-      {title && <p className={styles.inputTitle}>{title}</p>}
+      {title && <Title type={"input"}>{errorMessage}</Title>}
       <label className={`${styles.checkBox} ${className || ""}`}>
         <span className={styles.text}>{text}</span>
         <input
@@ -25,7 +27,7 @@ const CheckBox = ({
         />
         <div className={`${styles.checkBoxInput}`}></div>
       </label>
-      {errorMessage && <p className={styles.inputError}>{errorMessage}</p>}
+      {errorMessage && <Text type={"error"}>{errorMessage}</Text>}
     </div>
   );
 };

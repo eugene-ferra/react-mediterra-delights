@@ -1,9 +1,6 @@
 import StarFullIcon from "../../svg/StarFullIcon";
+import { lastDigit } from "../../../utils/lastDigit";
 import styles from "./Stars.module.scss";
-
-const lastDigit = (number) => {
-  return number?.toString().slice(-1);
-};
 
 const Stars = ({ rating, reviews }) => {
   const percent = Math.round((rating / 5) * 100);

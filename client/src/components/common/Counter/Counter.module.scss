@@ -1,0 +1,26 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.counter {
+  @include mixins.flexRow(15px);
+}
+
+.btn {
+  @include mixins.basicBold;
+  color: var(--secondary-color);
+  padding: 5px 13px;
+  border: 1px solid var(--secondary-color);
+  background: transparent;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+  }
+}
+
+.count {
+  @include mixins.basicBold;
+  margin: 0;
+  display: block;
+  padding: 5px 12px;
+}

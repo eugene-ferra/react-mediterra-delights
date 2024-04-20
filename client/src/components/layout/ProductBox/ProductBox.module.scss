@@ -1,0 +1,98 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.box {
+  padding: 20px 0;
+}
+
+.top {
+  @include mixins.flexRow(20px 30px, flex-start, stretch);
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--secondary-color);
+  @include mixins.mobile {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.images {
+  width: 50%;
+  max-width: 500px;
+  @include mixins.mobile {
+    width: auto;
+    max-width: 100%;
+  }
+}
+
+.picture {
+  @include mixins.image(100%, 100%, cover);
+  max-height: 300px;
+}
+
+.info {
+  @include mixins.flexColumn(10px);
+  @include mixins.mobile {
+    width: 100%;
+  }
+}
+
+.actions {
+  @include mixins.flexRow(10px 20px, flex-start, flex-end, wrap);
+  margin-top: auto;
+}
+
+.buy {
+  @include mixins.flexRow(50px, flex-start, center);
+  border-radius: var(--radius);
+  border: 2px solid var(--accent-color);
+  padding: 10px;
+  width: max-content;
+}
+
+.buyBtn {
+  border-radius: calc(var(--radius) - 10px);
+}
+
+.options {
+  @include mixins.flexRow(5px, flex-start, flex-start, wrap);
+  margin-bottom: 10px;
+}
+
+.bottom {
+  @include mixins.flexRow(40px);
+  padding-top: 20px;
+  @include mixins.mobile {
+    flex-direction: column;
+  }
+}
+
+.moreInfo {
+  width: 40%;
+  max-width: 600px;
+  @include mixins.mobile {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.chars {
+  @include mixins.flexColumn(20px, flex-start, stretch);
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+.reviews {
+  flex-grow: 1;
+}
+
+.reviewsHeader {
+  @include mixins.flexRow(20px, space-between, center);
+  margin-bottom: 20px;
+}
+
+.reviews {
+  @include mixins.flexColumn(10px, flex-start, stretch);
+}

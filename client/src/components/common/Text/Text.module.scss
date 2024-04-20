@@ -4,13 +4,16 @@
   @include mixins.basicText;
   margin: 0;
   vertical-align: middle;
-}
-
-.small {
-  @extend .text;
-  @include mixins.smallText;
-}
-.big {
-  @extend .text;
-  @include mixins.titleSmallText;
+  &Small {
+    @extend .text;
+    @include mixins.smallText;
+  }
+  &Big {
+    @extend .text;
+    @include mixins.titleSmallText;
+  }
+  &Error {
+    margin-top: 10px;
+    color: var(--accent-color);
+  }
 }

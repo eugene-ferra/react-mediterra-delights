@@ -15,6 +15,10 @@
   border-radius: var(--radius);
   gap: 0px 10px;
   width: max-content;
+  @include mixins.mobile {
+    @include mixins.smallText;
+    font-weight: 500;
+  }
   &:hover {
     cursor: pointer;
     box-shadow: 0 0 10px var(--accent-color);

@@ -1,24 +1,26 @@
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import MainLayout from "../components/MainLayout/MainLayout";
-import Container from "../components/common/Container/Container";
-import Product from "../components/Product/Product";
-import { useProducts } from "../hooks/useProducts";
-import Catalog from "../components/Catalog/Catalog";
-import Pagination from "../components/common/Pagination/Pagination";
-import Title from "../components/common/Title/Title";
-import Filters from "../components/common/Filters/Filters";
-import { useProductsOptions } from "../hooks/useProductOptions";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
+import { useProducts } from "../hooks/useProducts";
+import { useProductsOptions } from "../hooks/useProductOptions";
+import Header from "../components/layout/Header/Header";
+import Footer from "../components/layout/Footer/Footer";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
+import Container from "../components/layout/Container/Container";
+import Product from "../components/block/Product/Product";
+import Catalog from "../components/layout/Catalog/Catalog";
+import Pagination from "../components/block/Pagination/Pagination";
+import Title from "../components/common/Title/Title";
+import Filters from "../components/layout/Filters/Filters";
 import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
 import Loader from "../components/common/Loader/Loader";
-import { useUser } from "../hooks/useUser";
-import Modal from "../components/common/Modal/Modal";
-import { useState } from "react";
+import Modal from "../components/block/Modal/Modal";
 import Text from "../components/common/Text/Text";
 import Button from "../components/common/Button/Button";
 import Picture from "../components/common/Picture/Picture";
 import loginImg from "../assets/login.svg";
+import PageLoader from "../components/layout/PageLoader/PageLoader";
+import BtnBlock from "../components/layout/BtnBlock/BtnBlock";
 
 const ProductsPage = () => {
   const { options, isLoading, error } = useProductsOptions();
@@ -33,20 +35,23 @@ const ProductsPage = () => {
 
   const { user } = useUser();
 
+  const onClose = () => setIsModalOpen(false);
+
   return (
     <>
       <Header />
-      {isLoading ? (
-        <MainLayout
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
-          <Loader type={"global"} />
+
+      {isLoading && (
+        <MainLayout>
+          <PageLoader />
         </MainLayout>
-      ) : (
+      )}
+
+      {!isLoading && (
         <MainLayout>
           <Container>
             <Title type={"global"}>Меню</Title>
-            {!error && (
+            {!error && options && (
               <Filters
                 resetFilter={"Всі страви"}
                 filters={options?.categories}
@@ -55,15 +60,19 @@ const ProductsPage = () => {
                 filterQuery={"category"}
               />
             )}
-            {isProductsLoading ? (
-              <div style={{ marginTop: "40px" }}>
+
+            {isProductsLoading && (
+              <Catalog type={"no-items"}>
                 <Loader type={"global"} />
-              </div>
-            ) : productError ? (
-              <div style={{ marginTop: "40px" }}>
+              </Catalog>
+            )}
+            {productError && (
+              <Catalog type={"no-items"}>
                 <ErrorMassage status={productError?.status} />
-              </div>
-            ) : (
+              </Catalog>
+            )}
+
+            {products && (
               <>
                 <Catalog>
                   {products?.[1].map((product) => (
@@ -89,31 +98,21 @@ const ProductsPage = () => {
 
       <Footer />
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-            alignItems: "center",
-            padding: "10px 0",
-          }}
-        >
-          <Title type={"small"} align={"center"}>
-            Увійдіть в свій аккаунт!
-          </Title>
-          <Text align={"center"}>
-            Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
-          </Text>
-          <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-            <Button asTag={"Link"} to={"/login"}>
-              Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
-            </Button>
-            <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
-              Реєстрація
-            </Button>
-          </div>
-        </div>
+      <Modal isOpen={isModalOpen} onClose={onClose} align="center">
+        <Title type={"small"} align={"center"}>
+          Увійдіть в свій аккаунт!
+        </Title>
+        <Text align={"center"}>
+          Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
+        </Text>
+        <BtnBlock>
+          <Button asTag={"Link"} to={"/login"}>
+            Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
+          </Button>
+          <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
+            Реєстрація
+          </Button>
+        </BtnBlock>
       </Modal>
     </>
   );

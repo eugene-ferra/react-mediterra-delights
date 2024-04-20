@@ -27,30 +27,30 @@ const Button = ({ className, type, asTag, to, disabled, children, onClick, style
       classValue = styles.button;
   }
 
-  if (asTag === "Link") {
-    return (
-      <Link
-        to={to}
-        className={`${classValue} ${className || ""}`}
-        disabled={disabled}
-        onClick={onClick}
-        style={styles}
-      >
-        {children}
-      </Link>
-    );
-  } else {
-    return (
-      <button
-        className={`${classValue} ${className || ""}`}
-        disabled={disabled}
-        onClick={onClick}
-        style={style}
-      >
-        {children}
-      </button>
-    );
-  }
+  return (
+    <>
+      {asTag === "Link" ? (
+        <Link
+          to={to}
+          className={`${classValue} ${className || ""}`}
+          disabled={disabled}
+          onClick={onClick}
+          style={styles}
+        >
+          {children}
+        </Link>
+      ) : (
+        <button
+          className={`${classValue} ${className || ""}`}
+          disabled={disabled}
+          onClick={onClick}
+          style={style}
+        >
+          {children}
+        </button>
+      )}
+    </>
+  );
 };
 
 export default Button;

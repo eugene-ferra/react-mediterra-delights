@@ -1,4 +1,7 @@
+import { createContext, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import HomePage from "./pages/HomePage.jsx";
 import ProductsPage from "./pages/ProductsPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
@@ -16,26 +19,23 @@ import OneProductPage from "./pages/OneProductPage.jsx";
 import OrderPage from "./pages/OrderPage.jsx";
 import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 import ArticlesPage from "./pages/ArticlesPage.jsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import ProductManage from "./components/ProductManage/ProductManage.jsx";
-import ArticleManage from "./components/ArticleManage/ArticleManage.jsx";
-import CommentManage from "./components/CommentManage/CommentsManage.jsx";
-import ReviewManage from "./components/ReviewManage/ReviewManage.jsx";
-import OrdersManage from "./components/OrdersManage/OrdersManage.jsx";
-import ProductManageAdd from "./components/ProductManage/ProductManageAdd.jsx";
-import ProductEdit from "./components/ProductManage/ProductEdit.jsx";
-import ArticleManageAdd from "./components/ArticleManage/ArticleManageAdd.jsx";
-import ArticleEdit from "./components/ArticleManage/ArticleEdit.jsx";
-import { createContext, useState } from "react";
+import ProductManage from "./components/layout/ProductManage/ProductManage.jsx";
+import ArticleManage from "./components/layout/ArticleManage/ArticleManage.jsx";
+import CommentManage from "./components/layout/CommentManage/CommentsManage.jsx";
+import ReviewManage from "./components/layout/ReviewManage/ReviewManage.jsx";
+import OrdersManage from "./components/layout/OrdersManage/OrdersManage.jsx";
+import ProductManageAdd from "./components/layout/ProductManageAdd/ProductManageAdd.jsx";
+import ProductManageEdit from "./components/layout/ProductManageEdit/ProductManageEdit.jsx";
+import ArticleManageAdd from "./components/layout/ArticleManageAdd/ArticleManageAdd.jsx";
+import ArticleManageEdit from "./components/layout/ArticleManageEdit/ArticleManageEdit.jsx";
 import Cookies from "js-cookie";
 import ForbiddenPage from "./pages/ForbiddenPage.jsx";
-import AdminMain from "./components/AdminMain/AdminMain.jsx";
+import AdminMain from "./components/layout/AdminMain/AdminMain.jsx";
 import ServerErrorPage from "./pages/ServerErrorPage.jsx";
-import AccountMain from "./components/AccountMain/AccountMain.jsx";
-import AccountFavourite from "./components/AccountFavourite/AccountFavourite.jsx";
-import AccountSaved from "./components/AccountSaved/AccountSaved.jsx";
-import AccountOrders from "./components/AccountOrders/AccountOrders.jsx";
+import AccountMain from "./components/layout/AccountMain/AccountMain.jsx";
+import AccountFavourite from "./components/layout/AccountFavourite/AccountFavourite.jsx";
+import AccountSaved from "./components/layout/AccountSaved/AccountSaved.jsx";
+import AccountOrders from "./components/layout/AccountOrders/AccountOrders.jsx";
 import OrderSuccessPage from "./pages/OrderSuccessPage.jsx";
 import CheckOrderPage from "./pages/CheckOrderPage.jsx";
 
@@ -52,10 +52,10 @@ const router = createBrowserRouter([
           { path: "", element: <AdminMain /> },
           { path: "products", element: <ProductManage /> },
           { path: "products/new", element: <ProductManageAdd /> },
-          { path: "products/:id", element: <ProductEdit /> },
+          { path: "products/:id", element: <ProductManageEdit /> },
           { path: "articles", element: <ArticleManage /> },
           { path: "articles/new", element: <ArticleManageAdd /> },
-          { path: "articles/:id", element: <ArticleEdit /> },
+          { path: "articles/:id", element: <ArticleManageEdit /> },
           { path: "comments", element: <CommentManage /> },
           { path: "reviews", element: <ReviewManage /> },
           { path: "orders", element: <OrdersManage /> },

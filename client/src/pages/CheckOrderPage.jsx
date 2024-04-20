@@ -1,54 +1,34 @@
-import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import MainLayout from "../components/MainLayout/MainLayout";
+import Footer from "../components/layout/Footer/Footer";
+import Header from "../components/layout/Header/Header";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
 import Button from "../components/common/Button/Button";
-import Container from "../components/common/Container/Container";
-import Form from "../components/common/Form/Form";
+import Container from "../components/layout/Container/Container";
+import Form from "../components/layout/Form/Form";
 import Input from "../components/common/Input/Input";
 import Title from "../components/common/Title/Title";
 import { useState } from "react";
-import OrderFullBlock from "../components/OrderFullBlock/OrderFullBlock";
+import OrderFullBlock from "../components/block/OrderFullBlock/OrderFullBlock";
 import { useOrderById } from "../hooks/useOrderById";
+import SubmitSearch from "../components/layout/SubmitSearch/SubmitSearch";
 
 const CheckOrderPage = () => {
-  const [value, setValue] = useState(null);
   const [number, setNumber] = useState(null);
   const { isLoading } = useOrderById(number);
 
   return (
     <>
       <Header />
-      <MainLayout style={{ padding: "0px 0px 40px" }}>
+      <MainLayout>
         <Container>
           <Title type={"global"}>Відстеження замовлення</Title>
-          <Form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setNumber(value);
-            }}
-            style={{ padding: 0, gap: "20px" }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "15px",
-                alignItems: "flex-end",
-              }}
-            >
-              <Input
-                style={{ width: "300px" }}
-                name={"number"}
-                title={"Введіть номер замовлення*"}
-                onChange={(e) => setValue(e.target.value)}
-              />
-              <Button disabled={!value || isLoading}>Пошук</Button>
-            </div>
-          </Form>
 
-          <div style={{ marginTop: "40px" }}>
+          <SubmitSearch
+            setValue={setNumber}
+            isLoading={isLoading}
+            inputTitle={"Введіть номер замовлення*"}
+          >
             <OrderFullBlock id={number} />
-          </div>
+          </SubmitSearch>
         </Container>
       </MainLayout>
       <Footer />

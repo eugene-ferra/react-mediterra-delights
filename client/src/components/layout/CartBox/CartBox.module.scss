@@ -1,0 +1,25 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.inner {
+  @include mixins.flexRow(40px, center, flex-start, wrap);
+  padding: 20px 0;
+}
+
+.cards {
+  flex: 1 0 400px;
+  max-width: 100%;
+}
+
+.reciept {
+  @include mixins.flexColumn(25px);
+  @include mixins.position(sticky, 100px);
+  flex: 1 0 300px;
+  max-width: 400px;
+  padding: 20px 15px;
+  background-color: var(--primary-select-color);
+}
+
+.sum {
+  @include mixins.flexRow(0, space-between, center);
+  width: 100%;
+}

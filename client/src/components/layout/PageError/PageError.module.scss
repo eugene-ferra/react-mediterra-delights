@@ -1,0 +1,11 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.wrapper {
+  @include mixins.flexColumn(30px, center, center);
+  padding: 30px 0px;
+}
+
+.image {
+  @include mixins.image(600px, 100%, contain);
+  max-height: 400px;
+}

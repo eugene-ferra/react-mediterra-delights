@@ -5,13 +5,16 @@ const Text = ({ children, className, type, align, style }) => {
 
   switch (type) {
     case "small":
-      classValue = styles.small;
+      classValue = styles.textSmall;
       break;
     case "normal":
       classValue = styles.text;
       break;
     case "big":
-      classValue = styles.big;
+      classValue = styles.textBig;
+      break;
+    case "error":
+      classValue = styles.textError;
       break;
     default:
       classValue = styles.text;

@@ -1,0 +1,19 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.review {
+  @include mixins.flexColumn(15px);
+  padding: 10px;
+  border: 2px solid var(--secondary-color);
+  border-radius: var(--radius);
+  width: 100%;
+}
+
+.userData {
+  @include mixins.flexRow(10px);
+  text-transform: capitalize;
+}
+
+.avatar {
+  @include mixins.image(45px, 45px, cover);
+  border-radius: 50%;
+}

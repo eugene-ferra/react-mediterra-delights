@@ -1,0 +1,21 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.inner {
+  @include mixins.flexColumn(20px);
+  padding: 40px 0;
+}
+
+.aboutItem {
+  @include mixins.flexRow(30px 40px, center, flex-start, wrap);
+  &:nth-child(2n-1) {
+    flex-direction: row-reverse;
+  }
+  p {
+    flex: 1 1 600px;
+  }
+  img {
+    @include mixins.image(400px, 100%, cover);
+    max-height: 300px;
+    border-radius: var(--radius);
+  }
+}

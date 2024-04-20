@@ -1,3 +1,5 @@
+@use "../../../scss/mixins.scss" as mixins;
+
 @keyframes loaderBody {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
@@ -8,9 +10,7 @@
 }
 
 .loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include mixins.flexRow(0px, center, center);
   overflow: hidden;
   background: transparent;
   padding: 10px;
@@ -25,15 +25,13 @@
   backface-visibility: hidden;
   transform-origin: 0 0;
   div {
-    position: absolute;
+    @include mixins.position(absolute, 50%, unset, unset, 50%);
     min-width: 100%;
     min-height: 100%;
     border: 5px solid var(--primary-stable-color);
     border-top-color: transparent;
     border-radius: 50%;
     animation: loaderBody 1s linear infinite;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
     box-sizing: content-box;
   }

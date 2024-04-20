@@ -1,9 +1,7 @@
 @use "../../../scss/mixins.scss" as mixins;
 
 .container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  @include mixins.flexRow(10px, flex-start, center);
 }
 
 .stars {

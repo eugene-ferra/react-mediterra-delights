@@ -1,7 +1,7 @@
-import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import MainLayout from "../components/MainLayout/MainLayout";
-import Container from "../components/common/Container/Container";
+import Footer from "../components/layout/Footer/Footer";
+import Header from "../components/layout/Header/Header";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
+import Container from "../components/layout/Container/Container";
 import Title from "../components/common/Title/Title";
 
 const ContactPage = () => {

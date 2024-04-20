@@ -1,13 +1,13 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import Header from "../components/Header/Header";
-import MainLayout from "../components/MainLayout/MainLayout";
+import Header from "../components/layout/Header/Header";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
 import { useUser } from "../hooks/useUser";
-import Loader from "../components/common/Loader/Loader";
-import Panel from "../components/Panel/Panel";
+import Panel from "../components/layout/Panel/Panel";
 import HomeIcon from "../components/svg/HomeIcon";
 import OrderIcon from "../components/svg/OrderIcon";
 import SaveArticleIcon from "../components/svg/SaveArticleIcon";
-import FavouriteIcon from "../components/svg/FavouriteIcon";
+import FavIcon from "../components/svg/FavouriteIcon";
+import PageLoader from "../components/layout/PageLoader/PageLoader";
 
 const AccountPage = () => {
   const { user, isLoading } = useUser();
@@ -18,27 +18,19 @@ const AccountPage = () => {
   return (
     <>
       {isLoading && (
-        <MainLayout
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
-          <Loader type={"global"} />
+        <MainLayout>
+          <PageLoader />
         </MainLayout>
       )}
       {user && (
         <>
           <Header />
 
-          <MainLayout
-            style={{ display: "flex", overflowX: "hidden", position: "relative" }}
-          >
+          <MainLayout>
             <Panel
               links={[
                 { to: "", text: "Профіль", image: <HomeIcon />, end: true },
-                {
-                  to: "favourite",
-                  text: "Улюблене",
-                  image: <FavouriteIcon />,
-                },
+                { to: "favourite", text: "Улюблене", image: <FavIcon /> },
                 { to: "saved", text: "Збережене", image: <SaveArticleIcon /> },
                 { to: "orders", text: "Замовлення", image: <OrderIcon /> },
               ]}

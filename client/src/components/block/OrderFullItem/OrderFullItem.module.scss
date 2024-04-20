@@ -1,0 +1,33 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.order {
+  padding: 5px 0;
+  border-top: 1px solid var(--primary-select-color);
+  border-bottom: 1px solid var(--primary-select-color);
+}
+
+.inner {
+  @include mixins.flexRow(20px);
+  @include mixins.mobile {
+    @include mixins.flexRow(10px);
+  }
+}
+
+.img {
+  width: 120px;
+  @include mixins.mobile {
+    width: 100px;
+  }
+}
+
+.info {
+  @include mixins.flexColumn(20px 10px, flex-start, space-between);
+  width: calc(100% - 140px);
+  @include mixins.smallMobile {
+    width: 100%;
+  }
+}
+
+.stats {
+  @include mixins.flexRow(5px 20px, space-between, flex-start, wrap);
+}

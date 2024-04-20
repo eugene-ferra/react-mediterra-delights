@@ -1,11 +1,9 @@
 @use "../../../scss/mixins.scss" as mixins;
 
 .mode {
+  @include mixins.flexRow(0px, center, center);
   width: 45px;
   height: 45px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 5px;
   border-radius: 50%;
   overflow: hidden;
@@ -16,10 +14,7 @@
     height: 40px;
   }
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: 0.3s all;
+    @include mixins.image(100%, 100%, contain);
     animation: move 0.3s ease-in-out 1;
   }
 }

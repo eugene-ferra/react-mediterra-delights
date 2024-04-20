@@ -1,16 +1,16 @@
 import { useParams } from "react-router-dom";
-import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import MainLayout from "../components/MainLayout/MainLayout";
 import { useArticles } from "../hooks/useArticles";
-import Loader from "../components/common/Loader/Loader";
-import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
-import ArticleBox from "../components/ArticleBox/ArticleBox";
 import { useUser } from "../hooks/useUser";
 import { useArticleById } from "../hooks/useArticleById";
-import Gallery from "../components/Gallery/Gallery";
-import BlockHeader from "../components/common/BlockHeader/BlockHeader";
-import Article from "../components/Article/Article";
+import Footer from "../components/layout/Footer/Footer";
+import Header from "../components/layout/Header/Header";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
+import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
+import ArticleBox from "../components/layout/ArticleBox/ArticleBox";
+import Gallery from "../components/layout/Gallery/Gallery";
+import BlockHeader from "../components/layout/BlockHeader/BlockHeader";
+import Article from "../components/block/Article/Article";
+import PageLoader from "../components/layout/PageLoader/PageLoader";
 
 const OneArticlePage = () => {
   const { slug } = useParams();
@@ -26,19 +26,20 @@ const OneArticlePage = () => {
   return (
     <>
       <Header />
-      {isLoading ? (
-        <MainLayout
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
-          <Loader type={"global"} />
+
+      {isLoading && (
+        <MainLayout>
+          <PageLoader />
         </MainLayout>
-      ) : error ? (
-        <MainLayout
-          style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
+      )}
+
+      {error && (
+        <MainLayout>
           <ErrorMassage status={error.status} />
         </MainLayout>
-      ) : (
+      )}
+
+      {!isLoading && !error && articles && (
         <MainLayout>
           <ArticleBox
             article={articles?.[1]?.[0]}
@@ -55,6 +56,7 @@ const OneArticlePage = () => {
           />
         </MainLayout>
       )}
+
       <Footer />
     </>
   );

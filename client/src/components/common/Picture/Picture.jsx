@@ -22,7 +22,6 @@ const Picture = ({ formats, alt, defaultImg, className, style }) => {
         />
       ) : (
         <>
-          {" "}
           <img
             className={`${styles.img} ${className || ""}`}
             src={defaultImg || errorImg}

@@ -1,0 +1,66 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.pagination {
+  @include mixins.flexRow(20px 0, center, center);
+  width: 100%;
+  padding: 20px 0;
+}
+
+.pages {
+  @include mixins.flexRow(0px 5px, center);
+  margin: 0 5px;
+}
+
+.link {
+  @include mixins.smallText;
+  border: 2px solid var(--secondary-light-color);
+  border-radius: var(--radius);
+  cursor: pointer;
+  padding: 8px 12px;
+  background: transparent;
+  &:global.active {
+    color: var(--accent-color);
+  }
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    outline-width: 0;
+    transition: var(--transition);
+    border: 2px solid var(--accent-color) !important;
+  }
+  @include mixins.mobile {
+    border: none;
+    padding: 5px;
+  }
+  &Active {
+    @extend .link;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+  }
+}
+
+.button {
+  @include mixins.flexRow(0, center, center);
+  border: 2px solid var(--secondary-light-color);
+  border-radius: var(--radius);
+  padding: 6px;
+  background: transparent;
+  &:hover,
+  &:focus {
+    outline-width: 0;
+    transition: var(--transition);
+    border: 2px solid var(--accent-color) !important;
+  }
+  cursor: pointer;
+  svg {
+    @include mixins.image(18px, 18px, contain);
+    path {
+      fill: var(--secondary-color);
+    }
+  }
+  &Disable {
+    @extend .button;
+    pointer-events: none;
+    opacity: 50%;
+  }
+}

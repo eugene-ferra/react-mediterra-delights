@@ -1,0 +1,9 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.adminBlock {
+  @include mixins.flexColumn(15px);
+}
+
+.form {
+  @include mixins.flexRow(10px, flex-start, flex-start, wrap);
+}

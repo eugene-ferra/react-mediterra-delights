@@ -1,3 +1,5 @@
+import Text from "../Text/Text";
+import Title from "../Title/Title";
 import styles from "./TextArea.module.scss";
 
 const TextArea = ({
@@ -13,7 +15,7 @@ const TextArea = ({
 
   return (
     <label className={`${className || ""} `}>
-      <p className={styles.inputTitle}>{title}</p>
+      {title && <Title type={"input"}>{title}</Title>}
       <textarea
         className={`${styles.input} ${errorClass}`}
         placeholder={placeholder}
@@ -21,7 +23,7 @@ const TextArea = ({
         {...register}
         disabled={disabled}
       />
-      <p className={styles.inputError}>{errorMessage}</p>
+      {errorMessage && <Text type={"error"}>{errorMessage}</Text>}
     </label>
   );
 };

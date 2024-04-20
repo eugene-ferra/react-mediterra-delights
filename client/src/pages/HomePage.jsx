@@ -1,20 +1,21 @@
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import MainLayout from "../components/MainLayout/MainLayout";
-import Promo from "../components/Promo/Promo";
-import AboutBlock from "../components/AboutBlock/AboutBlock";
-import Gallery from "../components/Gallery/Gallery";
-import { useProducts } from "../hooks/useProducts";
-import Product from "../components/Product/Product";
-import BlockHeader from "../components/common/BlockHeader/BlockHeader";
-import { useUser } from "../hooks/useUser";
 import { useState } from "react";
-import Modal from "../components/common/Modal/Modal";
+import { useUser } from "../hooks/useUser";
+import { useProducts } from "../hooks/useProducts";
+import Header from "../components/layout/Header/Header";
+import Footer from "../components/layout/Footer/Footer";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
+import Promo from "../components/layout/Promo/Promo";
+import AboutBlock from "../components/layout/AboutBlock/AboutBlock";
+import Gallery from "../components/layout/Gallery/Gallery";
+import Product from "../components/block/Product/Product";
+import BlockHeader from "../components/layout/BlockHeader/BlockHeader";
+import Modal from "../components/block/Modal/Modal";
 import Title from "../components/common/Title/Title";
 import Text from "../components/common/Text/Text";
 import Button from "../components/common/Button/Button";
 import Picture from "../components/common/Picture/Picture";
 import loginImg from "../assets/login.svg";
+import BtnBlock from "../components/layout/BtnBlock/BtnBlock";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,6 +46,8 @@ const HomePage = () => {
   } = useProducts("isNewProduct=true&sort=-avgRating");
 
   const { user } = useUser();
+
+  const onClose = () => setIsModalOpen(false);
 
   return (
     <>
@@ -138,31 +141,21 @@ const HomePage = () => {
       </MainLayout>
       <Footer />
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-            alignItems: "center",
-            padding: "10px 0",
-          }}
-        >
-          <Title type={"small"} align={"center"}>
-            Увійдіть в свій аккаунт!
-          </Title>
-          <Text align={"center"}>
-            Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
-          </Text>
-          <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-            <Button asTag={"Link"} to={"/login"}>
-              Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
-            </Button>
-            <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
-              Реєстрація
-            </Button>
-          </div>
-        </div>
+      <Modal isOpen={isModalOpen} onClose={onClose} align="center">
+        <Title type={"small"} align={"center"}>
+          Увійдіть в свій аккаунт!
+        </Title>
+        <Text align={"center"}>
+          Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
+        </Text>
+        <BtnBlock>
+          <Button asTag={"Link"} to={"/login"}>
+            Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
+          </Button>
+          <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
+            Реєстрація
+          </Button>
+        </BtnBlock>
       </Modal>
     </>
   );

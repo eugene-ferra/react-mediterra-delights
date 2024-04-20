@@ -1,3 +1,5 @@
+import Text from "../Text/Text";
+import Title from "../Title/Title";
 import styles from "./RadioButton.module.scss";
 
 const RadioButton = ({
@@ -16,7 +18,7 @@ const RadioButton = ({
 
   return (
     <div className={styles.inner}>
-      {title && <p className={styles.inputTitle}>{title}</p>}
+      {title && <Title type={"input"}>{title}</Title>}
       <label className={`${styles.radio} ${className || ""}`} onChange={onCheck}>
         <span className={styles.text}>{text}</span>
         <input
@@ -30,7 +32,7 @@ const RadioButton = ({
         />
         <div className={`${styles.radioInput}`}></div>
       </label>
-      {errorMessage && <p className={styles.inputError}>{errorMessage}</p>}
+      {errorMessage && <Text type={"error"}>{errorMessage}</Text>}
     </div>
   );
 };

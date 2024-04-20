@@ -1,0 +1,22 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.loginForm {
+  max-width: 500px;
+  width: 100%;
+  @include mixins.flexColumn(20px, center, stretch);
+  padding: 15px;
+  background-color: var(--primary-color);
+  a {
+    color: var(--accent-color);
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.layout {
+  @include mixins.flexRow(0, center, center);
+  background: url("../../../assets/signup.jpg");
+  background-size: cover;
+  padding: 50px 0 50px;
+}
