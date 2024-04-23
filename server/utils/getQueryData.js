@@ -23,8 +23,6 @@ export const getQueryData = (req) => {
     (match) => `$${match}`
   );
 
-  console.log(JSON.parse(queryStr));
-
   return {
     filterObj: JSON.parse(queryStr),
     sortObj: req.query.sort?.replace(/,/g, " "),

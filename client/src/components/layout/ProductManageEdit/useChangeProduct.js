@@ -1,21 +1,22 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchProduct } from "../../../services/apiProducts";
+import toast from "react-hot-toast";
 
-export const useChangeProduct = () => {
+export const useChangeProduct = (resetForm) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const changing = useMutation({
     mutationFn: (data) => patchProduct(data.id, data.data),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log(data?.id);
       toast.success("Товар успішно оновлено!");
-      queryClient.invalidateQueries("adminProducts");
-      queryClient.invalidateQueries("products");
-      queryClient.invalidateQueries("product");
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product", data?.id] });
+      resetForm && resetForm();
       navigate("/admin/products");
     },
     onError: (errObj) => {
@@ -27,8 +28,8 @@ export const useChangeProduct = () => {
   });
 
   return {
-    patchProduct: mutation.mutate,
-    isLoading: mutation.isPending,
+    changeProduct: changing.mutate,
+    isChanging: changing.isPending,
     errors: errors,
   };
 };

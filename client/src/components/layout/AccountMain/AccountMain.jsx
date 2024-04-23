@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useAccountUser } from "./useAccountUser";
 import { useUpdateUser } from "./useUpdateUser";
 import { getFormData } from "../../../utils/getFormData";
 import { useDeleteUser } from "./useDeleteUser";
 import { useLogoutUser } from "./useLogout";
+import { useUser } from "../../../hooks/useUser";
 import Button from "../../common/Button/Button";
 import FieldSet from "../FieldSet/FieldSet";
 import Form from "../Form/Form";
@@ -16,11 +16,24 @@ import Title from "../../common/Title/Title";
 import Text from "../../common/Text/Text";
 import styles from "./AccountMain.module.scss";
 import BtnBlock from "../BtnBlock/BtnBlock";
+import { useBlobs } from "../../../hooks/useBlobs";
 
 const AccountMain = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const methods = useForm();
-  const { avatar, user } = useAccountUser(methods.setValue);
+
+  const { user } = useUser(methods.setValue);
+  const { pictures: avatar } = useBlobs(user?.avatar?.jpg ? [user?.avatar?.jpg] : [], [
+    "user",
+    "avatar",
+    user?.id,
+  ]);
+
+  useEffect(() => {
+    let fields = Object.keys(methods.getValues());
+    fields.forEach((key) => methods.setValue(key, user?.[key]));
+  }, [user, methods]);
+
   const { logout, isLoading: isLoadingOut } = useLogoutUser();
   const { deleteMe, isLoading: isDeleting } = useDeleteUser();
 

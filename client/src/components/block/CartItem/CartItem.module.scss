@@ -1,8 +1,8 @@
 @use "../../../scss/mixins.scss" as mixins;
 
 .cartItem {
-  @include mixins.flexRow(20px);
-  padding: 30px 60px 30px 0px;
+  @include mixins.flexRow(20px, flex-start, flex-start);
+  padding: 30px 40px 30px 0px;
   border-top: 1px solid var(--secondary-color);
   position: relative;
   &:last-child {
@@ -13,12 +13,11 @@
 .main {
   @include mixins.flexRow(20px 40px, flex-start, flex-start, wrap);
   flex: 1 1 auto;
-  min-width: 80%;
+  min-width: 50%;
 }
 
 .text {
   flex: 1 1 300px;
-  min-width: 300px;
 }
 
 .markers {
@@ -28,12 +27,14 @@
 
 .img {
   @include mixins.image(160px, 100px, cover);
+  min-width: 160px;
   @include mixins.tablet {
-    @include mixins.image(130px, 80px, cover);
+    @include mixins.image(100px, 60px, cover);
+    min-width: 100px;
   }
-  @media (max-width: 350px) {
-    @include mixins.image(160px, 100px, cover);
-  }
+  // @media (max-width: 350px) {
+  //   @include mixins.image(160px, 100px, cover);
+  // }
 }
 
 .priceBlock {

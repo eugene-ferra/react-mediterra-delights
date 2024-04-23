@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { saveArticle, deleteArticle } from "../services/apiUsers";
+import { saveArticle, deleteArticle } from "../../../services/apiUsers";
 
 export const useSaveArticle = (id) => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export const useSaveArticle = (id) => {
   const adding = useMutation({
     mutationFn: () => saveArticle(id),
     onSuccess: () => {
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       toast.success("Стаття успішно збережена!");
     },
     onError: (errObj) => {
@@ -22,7 +22,7 @@ export const useSaveArticle = (id) => {
   const deleting = useMutation({
     mutationFn: () => deleteArticle(id),
     onSuccess: () => {
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       toast.success("Стаття успішно видалена зі збережених!");
     },
     onError: (errObj) => {

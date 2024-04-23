@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "../../../services/apiProducts";
+import { getArticles } from "../services/apiArticles";
 
-export const useFavouritesProducts = (ids) => {
+export const useManyArticlesByIds = (ids) => {
   let queryStr = ids?.length ? ids.map((id) => `_id[in]=${id}`).join("&") : false;
 
   const result = useQuery({
-    queryKey: ["favouriteProducts"],
-    queryFn: ids?.length == 0 ? () => [] : () => getProducts(queryStr),
+    queryKey: ["articles", [...ids]],
+    queryFn: ids?.length == 0 ? () => [] : () => getArticles(queryStr),
     staleTime: 0,
   });
 
   return {
-    products: result.data,
+    articles: result.data,
     isLoading: result.isPending,
     error: result.error,
   };

@@ -23,13 +23,13 @@ export const signup = async (req, res, next) => {
     res.cookie("refresh", userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: req.secure ? true : false,
     });
 
     res.cookie("access", userData.accessToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: req.secure ? true : false,
     });
 
     res.status(201).json({
@@ -57,12 +57,12 @@ export const login = async (req, res, next) => {
     res.cookie("refresh", userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: req.secure ? true : false,
     });
     res.cookie("access", userData.accessToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: req.secure ? true : false,
     });
     res.status(200).json({
       status: "success",
@@ -113,12 +113,12 @@ export const refresh = async (req, res, next) => {
     res.cookie("refresh", userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: req.secure ? true : false,
     });
     res.cookie("access", userData.accessToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: true,
+      secure: req.secure ? true : false,
     });
     res.status(200).json({
       status: "success",

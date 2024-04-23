@@ -2,4 +2,5 @@
 
 .inner {
   @include mixins.flexColumn(20px, flex-start, stretch);
+  width: 100%;
 }

@@ -47,7 +47,6 @@ const sendError = (err, req, res) => {
 
 export default function (err, req, res, next) {
   let error;
-  console.log(err);
 
   if (err.name === "JsonWebTokenError") error = handleJWTError(err);
   if (err.name === "TokenExpiredError") error = handleTokenExpiredError(err);

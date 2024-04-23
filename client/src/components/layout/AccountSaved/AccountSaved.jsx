@@ -1,17 +1,15 @@
 import { useUser } from "../../../hooks/useUser";
-import { useSavedArticles } from "./useSavedArticles";
+import { useManyArticlesByIds } from "../../../hooks/useManyArticlesByIds";
 import Article from "../../block/Article/Article";
 import Catalog from "../Catalog/Catalog";
 import Button from "../../common/Button/Button";
 import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
-import Loader from "../../common/Loader/Loader";
+import PageLoader from "../../layout/PageLoader/PageLoader";
 import Title from "../../common/Title/Title";
 
 const AccountSaved = () => {
   const { user } = useUser();
-  const { articles, isLoading, error } = useSavedArticles(user?.savedArticles);
-
-  console.log(articles);
+  const { articles, isLoading, error } = useManyArticlesByIds(user?.savedArticles);
 
   return (
     <>
@@ -19,7 +17,7 @@ const AccountSaved = () => {
 
       {error && <ErrorMassage status={error?.[0]} />}
 
-      {isLoading && <Loader type={"global"} />}
+      {isLoading && <PageLoader />}
 
       {!isLoading && articles?.[1] && (
         <Catalog type={"small"}>

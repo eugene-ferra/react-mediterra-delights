@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { getFormData } from "../../../utils/getFormData";
 import { useArticleOptions } from "../../../hooks/useArticleOptions";
-import { usePostArticle } from "./usePostArticle";
+import { useAddArticle } from "./useAddArticle";
 import Form from "../Form/Form";
 import Button from "../../common/Button/Button";
 import Title from "../../common/Title/Title";
@@ -18,7 +18,7 @@ const ArticleManageAdd = () => {
   const { options } = useArticleOptions();
   const methods = useForm();
   const editorRef = useRef(null);
-  const { postArticle, isLoading, errors } = usePostArticle(methods.reset, editorRef);
+  const { postArticle, isLoading, errors } = useAddArticle(methods.reset, editorRef);
 
   async function onSubmit(data) {
     postArticle(getFormData(data));

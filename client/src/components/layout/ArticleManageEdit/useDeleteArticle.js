@@ -13,9 +13,7 @@ export const useDeleteArticle = () => {
     mutationFn: (id) => deleteArticleApi(id),
     onSuccess: () => {
       toast.success("Статтю успішно видалено!");
-      queryClient.invalidateQueries("adminArticles");
-      queryClient.invalidateQueries("articles");
-      queryClient.invalidateQueries("article");
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
       navigate("/admin/articles");
     },
     onError: (errObj) => {
@@ -28,7 +26,7 @@ export const useDeleteArticle = () => {
 
   return {
     deleteArticle: mutation.mutate,
-    isLoading: mutation.isPending,
+    isDeleting: mutation.isPending,
     errors: errors,
   };
 };

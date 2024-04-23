@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { likeArticle, unLikeArticle } from "../services/apiUsers";
+import { likeArticle, unLikeArticle } from "../../../services/apiUsers";
 
 export const useLikeArticle = (id) => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export const useLikeArticle = (id) => {
   const adding = useMutation({
     mutationFn: () => likeArticle(id),
     onSuccess: () => {
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
@@ -21,7 +21,7 @@ export const useLikeArticle = (id) => {
   const deleting = useMutation({
     mutationFn: () => unLikeArticle(id),
     onSuccess: () => {
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

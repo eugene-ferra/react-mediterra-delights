@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteProduct } from "../../../services/apiProducts";
+import { useNavigate } from "react-router-dom";
+import { postProduct } from "../../../services/apiProducts";
 import toast from "react-hot-toast";
 
-export const useDeleteProduct = (resetForm) => {
+export const useAddProduct = (resetForm) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const deleting = useMutation({
-    mutationFn: (id) => deleteProduct(id),
+  const adding = useMutation({
+    mutationFn: (data) => postProduct(data),
     onSuccess: () => {
-      toast.success("Товар успішно видалено!");
+      toast.success("Товар успішно додано!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      resetForm && resetForm();
+      resetForm();
       navigate("/admin/products");
     },
     onError: (errObj) => {
@@ -26,8 +26,8 @@ export const useDeleteProduct = (resetForm) => {
   });
 
   return {
-    deleteProduct: deleting.mutate,
-    isDeleting: deleting.isPending,
+    addProduct: adding.mutate,
+    isAdding: adding.isPending,
     errors: errors,
   };
 };

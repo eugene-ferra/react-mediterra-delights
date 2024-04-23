@@ -1,4 +1,4 @@
-import { useProducts } from "./useProducts";
+import { useProducts } from "../../../hooks/useProducts";
 import { Link, useSearchParams } from "react-router-dom";
 import ManageItem from "../ManageItem/ManageItem";
 import Button from "../../common/Button/Button";

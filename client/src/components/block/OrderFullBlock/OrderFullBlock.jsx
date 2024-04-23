@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useOrderById } from "../../../hooks/useOrderById";
+import { useOrder } from "../../../hooks/useOrder";
 import { prettyTime } from "../../../utils/prettyTime";
 import OrderFullItem from "../OrderFullItem/OrderFullItem";
 import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
@@ -9,7 +9,7 @@ import DropDownIcon from "../../svg/DropDownIcon";
 import styles from "./OrderFullBlock.module.scss";
 
 const OrderFullBlock = ({ id, isDropDown, isPersonalData }) => {
-  const { order, isLoading, isError, error } = useOrderById(id);
+  const { order, isLoading, isError, error } = useOrder(id);
   const [isOpen, setIsOpen] = useState(false);
 
   return (

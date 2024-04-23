@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Form } from "react-router-dom";
+// import { Form } from "react-router-dom";
 import Input from "../../common/Input/Input";
 import Button from "../../common/Button/Button";
 import styles from "./SubmitSearch.module.scss";
+import Form from "../Form/Form";
 
 const SubmitSearch = ({ setValue, isLoading, children, inputTitle }) => {
   const [inputValue, setInputValue] = useState(null);

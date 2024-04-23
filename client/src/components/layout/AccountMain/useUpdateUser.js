@@ -13,11 +13,11 @@ export const useUpdateUser = () => {
     mutationFn: (data) => updateMe(data),
     onSuccess: () => {
       toast.success("Персональну інформацію успішно оновлено!");
-      queryClient.invalidateQueries("user");
-      queryClient.invalidateQueries("product");
-      queryClient.invalidateQueries("products");
-      queryClient.invalidateQueries("article");
-      queryClient.invalidateQueries("articles");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["product"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["article"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

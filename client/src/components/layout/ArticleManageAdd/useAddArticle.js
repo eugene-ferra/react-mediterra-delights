@@ -1,23 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postProduct } from "../../../services/apiProducts";
+import { patchArticle, postArticle } from "../../../services/apiArticles";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export const usePostProduct = (resetForm) => {
+export const useAddArticle = (resetForm, editorRef) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (data) => postProduct(data),
+    mutationFn: async (data) => {
+      const response = await postArticle(data);
+      await editorRef.current.uploadImages();
+      await patchArticle(response.id, { markup: editorRef.current.getContent() });
+    },
     onSuccess: () => {
-      toast.success("Товар успішно додано!");
-      queryClient.invalidateQueries("adminProducts");
-      queryClient.invalidateQueries("products");
-      queryClient.invalidateQueries("product");
+      toast.success("Cтаттю успішно додано!");
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
       resetForm();
-      navigate("/admin/products");
+      navigate("/admin/articles");
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
@@ -28,7 +30,7 @@ export const usePostProduct = (resetForm) => {
   });
 
   return {
-    postProduct: mutation.mutate,
+    postArticle: mutation.mutate,
     isLoading: mutation.isPending,
     errors: errors,
   };

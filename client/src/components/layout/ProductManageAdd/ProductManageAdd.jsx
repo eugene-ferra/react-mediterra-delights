@@ -1,6 +1,6 @@
 import { useProductsOptions } from "../../../hooks/useProductOptions";
 import { useForm, FormProvider } from "react-hook-form";
-import { usePostProduct } from "./usePostProduct";
+import { useAddProduct } from "./useAddProduct";
 import { getFormData } from "../../../utils/getFormData";
 import Button from "../../common/Button/Button";
 import Form from "../Form/Form";
@@ -16,10 +16,11 @@ import Loader from "../../common/Loader/Loader";
 const ProductManageAdd = () => {
   const { options } = useProductsOptions();
   const methods = useForm();
-  const { postProduct, isLoading, errors } = usePostProduct(methods.reset);
+
+  const { addProduct, isAdding, errors } = useAddProduct(methods.reset);
 
   async function onSubmit(data) {
-    postProduct(getFormData(data));
+    addProduct(getFormData(data));
   }
 
   return (
@@ -37,7 +38,7 @@ const ProductManageAdd = () => {
               title={"Назва товару*"}
               errorMessage={errors?.title}
               register={methods.register("title")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <InputSelect
               title={"Категорія товару*"}
@@ -45,7 +46,7 @@ const ProductManageAdd = () => {
               valuesArr={options?.categories}
               errorMessage={errors?.category}
               name={"category"}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </FieldSet>
 
@@ -55,14 +56,14 @@ const ProductManageAdd = () => {
               errorMessage={errors?.imgCover}
               maxPhotos={1}
               name={"imgCover"}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <DropZone
               title={"Всі зображення товару*"}
               errorMessage={errors?.images}
               maxPhotos={10}
               name={"images"}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </FieldSet>
 
@@ -71,13 +72,13 @@ const ProductManageAdd = () => {
               title={"Опис товару*"}
               errorMessage={errors?.description}
               register={methods.register("description")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <TextArea
               title={"Повна інформація про товар"}
               errorMessage={errors?.fullText}
               register={methods.register("fullText")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </FieldSet>
 
@@ -87,14 +88,14 @@ const ProductManageAdd = () => {
               title={"Ціна товару*"}
               errorMessage={errors?.price}
               register={methods.register("price")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <Input
               type={"text"}
               title={"Ціна зі товару зі знижкою"}
               errorMessage={errors?.discountPrice}
               register={methods.register("discountPrice")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </FieldSet>
 
@@ -104,14 +105,14 @@ const ProductManageAdd = () => {
               title={"Вага товару*"}
               errorMessage={errors?.weight}
               register={methods.register("weight")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <Input
               type={"text"}
               title={"Час приготування товару*"}
               errorMessage={errors?.cookTime}
               register={methods.register("cookTime")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </FieldSet>
 
@@ -121,28 +122,28 @@ const ProductManageAdd = () => {
               title={"Калорії"}
               errorMessage={errors?.["nutrients.calories"]}
               register={methods.register("nutrients.calories")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <Input
               type={"text"}
               title={"Вуглеводи"}
               errorMessage={errors?.["nutrients.carbohydrates"]}
               register={methods.register("nutrients.carbohydrates")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <Input
               type={"text"}
               title={"Білки"}
               errorMessage={errors?.["nutrients.protein"]}
               register={methods.register("nutrients.protein")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <Input
               type={"text"}
               title={"Жири"}
               errorMessage={errors?.["nutrients.fats"]}
               register={methods.register("nutrients.fats")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </FieldSet>
 
@@ -152,18 +153,18 @@ const ProductManageAdd = () => {
               text={"Товар для вегетеріанців"}
               errorMessage={errors?.isVegan}
               register={methods.register("isVegan")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
             <CheckBox
               name={"isNewProduct"}
               text={"Помітити як новий"}
               errorMessage={errors?.isNewProduct}
               register={methods.register("isNewProduct")}
-              disabled={isLoading}
+              disabled={isAdding}
             />
           </FieldSet>
 
-          <Button disabled={isLoading}>{isLoading ? <Loader /> : "Cтворити"}</Button>
+          <Button disabled={isAdding}>{isAdding ? <Loader /> : "Cтворити"}</Button>
         </Form>
       </FormProvider>
     </>

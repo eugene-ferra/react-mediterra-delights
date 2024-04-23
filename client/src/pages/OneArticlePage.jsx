@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useArticles } from "../hooks/useArticles";
 import { useUser } from "../hooks/useUser";
-import { useArticleById } from "../hooks/useArticleById";
 import Footer from "../components/layout/Footer/Footer";
 import Header from "../components/layout/Header/Header";
 import MainLayout from "../components/layout/MainLayout/MainLayout";
@@ -11,6 +10,7 @@ import Gallery from "../components/layout/Gallery/Gallery";
 import BlockHeader from "../components/layout/BlockHeader/BlockHeader";
 import Article from "../components/block/Article/Article";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
+import { useArticle } from "../hooks/useArticle";
 
 const OneArticlePage = () => {
   const { slug } = useParams();
@@ -21,7 +21,7 @@ const OneArticlePage = () => {
     isLoading: moreLoading,
     error: moreError,
   } = useArticles(`topic=${articles?.[1]?.[0]?.topic}`);
-  useArticleById(articles?.[1]?.[0]?.id);
+  useArticle(articles?.[1]?.[0]?.id);
 
   return (
     <>

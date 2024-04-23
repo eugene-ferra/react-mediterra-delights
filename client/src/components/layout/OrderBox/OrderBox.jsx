@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useCart } from "../../../hooks/useCart";
 import { useManyProductsByIds } from "../../../hooks/useManyProductsByIds";
 import { useOrderOptions } from "./useOrderOptions";
-import { useUserData } from "./useUserData";
 import { useCreateOrder } from "./useCreateOrder";
 import { calcTotalDiscountPrice } from "../../../utils/calcTotalDiscountPrice";
 import { calcTotalSum } from "../../../utils/calcTotalSum";
@@ -23,10 +22,16 @@ import Button from "../../common/Button/Button";
 import DateInput from "../../common/DateInput/DateInput";
 import styles from "./OrderBox.module.scss";
 import PageLoader from "../PageLoader/PageLoader";
+import { useUser } from "../../../hooks/useUser";
 
 const OrderBox = () => {
   const methods = useForm();
-  useUserData(methods.setValue);
+
+  const { user } = useUser();
+  useEffect(() => {
+    let fields = Object.keys(methods.getValues());
+    fields.forEach((key) => methods.setValue(key, user?.[key]));
+  }, [user, methods]);
 
   const { cart, clearCart } = useCart();
   const { options, isLoading } = useOrderOptions();

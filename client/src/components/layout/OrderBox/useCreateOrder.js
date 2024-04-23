@@ -18,9 +18,9 @@ export const useCreateOrder = (clearCart, resetForm) => {
       return order;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("adminArticles");
-      queryClient.invalidateQueries("articles");
-      queryClient.invalidateQueries("article");
+      queryClient.invalidateQueries({ queryKey: ["adminArticles"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
+      queryClient.invalidateQueries({ queryKey: ["article"] });
 
       resetForm();
       navigate(`/order/success/${data?.number}`);
@@ -42,9 +42,9 @@ export const useCreateOrder = (clearCart, resetForm) => {
       await stripe.redirectToCheckout({ sessionId: session.id });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("adminArticles");
-      queryClient.invalidateQueries("articles");
-      queryClient.invalidateQueries("article");
+      queryClient.invalidateQueries({ queryKey: ["adminArticles"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
+      queryClient.invalidateQueries({ queryKey: ["article"] });
 
       resetForm();
     },

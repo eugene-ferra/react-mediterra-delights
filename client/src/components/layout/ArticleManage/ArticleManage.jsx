@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { useArticles } from "./useArticles";
+import { useArticles } from "../../../hooks/useArticles";
 import ManageItem from "../ManageItem/ManageItem";
 import Button from "../../common/Button/Button";
 import Title from "../../common/Title/Title";

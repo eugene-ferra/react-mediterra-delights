@@ -15,11 +15,10 @@ export const useChangeArticle = (editorRef) => {
       await editorRef.current.uploadImages();
       await patchArticle(data.id, { markup: editorRef.current.getContent() });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Статтю успішно оновлено!");
-      queryClient.invalidateQueries("adminArticles");
-      queryClient.invalidateQueries("articles");
-      queryClient.invalidateQueries("article");
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
+      queryClient.invalidateQueries({ queryKey: ["article", data?.id] });
       navigate("/admin/articles");
     },
     onError: (errObj) => {
@@ -32,7 +31,7 @@ export const useChangeArticle = (editorRef) => {
 
   return {
     patchArticle: mutation.mutate,
-    isLoading: mutation.isPending,
+    isChanging: mutation.isPending,
     errors: errors,
   };
 };

@@ -1,11 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useArticleOptions } from "../../../hooks/useArticleOptions";
 import { FormProvider, useForm } from "react-hook-form";
-import { useAdminArticle } from "../ArticleManage/useAdminArticle";
 import { useChangeArticle } from "./useChangeArticle";
 import { getFormData } from "../../../utils/getFormData";
 import { useDeleteArticle } from "./useDeleteArticle";
+import { useBlobs } from "../../../hooks/useBlobs";
 import Loader from "../../common/Loader/Loader";
 import Form from "../Form/Form";
 import Button from "../../common/Button/Button";
@@ -21,6 +21,7 @@ import Modal from "../../block/Modal/Modal";
 import TextEditor from "../../block/TextEditor/TextEditor";
 import PageLoader from "../PageLoader/PageLoader";
 import BtnBlock from "../BtnBlock/BtnBlock";
+import { useArticle } from "../../../hooks/useArticle";
 
 const ArticleManageEdit = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,16 +32,21 @@ const ArticleManageEdit = () => {
 
   const editorRef = useRef(null);
 
-  const {
-    article,
-    imgCover,
-    isLoading: isArticleLoading,
-    isError,
-  } = useAdminArticle(id, methods.setValue);
+  const { article, isLoading, isError } = useArticle(id);
 
-  const { isLoading, errors, patchArticle } = useChangeArticle(editorRef);
+  const { pictures: imgCover } = useBlobs(
+    [article?.imgCover?.jpg],
+    ["adminArticle", "imgCover", id]
+  );
 
-  const { isLoading: isDeleting, deleteArticle } = useDeleteArticle();
+  useEffect(() => {
+    let fields = Object.keys(methods.getValues());
+    fields.forEach((key) => methods.setValue(key, article?.[key]));
+  }, [methods, article]);
+
+  const { isChanging, errors, patchArticle } = useChangeArticle(editorRef);
+
+  const { isDeleting, deleteArticle } = useDeleteArticle();
 
   async function onSubmit(data) {
     patchArticle({ id: id, data: getFormData(data) });
@@ -49,7 +55,7 @@ const ArticleManageEdit = () => {
   return (
     <>
       {isError && <ErrorMassage status={404} />}
-      {isArticleLoading && <PageLoader />}
+      {isLoading && <PageLoader />}
 
       {article && (
         <FormProvider {...methods}>
@@ -65,7 +71,7 @@ const ArticleManageEdit = () => {
                 title={"Назва статті*"}
                 errorMessage={errors?.title}
                 register={methods.register("title")}
-                disabled={isLoading || isDeleting}
+                disabled={isChanging || isDeleting}
               />
               <InputSelect
                 title={"Тема статті*"}
@@ -73,7 +79,7 @@ const ArticleManageEdit = () => {
                 placeholder={article?.topic || "Тема"}
                 errorMessage={errors?.topic}
                 name={"topic"}
-                disabled={isLoading && isDeleting}
+                disabled={isChanging && isDeleting}
               />
 
               <DropZone
@@ -82,33 +88,33 @@ const ArticleManageEdit = () => {
                 maxPhotos={1}
                 name={"imgCover"}
                 initialFiles={imgCover}
-                disabled={isLoading || isDeleting}
+                disabled={isChanging || isDeleting}
               />
               <TextArea
                 name={"previewText"}
                 title={"Короткий зміст*"}
                 errorMessage={errors?.previewText}
                 register={methods.register("previewText")}
-                disabled={isLoading || isDeleting}
+                disabled={isChanging || isDeleting}
               />
             </FieldSet>
 
             <TextEditor
               title={"Контент статті*"}
               ref={editorRef}
-              disabled={isLoading || isDeleting}
+              disabled={isChanging || isDeleting}
               initialValue={article?.markup}
               imgName={() => methods.getValues()?.title}
             />
 
-            <Button disabled={isLoading || isDeleting}>
-              {isLoading ? <Loader /> : "Оновити"}
+            <Button disabled={isChanging || isDeleting}>
+              {isChanging ? <Loader /> : "Оновити"}
             </Button>
           </Form>
 
           <Form style={{ gap: "10px" }} onSubmit={(e) => e.preventDefault()}>
             <Button
-              disabled={isDeleting || isLoading}
+              disabled={isDeleting || isChanging}
               type={"outline-red"}
               onClick={() => setIsModalOpen(true)}
             >

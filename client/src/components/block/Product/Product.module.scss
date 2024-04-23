@@ -1,7 +1,7 @@
 @use "../../../scss/mixins.scss" as mixins;
 
 .product {
-  @include mixins.flexColumn(0, space-between);
+  @include mixins.flexColumn(0, space-between, stretch);
   height: 100%;
   padding: 10px;
   border-radius: var(--radius);

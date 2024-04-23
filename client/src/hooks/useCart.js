@@ -23,7 +23,7 @@ export const useCart = () => {
     mutationFn: (newItem) => addToCartApi(newItem.id, newItem.quantity),
     onSuccess: () => {
       toast.success("Товар успішно додано до кошика!");
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
@@ -35,7 +35,7 @@ export const useCart = () => {
     mutationFn: (itemId) => deleteFromCartApi(itemId),
     onSuccess: () => {
       toast.success("Товар успішно видалено із кошика!");
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
@@ -46,7 +46,7 @@ export const useCart = () => {
   const clearing = useMutation({
     mutationFn: clearCartApi,
     onSuccess: () => {
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
@@ -57,7 +57,7 @@ export const useCart = () => {
   const updating = useMutation({
     mutationFn: (item) => updateProductApi(item.id, item.quantity),
     onSuccess: () => {
-      queryClient.invalidateQueries("user");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

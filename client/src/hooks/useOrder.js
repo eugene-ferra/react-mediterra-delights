@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { getOneProduct } from "../services/apiProducts";
+import { getOneOrder } from "../services/apiOrders";
 
-export const useProductById = (id) => {
+export const useOrder = (id) => {
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["product", id],
-    queryFn: () => getOneProduct(id),
+    queryKey: ["order", id],
+    queryFn: () => getOneOrder(id),
   });
 
   return {
-    product: data || null,
+    order: data || null,
     isLoading: isLoading,
     isError: isError,
     error: error,

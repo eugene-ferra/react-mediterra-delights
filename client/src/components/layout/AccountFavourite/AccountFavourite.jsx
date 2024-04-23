@@ -1,15 +1,15 @@
 import { useUser } from "../../../hooks/useUser";
-import { useFavouritesProducts } from "./useFavouritesProducts";
+import { useManyProductsByIds } from "../../../hooks/useManyProductsByIds";
 import Title from "../../common/Title/Title";
 import Catalog from "../Catalog/Catalog";
 import Product from "../../block/Product/Product";
-import Loader from "../../common/Loader/Loader";
 import Button from "../../common/Button/Button";
 import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
+import PageLoader from "../PageLoader/PageLoader";
 
 const AccountFavourite = () => {
   const { user } = useUser();
-  const { products, isLoading, error } = useFavouritesProducts(user?.savedProducts);
+  const { products, isLoading, error } = useManyProductsByIds(user?.savedProducts);
 
   return (
     <>
@@ -17,7 +17,7 @@ const AccountFavourite = () => {
 
       {error && <ErrorMassage status={error.status} />}
 
-      {isLoading && <Loader type="global" />}
+      {isLoading && <PageLoader />}
 
       {!isLoading && products?.[1] && (
         <Catalog type="small">

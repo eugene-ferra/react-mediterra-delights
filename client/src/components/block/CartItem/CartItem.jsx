@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useProductById } from "../../../hooks/useProductById";
+import { useProduct } from "../../../hooks/useProduct";
 import Picture from "../../common/Picture/Picture";
 import Title from "../../common/Title/Title";
 import Marker from "../../common/Marker/Marker";
@@ -9,7 +9,7 @@ import Counter from "../../common/Counter/Counter";
 import styles from "./CartItem.module.scss";
 
 const CartItem = ({ id, quantity, updateCart, deleteFromCart }) => {
-  const { product } = useProductById(id);
+  const { product } = useProduct(id);
 
   return (
     <>

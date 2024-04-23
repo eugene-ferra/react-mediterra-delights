@@ -11,8 +11,8 @@ export const useSavedProduct = (id) => {
     mutationFn: () => saveProduct(id),
     onSuccess: () => {
       toast.success("Товар успішно збережено!");
-      queryClient.invalidateQueries("user");
-      queryClient.invalidateQueries("favouriteProducts");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["favouriteProducts"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
@@ -23,9 +23,9 @@ export const useSavedProduct = (id) => {
   const deleting = useMutation({
     mutationFn: () => deleteProduct(id),
     onSuccess: () => {
-      toast.success("Товар успішно видалено із улюблених! HEDHEHEH");
-      queryClient.invalidateQueries("user");
-      queryClient.invalidateQueries("favouriteProducts");
+      toast.success("Товар успішно видалено із улюблених! ");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["favouriteProducts"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
