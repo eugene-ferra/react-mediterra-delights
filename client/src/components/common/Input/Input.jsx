@@ -1,8 +1,8 @@
-import styles from "./Input.module.scss";
 import eye from "../../../assets/eye.svg";
 import eyeClose from "../../../assets/eye-close.svg";
 import Title from "../Title/Title";
 import Text from "../Text/Text";
+import styles from "./Input.module.scss";
 
 const Input = ({
   type,

@@ -12,7 +12,6 @@ export const useChangeProduct = (resetForm) => {
   const changing = useMutation({
     mutationFn: (data) => patchProduct(data.id, data.data),
     onSuccess: (data) => {
-      console.log(data?.id);
       toast.success("Товар успішно оновлено!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product", data?.id] });

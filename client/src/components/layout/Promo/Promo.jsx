@@ -19,7 +19,7 @@ const Promo = () => {
             кухарів. Наше меню насичене вишуканими стравами, які сповнені свіжості,
             аромату та витонченості.
           </Text>
-          <Button asTag={"Link"} to={"/products"}>
+          <Button asTag={"Link"} to={"/products"} type={"primary"}>
             Переглянути меню
           </Button>
         </div>

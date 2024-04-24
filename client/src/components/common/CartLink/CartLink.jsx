@@ -1,7 +1,7 @@
+import { Link } from "react-router-dom";
 import Picture from "../Picture/Picture";
 import cartImg from "../../../assets/cart.svg";
 import Text from "../Text/Text";
-import { Link } from "react-router-dom";
 import styles from "./CartLink.module.scss";
 
 const CartLink = ({ className, count = 0 }) => {

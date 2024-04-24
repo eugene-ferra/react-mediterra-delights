@@ -1,6 +1,6 @@
 import { useState } from "react";
-import styles from "./Picture.module.scss";
 import errorImg from "../../../assets/default.jpg";
+import styles from "./Picture.module.scss";
 
 const Picture = ({ formats, alt, defaultImg, className, style }) => {
   const [imageLoaded, setImageLoaded] = useState(true);

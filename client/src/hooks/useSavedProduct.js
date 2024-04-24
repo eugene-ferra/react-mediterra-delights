@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { deleteProduct, saveProduct } from "../services/apiUsers";
+import toast from "react-hot-toast";
 
 export const useSavedProduct = (id) => {
   const navigate = useNavigate();

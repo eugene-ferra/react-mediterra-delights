@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useFormContext } from "react-hook-form";
-import styles from "./DropZone.module.scss";
 import trash from "../../../assets/trash.svg";
 import Title from "../Title/Title";
 import Text from "../Text/Text";
+import styles from "./DropZone.module.scss";
 
 const DropZone = ({
   maxPhotos,

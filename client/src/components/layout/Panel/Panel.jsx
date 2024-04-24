@@ -1,8 +1,8 @@
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
 import Container from "../Container/Container";
 import Burger from "../../common/Burger/Burger";
 import styles from "./Panel.module.scss";
-import { NavLink } from "react-router-dom";
-import { useState } from "react";
 import Text from "../../common/Text/Text";
 
 const Panel = ({ links, children }) => {

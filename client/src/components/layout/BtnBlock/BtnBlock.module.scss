@@ -3,4 +3,5 @@
 .btnBlock {
   @include mixins.flexRow(10px, center, center, wrap);
   width: 100%;
+  padding: 8px 0;
 }

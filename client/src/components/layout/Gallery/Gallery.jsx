@@ -35,6 +35,9 @@ const Gallery = ({ items, isLoading, error, top }) => {
               320: {
                 slidesPerView: 1,
               },
+              450: {
+                slidesPerView: 2,
+              },
               576: {
                 slidesPerView: 2,
               },

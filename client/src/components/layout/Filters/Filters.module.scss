@@ -24,6 +24,7 @@
   background-color: var(--primary-color);
   border-radius: var(--radius);
   border: 1px solid var(--secondary-color);
+  transition: var(--transition);
   @include mixins.basicBold;
   cursor: pointer;
   &:hover {

@@ -35,7 +35,7 @@ const Button = ({ className, type, asTag, to, disabled, children, onClick, style
           className={`${classValue} ${className || ""}`}
           disabled={disabled}
           onClick={onClick}
-          style={styles}
+          style={style}
         >
           {children}
         </Link>

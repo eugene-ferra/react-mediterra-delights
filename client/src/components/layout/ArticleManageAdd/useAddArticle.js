@@ -11,6 +11,10 @@ export const useAddArticle = (resetForm, editorRef) => {
 
   const mutation = useMutation({
     mutationFn: async (data) => {
+      if (editorRef.current.getContent() === "") {
+        throw new Error("Будь-ласка, додайте контент статті!");
+      }
+
       const response = await postArticle(data);
       await editorRef.current.uploadImages();
       await patchArticle(response.id, { markup: editorRef.current.getContent() });

@@ -6,6 +6,7 @@ import { useOrderOptions } from "./useOrderOptions";
 import { useCreateOrder } from "./useCreateOrder";
 import { calcTotalDiscountPrice } from "../../../utils/calcTotalDiscountPrice";
 import { calcTotalSum } from "../../../utils/calcTotalSum";
+import { useUser } from "../../../hooks/useUser";
 import OrderItem from "../../block/OrderItem/OrderItem";
 import Container from "../Container/Container";
 import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
@@ -20,9 +21,8 @@ import Title from "../../common/Title/Title";
 import InputSelect from "../../common/InputSelect/InputSelect";
 import Button from "../../common/Button/Button";
 import DateInput from "../../common/DateInput/DateInput";
-import styles from "./OrderBox.module.scss";
 import PageLoader from "../PageLoader/PageLoader";
-import { useUser } from "../../../hooks/useUser";
+import styles from "./OrderBox.module.scss";
 
 const OrderBox = () => {
   const methods = useForm();

@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
 import Header from "../components/layout/Header/Header";
 import MainLayout from "../components/layout/MainLayout/MainLayout";
-import { useUser } from "../hooks/useUser";
 import Panel from "../components/layout/Panel/Panel";
 import HomeIcon from "../components/svg/HomeIcon";
 import OrderIcon from "../components/svg/OrderIcon";

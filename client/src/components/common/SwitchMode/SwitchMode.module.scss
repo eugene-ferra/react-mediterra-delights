@@ -15,7 +15,6 @@
   }
   img {
     @include mixins.image(100%, 100%, contain);
-    animation: move 0.3s ease-in-out 1;
   }
 }
 

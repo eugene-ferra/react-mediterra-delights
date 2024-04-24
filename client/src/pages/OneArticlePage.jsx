@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useArticles } from "../hooks/useArticles";
+import { useArticle } from "../hooks/useArticle";
 import { useUser } from "../hooks/useUser";
 import Footer from "../components/layout/Footer/Footer";
 import Header from "../components/layout/Header/Header";
@@ -10,7 +11,6 @@ import Gallery from "../components/layout/Gallery/Gallery";
 import BlockHeader from "../components/layout/BlockHeader/BlockHeader";
 import Article from "../components/block/Article/Article";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
-import { useArticle } from "../hooks/useArticle";
 
 const OneArticlePage = () => {
   const { slug } = useParams();

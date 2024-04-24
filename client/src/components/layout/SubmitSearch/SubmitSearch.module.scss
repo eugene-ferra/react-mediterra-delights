@@ -7,3 +7,7 @@
 .form {
   @include mixins.flexRow(15px, flex-start, flex-end, wrap);
 }
+
+.input {
+  width: 300px;
+}

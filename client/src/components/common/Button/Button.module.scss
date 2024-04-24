@@ -17,6 +17,7 @@
   width: max-content;
   @include mixins.mobile {
     @include mixins.smallText;
+    color: var(--primary-stable-color);
     font-weight: 500;
   }
   &:hover {
@@ -61,6 +62,7 @@
     @extend .button;
     background-color: transparent;
     border: 2px solid var(--accent-color);
+    padding: 8px 20px;
   }
   &OutlineRed {
     @extend .button;

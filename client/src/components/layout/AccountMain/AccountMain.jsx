@@ -5,6 +5,7 @@ import { getFormData } from "../../../utils/getFormData";
 import { useDeleteUser } from "./useDeleteUser";
 import { useLogoutUser } from "./useLogout";
 import { useUser } from "../../../hooks/useUser";
+import { useBlobs } from "../../../hooks/useBlobs";
 import Button from "../../common/Button/Button";
 import FieldSet from "../FieldSet/FieldSet";
 import Form from "../Form/Form";
@@ -14,9 +15,8 @@ import toast from "react-hot-toast";
 import Modal from "../../block/Modal/Modal";
 import Title from "../../common/Title/Title";
 import Text from "../../common/Text/Text";
-import styles from "./AccountMain.module.scss";
 import BtnBlock from "../BtnBlock/BtnBlock";
-import { useBlobs } from "../../../hooks/useBlobs";
+import styles from "./AccountMain.module.scss";
 
 const AccountMain = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,7 +31,7 @@ const AccountMain = () => {
 
   useEffect(() => {
     let fields = Object.keys(methods.getValues());
-    fields.forEach((key) => methods.setValue(key, user?.[key]));
+    fields.forEach((key) => key !== "password" && methods.setValue(key, user?.[key]));
   }, [user, methods]);
 
   const { logout, isLoading: isLoadingOut } = useLogoutUser();

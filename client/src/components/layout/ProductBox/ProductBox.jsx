@@ -20,13 +20,13 @@ import TextArea from "../../common/TextArea/TextArea";
 import StarRating from "../../common/StarRating/StarRating";
 import Review from "../../block/Review/Review";
 import Loader from "../../common/Loader/Loader";
+import BtnBlock from "../BtnBlock/BtnBlock";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/zoom";
 import styles from "./ProductBox.module.scss";
-import BtnBlock from "../BtnBlock/BtnBlock";
 
 const ProductBox = ({ product, isSaved, onUserError }) => {
   const { saveProduct, isSaving, deleteProduct, isDeleting } = useSavedProduct(
@@ -68,11 +68,7 @@ const ProductBox = ({ product, isSaved, onUserError }) => {
                   alt={product?.title}
                 />
               ) : (
-                <Picture
-                  className={styles.picture}
-                  formats={product?.imgCover}
-                  alt={product?.title}
-                />
+                <Picture formats={product?.imgCover} alt={product?.title} />
               )}
             </div>
             <div className={styles.info}>

@@ -1,5 +1,5 @@
-import Select from "react-select";
 import { Controller, useFormContext } from "react-hook-form";
+import Select from "react-select";
 import Title from "../Title/Title";
 import Text from "../Text/Text";
 

@@ -21,6 +21,10 @@
   border-radius: var(--radius);
   box-shadow: 0 0 3px 0 var(--primary-color);
   cursor: pointer;
+  transition: var(--transition);
+  &:hover:not([disabled]) {
+    box-shadow: 0 0 3px 0 var(--accent-color);
+  }
   @include mixins.mobile {
     display: none;
   }

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import el from "date-fns/locale/uk";
-import styles from "./DateInput.module.scss";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { Controller, useFormContext } from "react-hook-form";
 import Title from "../Title/Title";
 import Text from "../Text/Text";
+import styles from "./DateInput.module.scss";
 
 registerLocale("el", el);
 

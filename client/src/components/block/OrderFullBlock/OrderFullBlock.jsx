@@ -26,7 +26,7 @@ const OrderFullBlock = ({ id, isDropDown, isPersonalData }) => {
             <div>
               <Text type={"big"}>Замовлення № {order?.[0]?.number}</Text>
               <Text type={"small"}>{prettyTime(order?.[0]?.time)}</Text>
-            </div>{" "}
+            </div>
             {isDropDown && (
               <div className={styles.headerDrop}>
                 {!isOpen && (

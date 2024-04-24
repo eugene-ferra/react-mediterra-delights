@@ -1,10 +1,10 @@
 import { useState } from "react";
-import styles from "./StarRating.module.scss";
+import { Controller, useFormContext } from "react-hook-form";
 import StarFullIcon from "../../svg/StarFullIcon";
 import StarOutlinedIcon from "../../svg/StarOutlinedIcon";
-import { Controller, useFormContext } from "react-hook-form";
 import Title from "../Title/Title";
 import Text from "../Text/Text";
+import styles from "./StarRating.module.scss";
 
 const StarRating = ({ title, name, disabled, errorMessage }) => {
   const { control } = useFormContext();

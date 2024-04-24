@@ -1,5 +1,6 @@
-import MainLayout from "../components/layout/MainLayout/MainLayout";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
+import MainLayout from "../components/layout/MainLayout/MainLayout";
 import Panel from "../components/layout/Panel/Panel";
 import Header from "../components/layout/Header/Header";
 import HomeIcon from "../components/svg/HomeIcon";
@@ -8,7 +9,6 @@ import ArticleIcon from "../components/svg/ArticleIcon";
 import CommenIcon from "../components/svg/CommenIcon";
 import ReviewIcon from "../components/svg/ReviewIcon";
 import OrderIcon from "../components/svg/OrderIcon";
-import { useUser } from "../hooks/useUser";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
 
 const AdminPage = () => {
