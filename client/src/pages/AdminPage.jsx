@@ -10,12 +10,15 @@ import CommenIcon from "../components/svg/CommenIcon";
 import ReviewIcon from "../components/svg/ReviewIcon";
 import OrderIcon from "../components/svg/OrderIcon";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
+import { useEffect } from "react";
 
 const AdminPage = () => {
   const { user, isLoading } = useUser();
   const navigate = useNavigate();
 
-  if (!user || user?.role !== "admin") navigate("/forbidden");
+  useEffect(() => {
+    if (!isLoading && !user && user?.role !== "admin") navigate("/forbidden");
+  }, [isLoading, user, navigate]);
 
   return (
     <>

@@ -8,12 +8,15 @@ import OrderIcon from "../components/svg/OrderIcon";
 import SaveArticleIcon from "../components/svg/SaveArticleIcon";
 import FavIcon from "../components/svg/FavouriteIcon";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
+import { useEffect } from "react";
 
 const AccountPage = () => {
   const { user, isLoading } = useUser();
   const navigate = useNavigate();
 
-  if (!user) navigate("/forbidden");
+  useEffect(() => {
+    if (!isLoading && !user) navigate("/forbidden");
+  }, [user, navigate, isLoading]);
 
   return (
     <>

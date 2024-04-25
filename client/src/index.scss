@@ -147,3 +147,22 @@ h6 {
 .react-datepicker-wrapper {
   width: 100% !important;
 }
+
+//tiny mce overriding styles
+#root.dark {
+  .tox-editor-header,
+  .tox-menubar,
+  .tox-toolbar__primary,
+  .tox-statusbar,
+  .tox-tbtn--bespoke {
+    background-color: var(--primary-color);
+  }
+  .tox .tox-menubar + .tox-toolbar-overlord {
+    border-top: 2px solid var(--primary-stable-color);
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+  .tox-statusbar__branding {
+    display: none;
+  }
+}

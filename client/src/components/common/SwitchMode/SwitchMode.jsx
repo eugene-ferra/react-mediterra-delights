@@ -1,22 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import moon from "../../../assets/moon.svg";
 import sun from "../../../assets/sun.svg";
 import styles from "./SwitchMode.module.scss";
+import { ThemeContext } from "../../../App";
 
 const SwitchMode = () => {
-  const [isDark, setIsDark] = useState(
-    document.getElementById("root").classList.contains("dark")
-  );
-
-  useEffect(() => {
-    if (
-      (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ||
-      localStorage.getItem("theme") === "dark"
-    ) {
-      document.getElementById("root").classList.add("dark");
-      setIsDark(true);
-    }
-  }, []);
+  const { isDark, setIsDark } = useContext(ThemeContext);
 
   const changeTheme = (e) => {
     setIsDark((prevIsDark) => {

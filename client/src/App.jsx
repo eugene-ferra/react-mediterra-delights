@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -102,19 +102,35 @@ const queryClient = new QueryClient({
 });
 
 export const CartContext = createContext();
+export const ThemeContext = createContext();
 
 const App = () => {
   const [cart, setCart] = useState(
     Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : []
   );
 
+  const [isDark, setIsDark] = useState();
+  useEffect(() => {
+    if (
+      (!localStorage.getItem("theme") &&
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches) ||
+      localStorage.getItem("theme") === "dark"
+    ) {
+      document.getElementById("root").classList.add("dark");
+      setIsDark(true);
+    }
+  }, [setIsDark]);
+
   return (
-    <CartContext.Provider value={{ cart, setCart }}>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </CartContext.Provider>
+    <ThemeContext.Provider value={{ isDark, setIsDark }}>
+      <CartContext.Provider value={{ cart, setCart }}>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </CartContext.Provider>
+    </ThemeContext.Provider>
   );
 };
 
