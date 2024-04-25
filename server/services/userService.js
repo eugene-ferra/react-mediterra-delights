@@ -100,7 +100,7 @@ export default class userService {
 
   static async sendResetToken(email) {
     const user = await userModel.findOne({ email });
-    if (!user) throw new AppError("Користувача з таким email не знайдено!", 404);
+    if (!user) throw new AppError("Користувача з таким email не знайдено!", 400);
 
     const plainResetToken = crypto.randomBytes(32).toString("hex");
     const hashedResetToken = crypto
@@ -129,9 +129,16 @@ export default class userService {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await userModel.findOne({ email: email, resetToken: hashedToken });
-    if (!user) throw new AppError("Invalid token", 400);
+    if (!user)
+      throw new AppError(
+        "Сталася помилка. Зробіть повторний запит на скидання пароля!",
+        400
+      );
     if (user.resetTokenExpiresAt < Date.now())
-      throw new AppError("Reset token has been expired!", 400);
+      throw new AppError(
+        "Пройшло забагато часу з моменту скидання паролю. Зробіть запит на його скидання ще раз!",
+        400
+      );
 
     await userModel.findByIdAndUpdate(
       user._id,

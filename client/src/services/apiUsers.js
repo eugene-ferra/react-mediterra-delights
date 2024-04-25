@@ -26,6 +26,16 @@ export async function logout() {
   return await api.get("/api/auth/logout");
 }
 
+export async function forgotPassword(data) {
+  return await api.post("/api/auth/forgot-password", data);
+}
+
+export async function resetPassword(token, email, password) {
+  return await api.patch(`/api/auth/reset-password/${token}?email=${email}`, {
+    password,
+  });
+}
+
 export async function updateMe(data) {
   return await api.patch("/api/users/me", data);
 }
