@@ -140,7 +140,7 @@ export const forgotPassword = async (req, res, next) => {
       });
     }
 
-    await userService.sendResetToken(req.body.email);
+    await userService.sendResetToken(req.body.email, req.body.path);
     res.status(200).json({ status: "success" });
   } catch (error) {
     next(error);

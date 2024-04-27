@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useLogin } from "./useLogin";
 import Input from "../../common/Input/Input";
@@ -16,6 +16,10 @@ const LoginForm = () => {
   const { register, handleSubmit } = useForm();
 
   const [isPassShow, setIsPassShow] = useState(false);
+
+  const location = useLocation();
+
+  const pathname = new URLSearchParams(location?.search).get("next") || "/";
 
   async function onSubmit(data) {
     login(data);
@@ -49,8 +53,10 @@ const LoginForm = () => {
           {isLoading ? <Loader /> : "Увійти"}
         </Button>
         <Text type="small" align={"center"}>
-          Забули пароль? <Link to="/forgot-password">Відновити доступ</Link> <br />
-          Ще не маєте аккаунту? <Link to="/signup">Зареєструватися</Link>{" "}
+          Забули пароль?{" "}
+          <Link to={`/forgot-password?next=${pathname}`}>Відновити доступ</Link> <br />
+          Ще не маєте аккаунту?
+          <Link to={`/signup?next=${pathname}`}>Зареєструватися</Link>{" "}
         </Text>
       </Form>
     </MainLayout>

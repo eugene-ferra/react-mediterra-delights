@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useUser } from "../../../hooks/useUser";
 import { useCart } from "../../../hooks/useCart";
@@ -20,6 +20,10 @@ const Header = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const { user } = useUser();
   const { cart } = useCart();
+  let { pathname, search } = useLocation();
+
+  if (new URLSearchParams(search).get("next"))
+    pathname = new URLSearchParams(search).get("next");
 
   const handleClick = () => {
     setIsDropDownOpen((state) => !state);
@@ -49,14 +53,18 @@ const Header = () => {
         {!user && (
           <>
             <SwitchMode />
-            <Button asTag={"Link"} to={"/signup"} className={styles.signup}>
+            <Button
+              asTag={"Link"}
+              to={`/signup?next=${pathname}`}
+              className={styles.signup}
+            >
               Реєстрація
               <Picture alt={"register"} formats={{ jpg: registerImg }} />
             </Button>
 
             <Button
               asTag={"Link"}
-              to={"/login"}
+              to={`/login?next=${pathname}`}
               type={"outline"}
               className={styles.login}
             >
@@ -76,11 +84,16 @@ const Header = () => {
         <Navbar className={styles.navbarMobile} onClick={handleClick} />
         {!user && (
           <BtnBlock>
-            <Button asTag={"Link"} to={"/signup"} onClick={handleClick}>
+            <Button asTag={"Link"} to={`/signup?next=${pathname}`} onClick={handleClick}>
               Реєстрація
               {<Picture alt={"register"} formats={{ jpg: registerImg }} />}
             </Button>
-            <Button asTag={"Link"} to={"/login"} type={"outline"} onClick={handleClick}>
+            <Button
+              asTag={"Link"}
+              to={`/login?next=${pathname}`}
+              type={"outline"}
+              onClick={handleClick}
+            >
               Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
             </Button>
           </BtnBlock>

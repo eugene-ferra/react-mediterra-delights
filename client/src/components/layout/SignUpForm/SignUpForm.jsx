@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useRegister } from "./useRegister";
 import { useForm } from "react-hook-form";
 import Input from "../../common/Input/Input";
@@ -16,6 +16,10 @@ const SignUpForm = () => {
 
   const { signup, isLoading, errors } = useRegister();
   const { register, handleSubmit } = useForm();
+
+  const location = useLocation();
+
+  const pathname = new URLSearchParams(location?.search).get("next") || "/";
 
   async function onSubmit(data) {
     signup(data);
@@ -66,7 +70,7 @@ const SignUpForm = () => {
           {isLoading ? <Loader /> : "Реєстрація"}
         </Button>
         <Text type="small" align={"center"}>
-          Вже маєте аккаунт? <Link to="/login">Увійти в аккаунт</Link>{" "}
+          Вже маєте аккаунт? <Link to={`/login?next=${pathname}`}>Увійти в аккаунт</Link>
         </Text>
       </Form>
     </MainLayout>

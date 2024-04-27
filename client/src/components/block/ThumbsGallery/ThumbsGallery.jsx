@@ -24,7 +24,7 @@ const ThumbsGallery = ({ images, alt }) => {
 
   return (
     <>
-      <div className={styles.inner}>
+      <div>
         <div className={styles.top}>
           <button ref={prevRef} className={styles.buttonPrev}>
             <PrevIcon />

@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useForgotPassword } from "./useForgotPassword";
 import Picture from "../../common/Picture/Picture";
@@ -14,8 +15,11 @@ import styles from "./ForgotPasswordBlock.module.scss";
 const ForgotPasswordBlock = () => {
   const { errors, isLoading, forgotPassword } = useForgotPassword();
   const { register, handleSubmit } = useForm();
+  const location = useLocation();
+  const pathname = new URLSearchParams(location.search).get("next") || "/";
 
   async function onSubmit(data) {
+    data["path"] = pathname;
     forgotPassword(data);
   }
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useProducts } from "../hooks/useProducts";
 import { useUser } from "../hooks/useUser";
 import Header from "../components/layout/Header/Header";
@@ -23,6 +23,7 @@ const OneProductPage = () => {
   const { slug } = useParams();
   const { user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { pathname } = useLocation();
 
   const { products, isLoading, error } = useProducts(`slug=${slug}`);
 
@@ -81,10 +82,10 @@ const OneProductPage = () => {
           Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
         </Text>
         <BtnBlock>
-          <Button asTag={"Link"} to={"/login"}>
+          <Button asTag={"Link"} to={`/login?next=${pathname}`}>
             Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
           </Button>
-          <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
+          <Button asTag={"Link"} to={`/signup?next=${pathname}`} type={"outline-red"}>
             Реєстрація
           </Button>
         </BtnBlock>

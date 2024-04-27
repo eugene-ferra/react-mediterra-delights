@@ -9,7 +9,7 @@ export const useResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const next = new URLSearchParams(location.search).get("next");
+  const next = new URLSearchParams(location.search).get("next") || "/";
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data) => resetPassword(data?.token, data?.email, data?.password),
@@ -17,7 +17,7 @@ export const useResetPassword = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       toast.success("Пароль успішно змінено!");
-      navigate(`/login${next && `?next=${next}`}`);
+      navigate(`/login?next=${next}`);
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

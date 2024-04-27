@@ -37,7 +37,8 @@ export default class userService {
   static async registration({ name, lastName, email, password, device }) {
     const candidate = await userModel.findOne({ email });
 
-    if (candidate) throw new AppError("User with this email has already exist!", 409);
+    if (candidate)
+      throw new AppError("Користувач з таким e-mail вже зареєстрований!", 409);
 
     const hashPassword = await bcrypt.hash(password, 12);
     const user = await userModel.create({
@@ -98,7 +99,7 @@ export default class userService {
     return { user: new UserDTO(user), ...tokens };
   }
 
-  static async sendResetToken(email) {
+  static async sendResetToken(email, path) {
     const user = await userModel.findOne({ email });
     if (!user) throw new AppError("Користувача з таким email не знайдено!", 400);
 
@@ -120,7 +121,7 @@ export default class userService {
 
     await Mailer.sendMail(email, "Запит на скидання пароля", "resetPassEmail.ejs", {
       name: user.name,
-      link: `${process.env.CLIENT_URL}/reset-password/${plainResetToken}?email=${email}`,
+      link: `${process.env.CLIENT_URL}/reset-password/${plainResetToken}?email=${email}&next=${path}`,
       time: `${hours} години`,
     });
   }
@@ -129,6 +130,9 @@ export default class userService {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await userModel.findOne({ email: email, resetToken: hashedToken });
+
+    console.log(email);
+
     if (!user)
       throw new AppError(
         "Сталася помилка. Зробіть повторний запит на скидання пароля!",

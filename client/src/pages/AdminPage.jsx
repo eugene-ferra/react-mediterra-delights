@@ -17,7 +17,7 @@ const AdminPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !user && user?.role !== "admin") navigate("/forbidden");
+    if (!isLoading && (!user || user?.role !== "admin")) navigate("/forbidden");
   }, [isLoading, user, navigate]);
 
   return (

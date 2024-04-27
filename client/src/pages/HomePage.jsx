@@ -16,6 +16,7 @@ import Button from "../components/common/Button/Button";
 import Picture from "../components/common/Picture/Picture";
 import loginImg from "../assets/login.svg";
 import BtnBlock from "../components/layout/BtnBlock/BtnBlock";
+import { useLocation } from "react-router-dom";
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,6 +47,7 @@ const HomePage = () => {
   } = useProducts("isNewProduct=true&sort=-avgRating");
 
   const { user } = useUser();
+  const { pathname } = useLocation();
 
   const onClose = () => setIsModalOpen(false);
 
@@ -149,10 +151,10 @@ const HomePage = () => {
           Додавати товар в улюблені можуть лише зареєстровані користувачі сайту
         </Text>
         <BtnBlock>
-          <Button asTag={"Link"} to={"/login"}>
+          <Button asTag={"Link"} to={`/login?next=${pathname}`}>
             Вхід {<Picture alt={"login"} formats={{ jpg: loginImg }} />}
           </Button>
-          <Button asTag={"Link"} to={"/signup"} type={"outline-red"}>
+          <Button asTag={"Link"} to={`/signup?next=${pathname}`} type={"outline-red"}>
             Реєстрація
           </Button>
         </BtnBlock>

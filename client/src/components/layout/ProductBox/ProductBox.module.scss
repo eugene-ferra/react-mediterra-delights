@@ -15,12 +15,13 @@
 }
 
 .images {
-  width: 50%;
-  min-width: 50%;
+  width: 100%;
+  min-width: 400px;
   max-width: 500px;
   @include mixins.mobile {
-    width: auto;
-    max-width: 100%;
+    width: 100%;
+    min-width: unset;
+    max-width: 500px;
   }
 }
 

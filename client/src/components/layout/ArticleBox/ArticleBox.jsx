@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { useUser } from "../../../hooks/useUser";
 import { usePostComment } from "./usePostComment";
@@ -28,6 +29,8 @@ const ArticleBox = ({ article, isLiked, isSaved }) => {
     methods.reset();
     setIsModalOpen(false);
   });
+
+  const { pathname } = useLocation();
 
   const { likeArticle, unlikeArticle, isUnliking, isLiking } = useLikeArticle(
     article?.id
@@ -111,7 +114,7 @@ const ArticleBox = ({ article, isLiked, isSaved }) => {
         </div>
       </Container>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} align="center">
         {user ? (
           <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -129,19 +132,23 @@ const ArticleBox = ({ article, isLiked, isSaved }) => {
             </Form>
           </FormProvider>
         ) : (
-          <div>
+          <>
             <Title align={"center"} type={"small"}>
               Залишати коментарі можуть лише користувачі сайту!
             </Title>
-            <div className={styles.modalBody}>
-              <Button asTag={"Link"} to={"/login"}>
+            <BtnBlock>
+              <Button asTag={"Link"} to={`/login?next=${pathname}`}>
                 Увійти
               </Button>
-              <Button type={"outline-red"} asTag={"Link"} to={"/signup"}>
+              <Button
+                type={"outline-red"}
+                asTag={"Link"}
+                to={`/signup?next=${pathname}`}
+              >
                 Зареєструватися
               </Button>
-            </div>
-          </div>
+            </BtnBlock>
+          </>
         )}
       </Modal>
 
@@ -154,24 +161,28 @@ const ArticleBox = ({ article, isLiked, isSaved }) => {
           Ставити лайки можуть лише користувачі сайту!
         </Title>
         <BtnBlock>
-          <Button asTag={"Link"} to={"/login"}>
+          <Button asTag={"Link"} to={`/login?next=${pathname}`}>
             Увійти
           </Button>
-          <Button type={"outline-red"} asTag={"Link"} to={"/signup"}>
+          <Button type={"outline-red"} asTag={"Link"} to={`/signup?next=${pathname}`}>
             Зареєструватися
           </Button>
         </BtnBlock>
       </Modal>
 
-      <Modal isOpen={isSavedModalOpen} onClose={() => setIsSavedModalOpen(false)}>
+      <Modal
+        isOpen={isSavedModalOpen}
+        onClose={() => setIsSavedModalOpen(false)}
+        align="center"
+      >
         <Title align={"center"} type={"small"}>
           Зберігати статті можуть лише користувачі сайту!
         </Title>
         <BtnBlock>
-          <Button asTag={"Link"} to={"/login"}>
+          <Button asTag={"Link"} to={`/login?next=${pathname}`}>
             Увійти
           </Button>
-          <Button type={"outline-red"} asTag={"Link"} to={"/signup"}>
+          <Button type={"outline-red"} asTag={"Link"} to={`/signup?next=${pathname}`}>
             Зареєструватися
           </Button>
         </BtnBlock>

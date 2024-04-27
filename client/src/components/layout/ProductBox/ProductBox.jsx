@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
 import { FormProvider, useForm } from "react-hook-form";
 import { usePostReview } from "./usePostReview";
@@ -39,6 +40,8 @@ const ProductBox = ({ product, isSaved, onUserError }) => {
     methods.reset();
     setIsModalOpen(false);
   });
+
+  const { pathname } = useLocation();
 
   const { user } = useUser();
 
@@ -227,10 +230,14 @@ const ProductBox = ({ product, isSaved, onUserError }) => {
               Залишати відгуки можуть лише користувачі сайту!
             </Title>
             <BtnBlock>
-              <Button asTag={"Link"} to={"/login"}>
+              <Button asTag={"Link"} to={`/login?next=${pathname}`}>
                 Увійти
               </Button>
-              <Button type={"outline-red"} asTag={"Link"} to={"/signup"}>
+              <Button
+                type={"outline-red"}
+                asTag={"Link"}
+                to={`/signup?next=${pathname}`}
+              >
                 Зареєструватися
               </Button>
             </BtnBlock>
