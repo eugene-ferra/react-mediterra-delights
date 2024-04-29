@@ -131,8 +131,6 @@ export default class userService {
 
     const user = await userModel.findOne({ email: email, resetToken: hashedToken });
 
-    console.log(email);
-
     if (!user)
       throw new AppError(
         "Сталася помилка. Зробіть повторний запит на скидання пароля!",

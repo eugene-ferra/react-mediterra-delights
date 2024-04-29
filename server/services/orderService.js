@@ -76,13 +76,15 @@ export class orderService {
       .find(filterObj)
       .sort(sortObj)
       .skip(--page * limit)
-      .limit(limit);
+      .limit(limit)
+      .populate({ path: "products.id" });
 
     if (!data.length) {
       throw new AppError("No documents match the current filters!", 404);
     }
+    const docs = await orderModel.countDocuments(filterObj);
 
-    return data.map((item) => new OrderDTO(item));
+    return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new OrderDTO(item))];
   }
 
   static async getOne(id, populateObj) {

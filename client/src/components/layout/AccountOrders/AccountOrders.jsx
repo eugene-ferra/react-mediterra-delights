@@ -2,23 +2,41 @@ import { useUser } from "../../../hooks/useUser";
 import Title from "../../common/Title/Title";
 import OrderFullBlock from "../../block/OrderFullBlock/OrderFullBlock";
 import styles from "./AccountOrders.module.scss";
+import { useManyOrdersByIds } from "../../../hooks/useManyOrdersByIds";
+import { useSearchParams } from "react-router-dom";
+import Pagination from "../../block/Pagination/Pagination";
+import PageLoader from "../PageLoader/PageLoader";
 
 const AccountOrders = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useUser();
+  const { orders, isLoading } = useManyOrdersByIds(
+    user?.orders,
+    searchParams.get("page") || 1
+  );
 
   return (
     <>
       <Title>Ваші замовлення:</Title>
 
       <div className={styles.inner}>
-        {user?.orders?.map((order) => (
-          <OrderFullBlock
-            id={order}
-            key={order}
-            isDropDown={true}
-            isPersonalData={true}
-          />
-        ))}
+        {isLoading && <PageLoader />}
+        <div className={styles.orders}>
+          {orders?.[1]?.map((order) => (
+            <OrderFullBlock
+              order={order}
+              key={order?.id}
+              isDropDown={true}
+              isPersonalData={true}
+            />
+          ))}
+        </div>
+        <Pagination
+          totalCount={orders?.[0]?.pages}
+          siblingCount={2}
+          currPage={searchParams.get("page") || 1}
+          onLink={setSearchParams}
+        />
       </div>
     </>
   );

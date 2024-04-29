@@ -1,22 +1,16 @@
 import { useState } from "react";
-import { useOrder } from "../../../hooks/useOrder";
 import { prettyTime } from "../../../utils/prettyTime";
 import OrderFullItem from "../OrderFullItem/OrderFullItem";
-import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
-import Loader from "../../common/Loader/Loader";
 import Text from "../../common/Text/Text";
 import DropDownIcon from "../../svg/DropDownIcon";
 import styles from "./OrderFullBlock.module.scss";
 
-const OrderFullBlock = ({ id, isDropDown, isPersonalData }) => {
-  const { order, isLoading, isError, error } = useOrder(id);
+const OrderFullBlock = ({ order, isDropDown, isPersonalData }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      {isError && id && <ErrorMassage status={error?.status} />}
-      {isLoading && id && <Loader type={"global"} />}
-      {!isError && order && (
+      {order && (
         <div className={styles.order}>
           <div
             className={styles.header}
@@ -24,14 +18,14 @@ const OrderFullBlock = ({ id, isDropDown, isPersonalData }) => {
             style={isDropDown && { cursor: "pointer" }}
           >
             <div>
-              <Text type={"big"}>Замовлення № {order?.[0]?.number}</Text>
-              <Text type={"small"}>{prettyTime(order?.[0]?.time)}</Text>
+              <Text type={"big"}>Замовлення № {order?.number}</Text>
+              <Text type={"small"}>{prettyTime(order?.time)}</Text>
             </div>
             {isDropDown && (
               <div className={styles.headerDrop}>
                 {!isOpen && (
                   <div>
-                    <Text>Сума: {order?.[0]?.totalSum} грн</Text>
+                    <Text>Сума: {order?.totalSum} грн</Text>
                   </div>
                 )}
                 <button
@@ -55,29 +49,29 @@ const OrderFullBlock = ({ id, isDropDown, isPersonalData }) => {
                     <Text className={styles.bold}>Контактні дані:</Text>
                     <Text>
                       Імя та прізвище: {""}
-                      {order?.[0]?.name.charAt(0).toUpperCase()}
-                      {order?.[0]?.name.slice(1)} {""}
-                      {order?.[0]?.lastName.charAt(0).toUpperCase()}
-                      {order?.[0]?.lastName.slice(1)}
+                      {order?.name.charAt(0).toUpperCase()}
+                      {order?.name.slice(1)} {""}
+                      {order?.lastName.charAt(0).toUpperCase()}
+                      {order?.lastName.slice(1)}
                     </Text>
 
-                    <Text>Телефон: {order?.[0]?.phone}</Text>
-                    <Text>e-mail: {order?.[0]?.email}</Text>
+                    <Text>Телефон: {order?.phone}</Text>
+                    <Text>e-mail: {order?.email}</Text>
                   </div>
                 )}
 
                 <div>
                   <Text className={styles.bold}>Поточний статус:</Text>
-                  <Text>Cтатус: {order?.[0]?.status}</Text>
+                  <Text>Cтатус: {order?.status}</Text>
                   <Text style={{ marginBottom: "10px" }}>
-                    Cтатус оплати: {order?.[0]?.isPayed ? "Оплачено" : "Не оплачено"}
+                    Cтатус оплати: {order?.isPayed ? "Оплачено" : "Не оплачено"}
                   </Text>
                 </div>
               </div>
               <div className={styles.body}>
                 <div className={styles.products}>
                   <Text className={styles.bold}>Страви:</Text>
-                  {order?.[0]?.products?.map((item) => (
+                  {order?.products?.map((item) => (
                     <OrderFullItem
                       key={item?.product?.id}
                       title={item?.product?.title}
@@ -89,34 +83,32 @@ const OrderFullBlock = ({ id, isDropDown, isPersonalData }) => {
                     />
                   ))}
                   <div className={styles.total}>
-                    <Text type={"big"}>Всього: {order?.[0]?.totalSum} грн</Text>
+                    <Text type={"big"}>Всього: {order?.totalSum} грн</Text>
                   </div>
                 </div>
                 <div className={styles.orderInfo}>
                   <Text type={"small"}>
-                    <strong>Спосіб оплати: </strong> {order?.[0]?.paymentType}
+                    <strong>Спосіб оплати: </strong> {order?.paymentType}
                   </Text>
                   <Text type={"small"}>
-                    <strong>Спосіб доставки: </strong> {order?.[0]?.deliveryType}
+                    <strong>Спосіб доставки: </strong> {order?.deliveryType}
                   </Text>
 
-                  {order?.[0]?.pickupLocation ? (
+                  {order?.pickupLocation ? (
                     <Text type={"small"}>
-                      <strong>Пункт видачі</strong>: {order?.[0]?.pickupLocation}
+                      <strong>Пункт видачі</strong>: {order?.pickupLocation}
                     </Text>
                   ) : (
                     <Text type={"small"}>
-                      <strong>Адреса доставки</strong>:{" "}
-                      {order?.[0]?.deliveryAddress?.street}, буд. №{" "}
-                      {order?.[0]?.deliveryAddress?.home},
-                      {order?.[0]?.deliveryAddress?.flat
-                        ? ` кв. ${order?.[0]?.deliveryAddress?.flat}`
+                      <strong>Адреса доставки</strong>: {order?.deliveryAddress?.street},
+                      буд. № {order?.deliveryAddress?.home},
+                      {order?.deliveryAddress?.flat
+                        ? ` кв. ${order?.deliveryAddress?.flat}`
                         : ""}
                     </Text>
                   )}
                   <Text type={"small"}>
-                    <strong>Час отримання</strong>:{" "}
-                    {prettyTime(order?.[0]?.deliveryTime)}
+                    <strong>Час отримання</strong>: {prettyTime(order?.deliveryTime)}
                   </Text>
                 </div>
               </div>
@@ -124,7 +116,7 @@ const OrderFullBlock = ({ id, isDropDown, isPersonalData }) => {
           ) : (
             <></>
           )}
-          {isDropDown && !isOpen ? <Text>{order?.[0]?.status}</Text> : null}
+          {isDropDown && !isOpen ? <Text>{order?.status}</Text> : null}
         </div>
       )}
     </>

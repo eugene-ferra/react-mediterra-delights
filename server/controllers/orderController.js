@@ -65,6 +65,12 @@ export const getAllOrders = async (req, res, next) => {
       limit,
     });
 
+    data[1].map((order) =>
+      order.products.map((doc) => {
+        addLinks(req, doc.product, ["imgCover", "images"]);
+      })
+    );
+
     res.status(200).json({ status: "success", data });
   } catch (error) {
     next(error);
