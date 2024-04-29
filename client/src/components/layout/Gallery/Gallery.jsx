@@ -9,7 +9,7 @@ import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
 import "swiper/css";
 import styles from "./Gallery.module.scss";
 
-const Gallery = ({ items, isLoading, error, top }) => {
+const Gallery = ({ items, isLoading, error, top, breakpoints, height }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -31,29 +31,32 @@ const Gallery = ({ items, isLoading, error, top }) => {
             grabCursor={true}
             modules={[Navigation, Keyboard]}
             className={styles.slider}
-            breakpoints={{
-              320: {
-                slidesPerView: 1,
-              },
-              450: {
-                slidesPerView: 2,
-              },
-              576: {
-                slidesPerView: 2,
-              },
-              768: {
-                slidesPerView: 3,
-              },
-              992: {
-                slidesPerView: 3,
-              },
-              1200: {
-                slidesPerView: 4,
-              },
-              1440: {
-                slidesPerView: 5,
-              },
-            }}
+            style={{ height: height }}
+            breakpoints={
+              breakpoints || {
+                320: {
+                  slidesPerView: 1,
+                },
+                450: {
+                  slidesPerView: 2,
+                },
+                576: {
+                  slidesPerView: 2,
+                },
+                768: {
+                  slidesPerView: 3,
+                },
+                992: {
+                  slidesPerView: 3,
+                },
+                1200: {
+                  slidesPerView: 4,
+                },
+                1440: {
+                  slidesPerView: 5,
+                },
+              }
+            }
             onInit={(swiper) => {
               swiper.params.navigation.prevEl = prevRef.current;
               swiper.params.navigation.nextEl = nextRef.current;

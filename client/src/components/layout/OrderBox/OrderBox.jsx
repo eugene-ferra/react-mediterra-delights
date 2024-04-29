@@ -28,13 +28,16 @@ const OrderBox = () => {
   const methods = useForm();
 
   const { user } = useUser();
+  const { options, isLoading } = useOrderOptions();
+
   useEffect(() => {
-    let fields = Object.keys(methods.getValues());
-    fields.forEach((key) => methods.setValue(key, user?.[key]));
-  }, [user, methods]);
+    if (user && !isLoading) {
+      let fields = Object.keys(methods.getValues());
+      fields.forEach((key) => methods.setValue(key, user?.[key]));
+    }
+  }, [user, methods, isLoading]);
 
   const { cart, clearCart } = useCart();
-  const { options, isLoading } = useOrderOptions();
 
   const {
     createOrder,

@@ -42,9 +42,11 @@ const ProductManageEdit = () => {
   );
 
   useEffect(() => {
-    let fields = Object.keys(methods.getValues());
-    fields.forEach((key) => methods.setValue(key, product?.[key]));
-  }, [product, methods]);
+    if (product && options) {
+      let fields = Object.keys(methods.getValues());
+      fields.forEach((key) => methods.setValue(key, product?.[key]));
+    }
+  }, [product, methods, options]);
 
   const { changeProduct, isChanging, errors } = useChangeProduct(methods.reset);
 

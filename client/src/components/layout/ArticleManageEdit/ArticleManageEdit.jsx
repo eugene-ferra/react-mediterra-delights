@@ -40,9 +40,11 @@ const ArticleManageEdit = () => {
   );
 
   useEffect(() => {
-    let fields = Object.keys(methods.getValues());
-    fields.forEach((key) => methods.setValue(key, article?.[key]));
-  }, [methods, article]);
+    if (article && options) {
+      let fields = Object.keys(methods.getValues());
+      fields.forEach((key) => methods.setValue(key, article?.[key]));
+    }
+  }, [methods, article, options]);
 
   const { isChanging, errors, patchArticle } = useChangeArticle(editorRef);
 
