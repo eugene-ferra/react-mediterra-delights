@@ -1,6 +1,13 @@
 import styles from "./Modal.module.scss";
 
-const Modal = ({ isOpen, onClose, children, align = "flex-start", gap = "15px" }) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  children,
+  align = "flex-start",
+  gap = "15px",
+  className,
+}) => {
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
@@ -8,7 +15,10 @@ const Modal = ({ isOpen, onClose, children, align = "flex-start", gap = "15px" }
   return (
     <div className={isOpen ? styles.overlay : styles.overlayHidden} onClick={onClose}>
       {isOpen && (
-        <div className={styles.content} onClick={handleContentClick}>
+        <div
+          className={`${styles.content} ${className || ""}`}
+          onClick={handleContentClick}
+        >
           <button onClick={onClose} className={styles.close} title="Закрити">
             &times;
           </button>

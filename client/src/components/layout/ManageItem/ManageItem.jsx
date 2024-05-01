@@ -9,6 +9,7 @@ const ManageItem = ({
   isError,
   error,
   children,
+  rowOnClick,
 }) => {
   return (
     <>
@@ -35,7 +36,7 @@ const ManageItem = ({
             <tbody className={styles.body}>
               {rowsData.map((item, i) => {
                 return (
-                  <tr key={i} className={styles.row}>
+                  <tr key={i} className={styles.row} onClick={() => rowOnClick(i)}>
                     {item.map((data, i) => {
                       return (
                         <td className={styles.cell} key={i}>

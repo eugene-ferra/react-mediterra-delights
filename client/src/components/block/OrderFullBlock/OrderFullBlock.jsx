@@ -62,7 +62,7 @@ const OrderFullBlock = ({ order, isDropDown, isPersonalData }) => {
 
                 <div>
                   <Text className={styles.bold}>Поточний статус:</Text>
-                  <Text>Cтатус: {order?.status}</Text>
+                  <Text editable>Cтатус: {order?.status}</Text>
                   <Text style={{ marginBottom: "10px" }}>
                     Cтатус оплати: {order?.isPayed ? "Оплачено" : "Не оплачено"}
                   </Text>
@@ -71,17 +71,19 @@ const OrderFullBlock = ({ order, isDropDown, isPersonalData }) => {
               <div className={styles.body}>
                 <div className={styles.products}>
                   <Text className={styles.bold}>Страви:</Text>
-                  {order?.products?.map((item) => (
-                    <OrderFullItem
-                      key={item?.product?.id}
-                      title={item?.product?.title}
-                      weight={item?.product?.weight}
-                      quantity={item?.quantity}
-                      price={item.price}
-                      img={item?.product?.imgCover}
-                      id={item?.product?.slug}
-                    />
-                  ))}
+                  <div className={styles.productsInner}>
+                    {order?.products?.map((item) => (
+                      <OrderFullItem
+                        key={item?.product?.id}
+                        title={item?.product?.title}
+                        weight={item?.product?.weight}
+                        quantity={item?.quantity}
+                        price={item.price}
+                        img={item?.product?.imgCover}
+                        id={item?.product?.slug}
+                      />
+                    ))}
+                  </div>
                   <div className={styles.total}>
                     <Text type={"big"}>Всього: {order?.totalSum} грн</Text>
                   </div>

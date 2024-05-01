@@ -3,6 +3,7 @@
 .order {
   padding: 10px;
   border: 1px solid var(--secondary-color);
+  width: 100%;
 }
 
 .header {
@@ -49,6 +50,12 @@
   flex: 1 0 350px;
   max-width: 100%;
   padding: 10px 0;
+}
+
+.productsInner {
+  padding: 0 5px 0 0;
+  height: 220px;
+  overflow-y: auto;
 }
 
 .orderInfo {

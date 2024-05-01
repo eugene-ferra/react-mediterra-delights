@@ -2,7 +2,13 @@ import PrevIcon from "../../svg/PrevIcon";
 import NextIcon from "../../svg/NextIcon";
 import styles from "./Pagination.module.scss";
 
-const Pagination = ({ totalCount, siblingCount = 2, currPage = 1, onLink }) => {
+const Pagination = ({
+  totalCount,
+  siblingCount = 2,
+  currPage = 1,
+  onLink,
+  savedParams,
+}) => {
   let currentPage = +currPage;
   const pages = totalCount;
   const maxPagesToDisplay = siblingCount * 2 + 3;
@@ -80,7 +86,7 @@ const Pagination = ({ totalCount, siblingCount = 2, currPage = 1, onLink }) => {
       {totalCount > 1 ? (
         <>
           <button
-            onClick={() => onLink({ page: currentPage - 1 })}
+            onClick={() => onLink({ ...savedParams, page: currentPage - 1 })}
             key={"prev"}
             className={currentPage === 1 ? styles.buttonDisable : styles.button}
           >
@@ -90,7 +96,7 @@ const Pagination = ({ totalCount, siblingCount = 2, currPage = 1, onLink }) => {
           <div className={styles.pages}>
             {pagination.map((item) => (
               <button
-                onClick={() => onLink({ page: item.link })}
+                onClick={() => onLink({ ...savedParams, page: item.link })}
                 key={item.link}
                 className={item.page === currentPage ? styles.linkActive : styles.link}
               >
@@ -99,7 +105,7 @@ const Pagination = ({ totalCount, siblingCount = 2, currPage = 1, onLink }) => {
             ))}
           </div>
           <button
-            onClick={() => onLink({ page: currentPage + 1 })}
+            onClick={() => onLink({ ...savedParams, page: currentPage + 1 })}
             key={"next"}
             className={currentPage === totalCount ? styles.buttonDisable : styles.button}
           >

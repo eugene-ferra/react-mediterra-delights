@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import PrevIcon from "../../svg/PrevIcon";
@@ -7,10 +7,17 @@ import "swiper/css";
 import "swiper/css/navigation";
 import styles from "./Filters.module.scss";
 
-const Filters = ({ filters, onFilter, resetFilter, currentFilter, filterQuery }) => {
+const Filters = ({ filters, resetFilter, initialFilter }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const slides = resetFilter ? filters.length + 1 : filters.length;
+  const currentFilterRef = useRef(null);
+
+  const [currentFilter, setCurrentFilter] = useState(initialFilter?.title);
+
+  useEffect(() => {
+    if (initialFilter?.isActive) initialFilter?.filter();
+  }, [initialFilter]);
 
   return (
     <div className={styles.inner}>
@@ -52,25 +59,17 @@ const Filters = ({ filters, onFilter, resetFilter, currentFilter, filterQuery })
           swiper.navigation.update();
         }}
       >
-        {resetFilter && (
-          <SwiperSlide key={resetFilter}>
-            <button
-              className={
-                filters?.includes(currentFilter) ? styles.item : styles.itemActive
-              }
-              onClick={() => onFilter({})}
-            >
-              {resetFilter}
-            </button>
-          </SwiperSlide>
-        )}
         {filters?.map((item) => (
-          <SwiperSlide key={item}>
+          <SwiperSlide key={item.title}>
             <button
-              className={item === currentFilter ? styles.itemActive : styles.item}
-              onClick={() => onFilter({ [filterQuery]: item })}
+              className={item.title === currentFilter ? styles.itemActive : styles.item}
+              onClick={() => {
+                item?.filter();
+                setCurrentFilter(item?.title);
+              }}
+              ref={item?.title === initialFilter?.title ? currentFilterRef : null}
             >
-              {item}
+              {item?.title}
             </button>
           </SwiperSlide>
         ))}

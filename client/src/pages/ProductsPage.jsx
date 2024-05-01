@@ -55,11 +55,20 @@ const ProductsPage = () => {
             <Title type={"global"}>Меню</Title>
             {!error && options && (
               <Filters
-                resetFilter={"Всі страви"}
-                filters={options?.categories}
-                currentFilter={searchParams?.get("category")}
-                onFilter={setSearchParams}
-                filterQuery={"category"}
+                filters={[
+                  {
+                    title: "Всі страви",
+                    filter: () => setSearchParams({}),
+                  },
+                ].concat(
+                  options?.categories?.map((item) => ({
+                    title: item,
+                    filter: () => setSearchParams({ category: item }),
+                  }))
+                )}
+                initialFilter={{
+                  title: "Всі страви",
+                }}
               />
             )}
 

@@ -39,11 +39,20 @@ const ArticlesPage = () => {
             <Title type={"global"}>Статті</Title>
             {!error && options && (
               <Filters
-                resetFilter={"Всі статті"}
-                filters={options?.topic}
-                currentFilter={searchParams?.get("topic")}
-                onFilter={setSearchParams}
-                filterQuery={"topic"}
+                filters={[
+                  {
+                    title: "Всі статті",
+                    filter: () => setSearchParams({}),
+                  },
+                ].concat(
+                  options?.topic?.map((item) => ({
+                    title: item,
+                    filter: () => setSearchParams({ topic: item }),
+                  }))
+                )}
+                initialFilter={{
+                  title: "Всі статті",
+                }}
               />
             )}
 

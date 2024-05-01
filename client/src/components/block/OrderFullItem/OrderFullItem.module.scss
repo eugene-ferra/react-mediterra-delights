@@ -15,8 +15,9 @@
 
 .img {
   width: 120px;
+  max-height: 90px;
   @include mixins.mobile {
-    width: 100px;
+    width: 80px;
   }
 }
 
