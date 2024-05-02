@@ -149,11 +149,9 @@ export class orderService {
   }
 
   static async proceedOrder(id, status, isPayed) {
-    const order = await orderModel.findByIdAndUpdate(
-      id,
-      { status, isPayed },
-      { runValidators: true, new: true }
-    );
+    const order = await orderModel
+      .findByIdAndUpdate(id, { status, isPayed }, { runValidators: true, new: true })
+      .populate({ path: "products.id" });
 
     return [new OrderDTO(order)];
   }

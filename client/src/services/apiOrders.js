@@ -20,6 +20,10 @@ export const patchOrder = async (id, data) => {
   return await api.patch(`/api/orders/${id}`, data);
 };
 
+export const proceedOrder = async (id, data) => {
+  return await api.patch(`/api/orders/${id}/proceed`, data);
+};
+
 export const deleteOrder = async (id) => {
   return await api.delete(`/api/orders/${id}`);
 };

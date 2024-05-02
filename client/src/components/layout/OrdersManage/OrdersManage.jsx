@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useOrderOptions } from "../OrderBox/useOrderOptions";
 import { useOrders } from "../../../hooks/useOrders";
+import { useProceedOrder } from "./useProceedOrder";
+import { prettyTime } from "../../../utils/prettyTime";
 import OrderFullBlock from "../../block/OrderFullBlock/OrderFullBlock";
 import Pagination from "../../block/Pagination/Pagination";
 import PageLoader from "../PageLoader/PageLoader";
@@ -13,7 +15,6 @@ import Filters from "../Filters/Filters";
 import BtnBlock from "../BtnBlock/BtnBlock";
 import Button from "../../common/Button/Button";
 import styles from "./OrdersManage.module.scss";
-import { prettyTime } from "../../../utils/prettyTime";
 
 const OrdersManage = () => {
   const { options, isLoading } = useOrderOptions();
@@ -24,12 +25,21 @@ const OrdersManage = () => {
     error,
   } = useOrders(`${searchParams.toString()}&limit=5&sort=time`);
 
+  const { proceedOrder } = useProceedOrder();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(null);
 
   const onClick = (id) => {
     setCurrentOrder(id);
     setIsModalOpen(true);
+  };
+
+  const onProceed = (status, isPayed) => {
+    return () => {
+      proceedOrder({ id: orders?.[1]?.[currentOrder]?.id, data: { status, isPayed } });
+      setIsModalOpen(false);
+    };
   };
 
   return (
@@ -77,14 +87,12 @@ const OrdersManage = () => {
       )}
 
       {isOrdersLoading && <PageLoader />}
-      {error && <ErrorMassage status={error?.status} />}
+      {error?.status && <ErrorMassage status={error?.status} />}
 
-      {!isOrdersLoading && orders && (
+      {!isOrdersLoading && !error?.status && orders && (
         <>
           <ManageItem
             isLoading={isLoading}
-            isError={error}
-            error={<ErrorMassage status={error?.status} />}
             columns={[
               "Номер",
               "Замовник",
@@ -147,24 +155,66 @@ const OrdersManage = () => {
             />
             <BtnBlock>
               {orders?.[1]?.[currentOrder]?.status === "Замовлення в обробці" && (
-                <Button type={"outline-red"}>Скасувати замовлення</Button>
+                <Button
+                  type={"outline-red"}
+                  onClick={onProceed(
+                    "Замовлення скасовано",
+                    orders?.[1]?.[currentOrder]?.isPayed
+                  )}
+                >
+                  Скасувати замовлення
+                </Button>
               )}
               {orders?.[1]?.[currentOrder]?.status === "Замовлення в обробці" && (
-                <Button type={"success"}>Прийняти замовлення</Button>
+                <Button
+                  type={"success"}
+                  onClick={onProceed(
+                    "Замовлення підтверджено",
+                    orders?.[1]?.[currentOrder]?.isPayed
+                  )}
+                >
+                  Прийняти замовлення
+                </Button>
               )}
               {orders?.[1]?.[currentOrder]?.status === "Замовлення підтверджено" && (
-                <Button type={"success"}>Передати в службу видачі</Button>
+                <Button
+                  type={"success"}
+                  onClick={onProceed(
+                    "Замовлення готове",
+                    orders?.[1]?.[currentOrder]?.isPayed
+                  )}
+                >
+                  Передати в службу видачі
+                </Button>
               )}
               {orders?.[1]?.[currentOrder]?.status === "Замовлення готове" &&
                 orders?.[1]?.[currentOrder]?.deliveryType == "Доставка кур'єром" && (
-                  <Button type={"success"}>Взяти замовлення</Button>
+                  <Button
+                    type={"success"}
+                    onClick={onProceed(
+                      "Замовлення прямує до вас",
+                      orders?.[1]?.[currentOrder]?.isPayed
+                    )}
+                  >
+                    Взяти замовлення
+                  </Button>
                 )}
               {orders?.[1]?.[currentOrder]?.status === "Замовлення готове" &&
                 orders?.[1]?.[currentOrder]?.deliveryType == "Самовивіз" && (
-                  <Button type={"success"}>Замовлення видано</Button>
+                  <Button
+                    type={"success"}
+                    onClick={onProceed("Замовлення отримано", true)}
+                  >
+                    Замовлення видано
+                  </Button>
                 )}
               {orders?.[1]?.[currentOrder]?.status === "Замовлення прямує до вас" && (
-                <Button type={"success"}>Замовлення доставлено</Button>
+                <Button
+                  type={"success"}
+                  onClick={onProceed("Замовлення отримано", true)}
+                >
+                  Замовлення доставлено
+                </Button>
               )}
             </BtnBlock>
           </Modal>
