@@ -1,0 +1,66 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.container {
+  @include mixins.flexColumn(0, center, stretch);
+}
+
+.inner {
+  @include mixins.flexRow(30px, justify-content, stretch);
+  height: 100%;
+  flex: 1 1 400px;
+  padding: 10px 0;
+  @include mixins.mobile {
+    @include mixins.flexColumn(30px);
+  }
+}
+
+.left {
+  flex: 1 0 400px;
+  @include mixins.flexColumn(10px);
+  @include mixins.mobile {
+    @include mixins.flexRow(20px 60px, flex-start, flex-start, wrap);
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+.map {
+  min-height: 300px;
+  width: 100%;
+  overflow: hidden;
+  z-index: 0 !important;
+  flex: 1 1 auto;
+}
+
+.title {
+  padding-top: 5px;
+}
+
+.link {
+  @include mixins.basicText();
+}
+
+.places {
+  width: 100%;
+  @include mixins.mobile {
+    order: 1;
+  }
+}
+
+.place {
+  width: 100%;
+  border: 0;
+  @include mixins.flexRow(0px, flex-start, center);
+  @include mixins.basicText();
+  padding: 5px 0;
+  cursor: pointer;
+  transition: 0.3s color;
+  &:hover {
+    color: var(--accent-color);
+  }
+  &Active {
+    @extend .place;
+    color: var(--accent-color);
+    font-weight: 500;
+  }
+}

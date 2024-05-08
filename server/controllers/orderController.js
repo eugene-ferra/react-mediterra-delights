@@ -95,7 +95,7 @@ export const getOptions = (req, res, next) => {
     const data = orderService.getOptions();
 
     res.status(200).json({
-      status: "succes",
+      status: "success",
       data,
     });
   } catch (err) {

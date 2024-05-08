@@ -104,6 +104,11 @@ export class orderService {
       pickupLocation: orderModel.schema.path("pickupLocation").enumValues,
       paymentType: orderModel.schema.path("paymentType").enumValues,
       status: orderModel.schema.path("status").enumValues,
+      shopGeo: [
+        [50.0123029, 36.243651761572096],
+        [50.001016250000006, 36.2438107722186],
+        [50.00886735, 36.24091788725961],
+      ],
     };
 
     return options;

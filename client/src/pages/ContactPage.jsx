@@ -1,17 +1,14 @@
 import Footer from "../components/layout/Footer/Footer";
 import Header from "../components/layout/Header/Header";
 import MainLayout from "../components/layout/MainLayout/MainLayout";
-import Container from "../components/layout/Container/Container";
-import Title from "../components/common/Title/Title";
+import Contactslayout from "../components/layout/ContactsLayout/ContactsLayout";
 
 const ContactPage = () => {
   return (
     <>
       <Header />
       <MainLayout>
-        <Container>
-          <Title type={"global"}>Сторінка в розробці</Title>
-        </Container>
+        <Contactslayout />
       </MainLayout>
       <Footer />
     </>

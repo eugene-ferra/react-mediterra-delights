@@ -143,7 +143,13 @@ export const orderValidationSchema = {
   pickupLocation: {
     isIn: {
       if: body("pickupLocation").exists(),
-      options: [["Харків, вул. Сумська, 123", "Харків, вул. Пушкінська 55"]],
+      options: [
+        [
+          "Харків, вул. Сумська, 123",
+          "Харків, вул. Григорія Сковороди, 55",
+          "Харків, вул. Мироносицька, 65",
+        ],
+      ],
       errorMessage: "Некоректне значення!",
     },
   },

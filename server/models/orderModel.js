@@ -64,7 +64,11 @@ const orderSchema = new mongoose.Schema({
   pickupLocation: {
     type: String,
     enum: {
-      values: ["Харків, вул. Сумська, 123", "Харків, вул. Пушкінська 55", null],
+      values: [
+        "Харків, вул. Сумська, 123",
+        "Харків, вул. Григорія Сковороди, 55",
+        "Харків, вул. Мироносицька, 65",
+      ],
       message: "{VALUE} is not supported!",
     },
     required: [
