@@ -11,7 +11,6 @@ export const usePublishReview = () => {
     mutationFn: (id) => patchReview(id, { isModerated: true }),
     onSuccess: () => {
       toast.success("Відгук успішно опубліковано!");
-      queryClient.invalidateQueries({ queryKey: ["adminReviews"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product"] });
     },

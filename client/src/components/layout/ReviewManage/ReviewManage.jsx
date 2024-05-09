@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import { useAdminReviews } from "./useAdminReviews";
 import { useDeleteReview } from "./useDeleteReview";
 import { usePublishReview } from "./usePublishReview";
 import Title from "../../common/Title/Title";
@@ -10,11 +9,12 @@ import Pagination from "../../block/Pagination/Pagination";
 import Button from "../../common/Button/Button";
 import Text from "../../common/Text/Text";
 import BtnBlock from "../BtnBlock/BtnBlock";
+import { useReviews } from "../../../hooks/useReviews";
 
 const ReviewManage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { reviews, isError, error, isLoading } = useAdminReviews(
-    searchParams.get("page") || 1
+  const { reviews, isError, error, isLoading } = useReviews(
+    `page=${searchParams.get("page") || 1}`
   );
 
   const { deleteReview, isLoading: isDeleting } = useDeleteReview();

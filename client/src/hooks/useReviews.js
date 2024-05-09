@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getReviews } from "../../../services/apiReviews";
+import { getReviews } from "../services/apiReviews";
 
-export const useAdminReviews = (page) => {
+export const useReviews = (queryStr) => {
   const query = useQuery({
-    queryFn: () => getReviews(`isModerated=false&page=${page}`),
-    queryKey: ["adminReviews", page],
+    queryFn: () => getReviews(queryStr),
+    queryKey: ["reviews", queryStr],
     staleTime: 0,
   });
 

@@ -11,7 +11,6 @@ export const useDeleteReview = () => {
     mutationFn: (id) => deleteReviewApi(id),
     onSuccess: () => {
       toast.success("Відгук успішно видалено!");
-      queryClient.invalidateQueries({ queryKey: ["adminReviews"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["product"] });
     },

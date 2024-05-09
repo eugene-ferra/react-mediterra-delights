@@ -1,7 +1,12 @@
 @use "../../../scss/mixins.scss" as mixins;
 
+.container {
+  @include mixins.flexColumn(0, center, center);
+}
+
 .box {
   padding: 20px 0;
+  width: 100%;
 }
 
 .top {

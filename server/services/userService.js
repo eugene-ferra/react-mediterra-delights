@@ -265,7 +265,9 @@ export default class userService {
     if (!doc) throw new AppError(`There aren't users with this id!`, 404);
     const payload = `${data?.name || doc.name}-${data?.lastName || doc.lastName}`;
 
-    const savedAvatar = await fileService.saveOneImage(avatar, folder, payload, 300);
+    const savedAvatar = !data?.password
+      ? await fileService.saveOneImage(avatar, folder, payload, 300)
+      : null;
 
     if (savedAvatar) data["avatar"] = savedAvatar;
 

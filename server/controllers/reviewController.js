@@ -1,4 +1,5 @@
 import { reviewService } from "../services/reviewService.js";
+import addLinks from "../utils/addLinks.js";
 import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
 
@@ -38,7 +39,15 @@ export const getAllReviews = async (req, res, next) => {
     if (req.params.productID) {
       filterObj = { ...filterObj, productID: req.params.productID, isModerated: true };
     }
-    const data = await reviewService.getAll({ filterObj, sortObj, page, limit });
+    let data = await reviewService.getAll({
+      filterObj,
+      sortObj,
+      page,
+      limit,
+      populateObj: { path: "userID", model: "User" },
+    });
+
+    data[1].map((review) => addLinks(req, review?.userID, "avatar"));
 
     res.status(200).json({
       status: "success",
