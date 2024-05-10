@@ -66,9 +66,15 @@ const ProductsPage = () => {
                     filter: () => setSearchParams({ category: item }),
                   }))
                 )}
-                initialFilter={{
-                  title: "Всі страви",
-                }}
+                initialFilter={
+                  searchParams.get("category")
+                    ? {
+                        title: searchParams.get("category"),
+                        filter: () =>
+                          setSearchParams({ category: searchParams.get("category") }),
+                      }
+                    : { title: "Всі страви" }
+                }
               />
             )}
 
