@@ -80,6 +80,12 @@ const ArticlesPage = () => {
                   siblingCount={2}
                   currPage={searchParams.get("page") || 1}
                   onLink={setSearchParams}
+                  savedParams={(() => {
+                    const saved = {};
+                    if (searchParams.get("topic"))
+                      saved.topic = searchParams.get("topic");
+                    return saved;
+                  })()}
                 />
               </>
             )}

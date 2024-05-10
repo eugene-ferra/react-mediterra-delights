@@ -100,6 +100,12 @@ const ProductsPage = () => {
                   siblingCount={2}
                   currPage={searchParams.get("page") || 1}
                   onLink={setSearchParams}
+                  savedParams={(() => {
+                    const saved = {};
+                    if (searchParams.get("category"))
+                      saved.category = searchParams.get("category");
+                    return saved;
+                  })()}
                 />
               </>
             )}
