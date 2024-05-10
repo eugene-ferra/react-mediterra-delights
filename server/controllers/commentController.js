@@ -1,4 +1,5 @@
 import { commentService } from "../services/commentService.js";
+import addLinks from "../utils/addLinks.js";
 import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
 
@@ -37,7 +38,16 @@ export const getAllComments = async (req, res, next) => {
       filterObj = { ...filterObj, articleID: req.params.articleID, isModerated: true };
     }
 
-    const data = await commentService.getAll({ filterObj, sortObj, page, limit });
+    let data = await commentService.getAll({
+      filterObj,
+      sortObj,
+      page,
+      limit,
+      populateObj: { path: "userID", model: "User" },
+    });
+
+    data[1].map((comment) => addLinks(req, comment?.userID, "avatar"));
+
     res.status(200).json({
       status: "success",
       data,

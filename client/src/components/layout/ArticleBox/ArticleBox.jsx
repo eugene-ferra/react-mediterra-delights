@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { useUser } from "../../../hooks/useUser";
 import { usePostComment } from "./usePostComment";
 import { useLikeArticle } from "./useLikeArticle";
 import { useSaveArticle } from "./useSaveArticle";
+import { useArticles } from "../../../hooks/useArticles";
+import { useComments } from "../../../hooks/useComments";
 import Container from "../Container/Container";
 import Title from "../../common/Title/Title";
 import Button from "../../common/Button/Button";
@@ -19,8 +21,34 @@ import CommentsIcon from "../../svg/CommentsIcon";
 import Comment from "../../block/Comment/Comment";
 import styles from "./ArticleBox.module.scss";
 import BtnBlock from "../BtnBlock/BtnBlock";
+import BlockHeader from "../BlockHeader/BlockHeader";
+import Gallery from "../Gallery/Gallery";
+import Article from "../../block/Article/Article";
+import PageLoader from "../PageLoader/PageLoader";
+import Pagination from "../../block/Pagination/Pagination";
 
-const ArticleBox = ({ article, isLiked, isSaved }) => {
+const ArticleBox = ({ slug }) => {
+  const navigate = useNavigate();
+  const [page, setPage] = useState({ page: 1 });
+  const { user } = useUser();
+  const { articles, isLoading: isArticleLoading, error } = useArticles(`slug=${slug}`);
+
+  if (error && error?.status) navigate(`/${error?.status}`);
+
+  const {
+    articles: more,
+    isLoading: moreLoading,
+    error: moreError,
+  } = useArticles(`topic=${articles?.[1]?.[0]?.topic}`);
+
+  const article = articles?.[1]?.[0];
+  const isLiked = user ? user.likedArticles.includes(articles?.[1]?.[0]?.id) : false;
+  const isSaved = user ? user.savedArticles.includes(articles?.[1]?.[0]?.id) : false;
+
+  const { comments, isLoading: isCommentsLoading } = useComments(
+    `isModerated=true&articleID=${article?.id}&page=${page?.page}&limit=5`
+  );
+
   const methods = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLikeModalOpen, setIsLikeModalOpen] = useState(false);
@@ -40,8 +68,6 @@ const ArticleBox = ({ article, isLiked, isSaved }) => {
     article?.id
   );
 
-  const { user } = useUser();
-
   async function onSubmit(data) {
     data["articleID"] = article?.id;
     data["userID"] = user?.id;
@@ -50,68 +76,100 @@ const ArticleBox = ({ article, isLiked, isSaved }) => {
 
   return (
     <>
-      <Container>
-        <Title type={"global"} align={"center"}>
-          {article?.title}
-        </Title>
-        <div
-          className={`${styles.content} ql-editor`}
-          dangerouslySetInnerHTML={{ __html: article?.markup }}
-        ></div>
+      <Container className={styles.container}>
+        {isArticleLoading && <PageLoader />}
 
-        <div className={styles.coments}>
-          <div className={styles.stats}>
-            {user ? (
-              <button
-                className={isDeleting || isSaving ? styles.statLoading : styles.stat}
-                onClick={isSaved ? deleteArticle : saveArticle}
-                disabled={isSaving || isDeleting}
-              >
-                <BookMarkIcon full={isSaved} />
-              </button>
-            ) : (
-              <button className={styles.stat} onClick={() => setIsSavedModalOpen(true)}>
-                <BookMarkIcon full={isLiked} />
-              </button>
-            )}
-            {user ? (
-              <button
-                className={isUnliking || isLiking ? styles.statLoading : styles.stat}
-                onClick={isLiked ? unlikeArticle : likeArticle}
-                disabled={isUnliking || isLiking}
-              >
-                <LikesIcon full={isLiked} />
-                <Text>{article?.likes}</Text>
-              </button>
-            ) : (
-              <button className={styles.stat} onClick={() => setIsLikeModalOpen(true)}>
-                <LikesIcon full={isLiked} />
-                <Text>{article?.likes}</Text>
-              </button>
-            )}
+        {!isArticleLoading && article && (
+          <>
+            <Title type={"global"} align={"center"}>
+              {article?.title}
+            </Title>
+            <div
+              className={`${styles.content} ql-editor`}
+              dangerouslySetInnerHTML={{ __html: article?.markup }}
+            ></div>
 
-            <div className={styles.stat}>
-              <ViewsIcon /> <Text>{article?.views}</Text>
+            <div className={styles.coments}>
+              <div className={styles.stats}>
+                {user ? (
+                  <button
+                    className={isDeleting || isSaving ? styles.statLoading : styles.stat}
+                    onClick={isSaved ? deleteArticle : saveArticle}
+                    disabled={isSaving || isDeleting}
+                  >
+                    <BookMarkIcon full={isSaved} />
+                  </button>
+                ) : (
+                  <button
+                    className={styles.stat}
+                    onClick={() => setIsSavedModalOpen(true)}
+                  >
+                    <BookMarkIcon full={isLiked} />
+                  </button>
+                )}
+                {user ? (
+                  <button
+                    className={isUnliking || isLiking ? styles.statLoading : styles.stat}
+                    onClick={isLiked ? unlikeArticle : likeArticle}
+                    disabled={isUnliking || isLiking}
+                  >
+                    <LikesIcon full={isLiked} />
+                    <Text>{article?.likes}</Text>
+                  </button>
+                ) : (
+                  <button
+                    className={styles.stat}
+                    onClick={() => setIsLikeModalOpen(true)}
+                  >
+                    <LikesIcon full={isLiked} />
+                    <Text>{article?.likes}</Text>
+                  </button>
+                )}
+
+                <div className={styles.stat}>
+                  <ViewsIcon /> <Text>{article?.views}</Text>
+                </div>
+                <div className={styles.stat}>
+                  <CommentsIcon /> <Text>{article?.comments?.length}</Text>
+                </div>
+              </div>
+              <div className={styles.commentsContent}>
+                <Button onClick={() => setIsModalOpen(true)}>Залишити коментар</Button>
+
+                {isCommentsLoading && <PageLoader />}
+
+                {!isCommentsLoading && comments?.length > 0 && (
+                  <>
+                    {comments?.[1]?.map((comment) => (
+                      <Comment comment={comment} key={comment.id} />
+                    ))}
+
+                    <Pagination
+                      totalCount={comments?.[0]?.pages}
+                      currPage={page.page}
+                      onLink={setPage}
+                    />
+                  </>
+                )}
+                {!isCommentsLoading && !comments && (
+                  <Text align={"center"}>
+                    Коментарів ще немає. Будьте першим, хто залише коментар до цієї
+                    статті!
+                  </Text>
+                )}
+              </div>
             </div>
-            <div className={styles.stat}>
-              <CommentsIcon /> <Text>{article?.comments?.length}</Text>
-            </div>
-          </div>
-          <div className={styles.commentsContent}>
-            {article?.comments.length > 0 ? (
-              <>
-                {article?.comments.map((comment) => (
-                  <Comment comment={comment} key={comment.id} />
-                ))}
-              </>
-            ) : (
-              <Text align={"center"}>
-                Коментарів ще немає. Будьте першим, хто залише коментар до цієї статті!
-              </Text>
-            )}
-            <Button onClick={() => setIsModalOpen(true)}>Залишити коментар</Button>
-          </div>
-        </div>
+
+            <Gallery
+              isLoading={moreLoading}
+              error={moreError}
+              top={<BlockHeader title={"Схожі статті"} />}
+              items={more?.[1]?.map((item) => (
+                <Article article={item} key={item?.id} />
+              ))}
+            />
+          </>
+        )}
       </Container>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} align="center">

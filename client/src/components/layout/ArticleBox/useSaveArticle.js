@@ -11,6 +11,7 @@ export const useSaveArticle = (id) => {
     mutationFn: () => saveArticle(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
       toast.success("Стаття успішно збережена!");
     },
     onError: (errObj) => {
@@ -23,6 +24,7 @@ export const useSaveArticle = (id) => {
     mutationFn: () => deleteArticle(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
       toast.success("Стаття успішно видалена зі збережених!");
     },
     onError: (errObj) => {

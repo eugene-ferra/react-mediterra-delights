@@ -50,7 +50,7 @@ const ProductBox = ({ slug }) => {
   const [page, setPage] = useState({ page: 1 });
 
   const { reviews, isLoading: isReviewsLoading } = useReviews(
-    `isModerated=true&productID=${product?.id}&page=${page.page}&limit=2`
+    `isModerated=true&productID=${product?.id}&page=${page.page}&limit=5`
   );
 
   const { reviews: userReview } = useReviews(

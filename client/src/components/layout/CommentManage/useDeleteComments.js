@@ -11,7 +11,7 @@ export const useDeleteComment = () => {
     mutationFn: (id) => deleteCommentApi(id),
     onSuccess: () => {
       toast.success("Коментар успішно видалено!");
-      queryClient.invalidateQueries({ queryKey: ["adminComments"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },

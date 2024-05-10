@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getComments } from "../../../services/apiComments";
+import { getComments } from "../services/apiComments";
 
-export const useAdminComments = (page) => {
+export const useComments = (queryStr) => {
   const query = useQuery({
-    queryFn: () => getComments(`isModerated=false&page=${page}`),
-    queryKey: ["adminComments", page],
+    queryFn: () => getComments(queryStr),
+    queryKey: ["comments", queryStr],
     staleTime: 0,
   });
 

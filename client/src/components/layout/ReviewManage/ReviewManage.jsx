@@ -14,7 +14,7 @@ import { useReviews } from "../../../hooks/useReviews";
 const ReviewManage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { reviews, isError, error, isLoading } = useReviews(
-    `page=${searchParams.get("page") || 1}`
+    `page=${searchParams.get("page") || 1}&isModerated=false`
   );
 
   const { deleteReview, isLoading: isDeleting } = useDeleteReview();

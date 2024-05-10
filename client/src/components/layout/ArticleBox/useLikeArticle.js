@@ -11,6 +11,7 @@ export const useLikeArticle = (id) => {
     mutationFn: () => likeArticle(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);
@@ -22,6 +23,7 @@ export const useLikeArticle = (id) => {
     mutationFn: () => unLikeArticle(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
     },
     onError: (errObj) => {
       if (errObj?.navTo) navigate(errObj.navTo);

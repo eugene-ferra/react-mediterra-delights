@@ -11,7 +11,7 @@ export const usePublishComment = () => {
     mutationFn: (id) => patchComment(id, { isModerated: true }),
     onSuccess: () => {
       toast.success("Коментар успішно опубліковано!");
-      queryClient.invalidateQueries({ queryKey: ["adminComments"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },

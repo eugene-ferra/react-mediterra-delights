@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import { useAdminComments } from "./useAdminComments";
 import { useDeleteComment } from "./useDeleteComments";
 import { usePublishComment } from "./usePublishComment";
 import Title from "../../common/Title/Title";
@@ -9,11 +8,12 @@ import Text from "../../common/Text/Text";
 import Button from "../../common/Button/Button";
 import Pagination from "../../block/Pagination/Pagination";
 import BtnBlock from "../BtnBlock/BtnBlock";
+import { useComments } from "../../../hooks/useComments";
 
 const CommentManage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { comments, isError, error, isLoading } = useAdminComments(
-    searchParams.get("page") || 1
+  const { comments, isError, error, isLoading } = useComments(
+    `page=${searchParams.get("page") || 1}&isModerated=false`
   );
 
   const { deleteComment, isLoading: isDeleting } = useDeleteComment();
