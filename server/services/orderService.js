@@ -215,4 +215,189 @@ export class orderService {
       );
     }
   }
+
+  static async getStatsByYear(year) {
+    let incomeStats = await orderModel.aggregate([
+      {
+        $match: {
+          $expr: {
+            $and: [{ $eq: [{ $year: "$time" }, +year] }],
+          },
+          status: "Замовлення отримано",
+        },
+      },
+      {
+        $group: {
+          _id: { $month: "$time" },
+          totalSum: { $sum: "$totalSum" },
+          avgOrderSum: { $avg: "$totalSum" },
+          orders: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          month: "$_id",
+          totalSum: 1,
+          avgOrderSum: 1,
+          orders: 1,
+          _id: 0,
+        },
+      },
+    ]);
+
+    const topSalers = await orderModel.aggregate([
+      {
+        $match: {
+          $expr: {
+            $and: [{ $eq: [{ $year: "$time" }, +year] }],
+          },
+          status: "Замовлення отримано",
+        },
+      },
+      {
+        $unwind: "$products",
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$time" },
+            product_id: "$products.id",
+          },
+          totalQuantity: { $sum: "$products.quantity" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id.product_id",
+          quantity: "$totalQuantity",
+        },
+      },
+      { $sort: { quantity: -1 } },
+      {
+        $lookup: {
+          from: "products",
+          localField: "id",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+    ]);
+
+    if (!incomeStats.length) {
+      throw new AppError("Даних за цей період не знайдено", 404);
+    }
+
+    for (let i = 1; i <= 12; i++) {
+      if (!incomeStats.some((item) => item.month == i)) {
+        incomeStats.push({
+          totalSum: 0,
+          orders: 0,
+          avgOrderSum: 1,
+          month: i,
+        });
+      }
+    }
+
+    incomeStats = incomeStats.sort((a, b) => a.month - b.month);
+
+    return { incomeStats, topSalers };
+  }
+
+  static async getStatsByMonth(year, month) {
+    let incomeStats = await orderModel.aggregate([
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $eq: [{ $year: "$time" }, +year] },
+              { $eq: [{ $month: "$time" }, +month] },
+            ],
+          },
+          status: "Замовлення отримано",
+        },
+      },
+      {
+        $group: {
+          _id: { $dayOfMonth: "$time" },
+          totalSum: { $sum: "$totalSum" },
+          avgOrderSum: { $avg: "$totalSum" },
+          orders: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          day: "$_id",
+          totalSum: 1,
+          avgOrderSum: 1,
+          orders: 1,
+          _id: 0,
+        },
+      },
+    ]);
+
+    const lastDayOfMonth = 32 - new Date(year, month - 1, 32).getDate();
+
+    const topSalers = await orderModel.aggregate([
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $eq: [{ $year: "$time" }, +year] },
+              { $eq: [{ $month: "$time" }, +month] },
+            ],
+          },
+          status: "Замовлення отримано",
+        },
+      },
+      {
+        $unwind: "$products",
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$time" },
+            month: { $month: "$time" },
+            product_id: "$products.id",
+          },
+          totalQuantity: { $sum: "$products.quantity" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id.product_id",
+          quantity: "$totalQuantity",
+        },
+      },
+      { $sort: { quantity: -1 } },
+      {
+        $lookup: {
+          from: "products",
+          localField: "id",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+    ]);
+
+    if (!incomeStats.length) {
+      throw new AppError("Даних за цей період не знайдено", 404);
+    }
+
+    for (let i = 1; i <= lastDayOfMonth; i++) {
+      if (!incomeStats.some((item) => item.day == i)) {
+        incomeStats.push({
+          totalSum: 0,
+          orders: 0,
+          avgOrderSum: 0,
+          day: i,
+        });
+      }
+    }
+
+    incomeStats = incomeStats.sort((a, b) => a.day - b.day);
+
+    return { incomeStats, topSalers };
+  }
 }

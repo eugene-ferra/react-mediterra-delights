@@ -21,6 +21,9 @@ orderRouter
 
 orderRouter.get("/options", orderController.getOptions);
 
+orderRouter.get("/stats/:year/", orderController.getStatsByYear);
+orderRouter.get("/stats/:year/:month", orderController.getStatsByMonth);
+
 orderRouter
   .route("/:id")
   .get(orderController.getOrder)

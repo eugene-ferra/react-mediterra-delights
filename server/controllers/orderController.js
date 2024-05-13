@@ -146,3 +146,22 @@ export const proceedOrder = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getStatsByYear = async (req, res, next) => {
+  try {
+    const data = await orderService.getStatsByYear(req.params.year);
+
+    res.status(200).json({ status: "success", data: data });
+  } catch (error) {
+    next(error);
+  }
+};
+export const getStatsByMonth = async (req, res, next) => {
+  try {
+    const data = await orderService.getStatsByMonth(req.params.year, req.params.month);
+
+    res.status(200).json({ status: "success", data: data });
+  } catch (error) {
+    next(error);
+  }
+};
