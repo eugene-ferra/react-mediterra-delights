@@ -1,47 +1,81 @@
-import { createContext, useEffect, useState } from "react";
+import { Suspense, createContext, lazy, useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import HomePage from "./pages/HomePage.jsx";
-import ProductsPage from "./pages/ProductsPage.jsx";
-import NotFoundPage from "./pages/NotFoundPage.jsx";
-import AppLayout from "./pages/AppLayout.jsx";
-import AdminPage from "./pages/AdminPage.jsx";
-import AccountPage from "./pages/AccountPage.jsx";
-import SignUpPage from "./pages/SignUpPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import AboutPage from "./pages/AboutPage.jsx";
-import CartPage from "./pages/CartPage.jsx";
-import ContactPage from "./pages/ContactPage.jsx";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
-import OneArticlePage from "./pages/OneArticlePage.jsx";
-import OneProductPage from "./pages/OneProductPage.jsx";
-import OrderPage from "./pages/OrderPage.jsx";
-import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
-import ArticlesPage from "./pages/ArticlesPage.jsx";
-import ProductManage from "./components/layout/ProductManage/ProductManage.jsx";
-import ArticleManage from "./components/layout/ArticleManage/ArticleManage.jsx";
-import CommentManage from "./components/layout/CommentManage/CommentsManage.jsx";
-import ReviewManage from "./components/layout/ReviewManage/ReviewManage.jsx";
-import OrdersManage from "./components/layout/OrdersManage/OrdersManage.jsx";
-import ProductManageAdd from "./components/layout/ProductManageAdd/ProductManageAdd.jsx";
-import ProductManageEdit from "./components/layout/ProductManageEdit/ProductManageEdit.jsx";
-import ArticleManageAdd from "./components/layout/ArticleManageAdd/ArticleManageAdd.jsx";
-import ArticleManageEdit from "./components/layout/ArticleManageEdit/ArticleManageEdit.jsx";
 import Cookies from "js-cookie";
-import ForbiddenPage from "./pages/ForbiddenPage.jsx";
-import AdminMain from "./components/layout/AdminMain/AdminMain.jsx";
-import ServerErrorPage from "./pages/ServerErrorPage.jsx";
-import AccountMain from "./components/layout/AccountMain/AccountMain.jsx";
-import AccountFavourite from "./components/layout/AccountFavourite/AccountFavourite.jsx";
-import AccountSaved from "./components/layout/AccountSaved/AccountSaved.jsx";
-import AccountOrders from "./components/layout/AccountOrders/AccountOrders.jsx";
-import OrderSuccessPage from "./pages/OrderSuccessPage.jsx";
-import CheckOrderPage from "./pages/CheckOrderPage.jsx";
+
+import ChunkLoading from "./pages/ChunkLoading.jsx";
+
+const HomePage = lazy(() => import("./pages/HomePage.jsx"));
+const ProductsPage = lazy(() => import("./pages/ProductsPage.jsx"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage.jsx"));
+const AppLayout = lazy(() => import("./pages/AppLayout.jsx"));
+const AdminPage = lazy(() => import("./pages/AdminPage.jsx"));
+const AccountPage = lazy(() => import("./pages/AccountPage.jsx"));
+const SignUpPage = lazy(() => import("./pages/SignUpPage.jsx"));
+const LoginPage = lazy(() => import("./pages/LoginPage.jsx"));
+const AboutPage = lazy(() => import("./pages/AboutPage.jsx"));
+const CartPage = lazy(() => import("./pages/CartPage.jsx"));
+const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
+const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage.jsx"));
+const OneArticlePage = lazy(() => import("./pages/OneArticlePage.jsx"));
+const OneProductPage = lazy(() => import("./pages/OneProductPage.jsx"));
+const OrderPage = lazy(() => import("./pages/OrderPage.jsx"));
+const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage.jsx"));
+const ArticlesPage = lazy(() => import("./pages/ArticlesPage.jsx"));
+const ServerErrorPage = lazy(() => import("./pages/ServerErrorPage.jsx"));
+const ForbiddenPage = lazy(() => import("./pages/ForbiddenPage.jsx"));
+const CheckOrderPage = lazy(() => import("./pages/CheckOrderPage.jsx"));
+const OrderSuccessPage = lazy(() => import("./pages/OrderSuccessPage.jsx"));
+const AdminMain = lazy(() => import("./components/layout/AdminMain/AdminMain.jsx"));
+const ArticleManage = lazy(() =>
+  import("./components/layout/ArticleManage/ArticleManage.jsx")
+);
+const CommentManage = lazy(() =>
+  import("./components/layout/CommentManage/CommentsManage.jsx")
+);
+const ReviewManage = lazy(() =>
+  import("./components/layout/ReviewManage/ReviewManage.jsx")
+);
+const OrdersManage = lazy(() =>
+  import("./components/layout/OrdersManage/OrdersManage.jsx")
+);
+const ProductManageAdd = lazy(() =>
+  import("./components/layout/ProductManageAdd/ProductManageAdd.jsx")
+);
+const ProductManageEdit = lazy(() =>
+  import("./components/layout/ProductManageEdit/ProductManageEdit.jsx")
+);
+const ArticleManageAdd = lazy(() =>
+  import("./components/layout/ArticleManageAdd/ArticleManageAdd.jsx")
+);
+const ArticleManageEdit = lazy(() =>
+  import("./components/layout/ArticleManageEdit/ArticleManageEdit.jsx")
+);
+const AccountMain = lazy(() =>
+  import("./components/layout/AccountMain/AccountMain.jsx")
+);
+const AccountFavourite = lazy(() =>
+  import("./components/layout/AccountFavourite/AccountFavourite.jsx")
+);
+const AccountSaved = lazy(() =>
+  import("./components/layout/AccountSaved/AccountSaved.jsx")
+);
+const AccountOrders = lazy(() =>
+  import("./components/layout/AccountOrders/AccountOrders.jsx")
+);
+
+const ProductManage = lazy(() =>
+  import("./components/layout/ProductManage/ProductManage.jsx")
+);
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: (
+      <Suspense fallback={<ChunkLoading />}>
+        <AppLayout />
+      </Suspense>
+    ),
     errorElement: <ServerErrorPage />,
     children: [
       { path: "/", element: <HomePage /> },
