@@ -16,6 +16,14 @@ export const getOneOrder = async (id) => {
   return await api.get(`/api/orders/${id}`);
 };
 
+export const getStatsByYear = async (year) => {
+  return await api.get(`/api/orders/stats/${year}`);
+};
+
+export const getStatsByMonth = async (year, month) => {
+  return await api.get(`/api/orders/stats/${year}/${month}`);
+};
+
 export const patchOrder = async (id, data) => {
   return await api.patch(`/api/orders/${id}`, data);
 };

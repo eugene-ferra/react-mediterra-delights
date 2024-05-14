@@ -149,7 +149,9 @@ export const proceedOrder = async (req, res, next) => {
 
 export const getStatsByYear = async (req, res, next) => {
   try {
-    const data = await orderService.getStatsByYear(req.params.year);
+    let data = await orderService.getStatsByYear(req.params.year);
+
+    data.topSalers.map((item) => addLinks(req, item.product[0], "imgCover"));
 
     res.status(200).json({ status: "success", data: data });
   } catch (error) {
@@ -158,7 +160,8 @@ export const getStatsByYear = async (req, res, next) => {
 };
 export const getStatsByMonth = async (req, res, next) => {
   try {
-    const data = await orderService.getStatsByMonth(req.params.year, req.params.month);
+    let data = await orderService.getStatsByMonth(req.params.year, req.params.month);
+    data.topSalers.map((item) => addLinks(req, item.product[0], "imgCover"));
 
     res.status(200).json({ status: "success", data: data });
   } catch (error) {
