@@ -17,6 +17,8 @@ const Input = ({
   isShow,
   onShow,
   onChange,
+  icon,
+  value,
 }) => {
   const errorClass = errorMessage ? styles.error : "";
 
@@ -37,6 +39,9 @@ const Input = ({
             {!isShow ? <img src={eyeClose} alt="hide" /> : <img src={eye} alt="show" />}
           </button>
         )}
+
+        {type !== "password" && icon && <div className={styles.icon}>{icon}</div>}
+
         <input
           className={`${styles.input} ${errorClass}`}
           type={onShow ? (isShow ? "text" : "password") : type}
@@ -46,6 +51,7 @@ const Input = ({
           onChange={onChange}
           disabled={disabled}
           style={style}
+          value={value}
         ></input>
       </div>
       {errorMessage && <Text type={"error"}>{errorMessage}</Text>}

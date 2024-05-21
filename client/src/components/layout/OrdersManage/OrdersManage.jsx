@@ -15,15 +15,29 @@ import Filters from "../Filters/Filters";
 import BtnBlock from "../BtnBlock/BtnBlock";
 import Button from "../../common/Button/Button";
 import styles from "./OrdersManage.module.scss";
+import SearchInput from "../SearchInput/SearchInput";
 
 const OrdersManage = () => {
   const { options, isLoading } = useOrderOptions();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = useState("");
+  const [searchPage, setSearchPage] = useState({ page: 1 });
+
+  const deliveryType = searchParams.get("deliveryType");
+  const status = searchParams.get("status");
+  const baseEnd = `limit=5&sort=time`;
+
   const {
     orders,
     isLoading: isOrdersLoading,
     error,
-  } = useOrders(`${searchParams.toString()}&limit=5&sort=time`);
+  } = useOrders(
+    searchValue
+      ? `${deliveryType ? `deliveryType=${deliveryType}&` : ""}${
+          status ? `status=${status}&` : ""
+        }page=${searchPage.page}&number[regex]=${searchValue}&${baseEnd}`
+      : `${searchParams.toString()}&${baseEnd}`
+  );
 
   const { proceedOrder } = useProceedOrder();
 
@@ -47,43 +61,51 @@ const OrdersManage = () => {
       {isLoading && <PageLoader />}
 
       {!isLoading && options && (
-        <Filters
-          filters={[
-            {
+        <>
+          <Filters
+            filters={[
+              {
+                title: "Неопрацьовані",
+                filter: () => setSearchParams({ status: "Замовлення в обробці" }),
+              },
+              {
+                title: "Підтверджені",
+                filter: () => setSearchParams({ status: "Замовлення підтверджено" }),
+              },
+              {
+                title: "Для доставки",
+                filter: () =>
+                  setSearchParams({
+                    status: "Замовлення готове",
+                    deliveryType: "Доставка кур'єром",
+                  }),
+              },
+              {
+                title: "Для видачі",
+                filter: () =>
+                  setSearchParams({
+                    status: "Замовлення готове",
+                    deliveryType: "Самовивіз",
+                  }),
+              },
+              {
+                title: "В дорозі",
+                filter: () => setSearchParams({ status: "Замовлення прямує до вас" }),
+              },
+            ]}
+            initialFilter={{
               title: "Неопрацьовані",
               filter: () => setSearchParams({ status: "Замовлення в обробці" }),
-            },
-            {
-              title: "Підтверджені",
-              filter: () => setSearchParams({ status: "Замовлення підтверджено" }),
-            },
-            {
-              title: "Для доставки",
-              filter: () =>
-                setSearchParams({
-                  status: "Замовлення готове",
-                  deliveryType: "Доставка кур'єром",
-                }),
-            },
-            {
-              title: "Для видачі",
-              filter: () =>
-                setSearchParams({
-                  status: "Замовлення готове",
-                  deliveryType: "Самовивіз",
-                }),
-            },
-            {
-              title: "В дорозі",
-              filter: () => setSearchParams({ status: "Замовлення прямує до вас" }),
-            },
-          ]}
-          initialFilter={{
-            title: "Неопрацьовані",
-            filter: () => setSearchParams({ status: "Замовлення в обробці" }),
-            isActive: searchParams.size == 0,
-          }}
-        />
+              isActive: searchParams.size == 0,
+            }}
+          />
+          <SearchInput
+            setValue={setSearchValue}
+            value={searchValue}
+            inputTitle={"Пошук cтатті"}
+            resetFn={() => setSearchPage({ page: 1 })}
+          />
+        </>
       )}
 
       {isOrdersLoading && <PageLoader />}
@@ -130,9 +152,11 @@ const OrdersManage = () => {
             <Pagination
               totalCount={orders?.[0]?.pages}
               siblingCount={2}
-              currPage={searchParams.get("page")}
-              onLink={setSearchParams}
+              currPage={searchValue ? searchPage.page : searchParams.get("page")}
+              onLink={searchValue ? setSearchPage : setSearchParams}
               savedParams={(() => {
+                if (searchParams) return {};
+
                 const saved = {};
                 if (searchParams.get("status"))
                   saved.status = searchParams.get("status");

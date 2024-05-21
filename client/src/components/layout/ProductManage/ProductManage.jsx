@@ -1,19 +1,35 @@
 import { useProducts } from "../../../hooks/useProducts";
 import { Link, useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import ManageItem from "../ManageItem/ManageItem";
 import Button from "../../common/Button/Button";
 import Title from "../../common/Title/Title";
 import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
 import EditIcon from "../../svg/EditIcon";
 import Pagination from "../../block/Pagination/Pagination";
+import SearchInput from "../SearchInput/SearchInput";
 
 const ProductManage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { products, isError, error, isLoading } = useProducts(searchParams.toString());
+  const [searchValue, setSearchValue] = useState("");
+  const [searchPage, setSearchPage] = useState({ page: 1 });
+
+  const { products, isError, error, isLoading } = useProducts(
+    searchValue
+      ? `title[regex]=${searchValue}&page=${searchPage.page}`
+      : searchParams.toString()
+  );
 
   return (
     <>
       <Title>Додані товари:</Title>
+
+      <SearchInput
+        setValue={setSearchValue}
+        value={searchValue}
+        inputTitle={"Пошук продукту"}
+        resetFn={() => setSearchPage({ page: 1 })}
+      />
 
       <ManageItem
         isLoading={isLoading}
@@ -47,8 +63,8 @@ const ProductManage = () => {
         <Pagination
           totalCount={products?.[0]?.pages}
           siblingCount={2}
-          currPage={searchParams.get("page")}
-          onLink={setSearchParams}
+          currPage={searchValue ? searchPage.page : searchParams.get("page")}
+          onLink={searchValue ? setSearchPage : setSearchParams}
         />
       </ManageItem>
 

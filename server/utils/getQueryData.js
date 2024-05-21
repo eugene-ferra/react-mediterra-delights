@@ -23,8 +23,16 @@ export const getQueryData = (req) => {
     (match) => `$${match}`
   );
 
+  let filter = JSON.parse(queryStr);
+
+  for (let key in filter) {
+    if (Object.keys(filter[key]).includes("$regex")) {
+      filter[key]["$options"] = "i";
+    }
+  }
+
   return {
-    filterObj: JSON.parse(queryStr),
+    filterObj: filter,
     sortObj: req.query.sort?.replace(/,/g, " "),
     page: page,
     limit: limit,

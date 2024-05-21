@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useArticles } from "../../../hooks/useArticles";
 import ManageItem from "../ManageItem/ManageItem";
@@ -6,14 +7,29 @@ import Title from "../../common/Title/Title";
 import Pagination from "../../block/Pagination/Pagination";
 import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
 import EditIcon from "../../svg/EditIcon";
+import SearchInput from "../SearchInput/SearchInput";
 
 const ArticleManage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { articles, isError, error, isLoading } = useArticles(searchParams.toString());
+  const [searchValue, setSearchValue] = useState("");
+  const [searchPage, setSearchPage] = useState({ page: 1 });
+
+  const { articles, isError, error, isLoading } = useArticles(
+    searchValue
+      ? `title[regex]=${searchValue}&page=${searchPage.page}&limit=3`
+      : searchParams.toString()
+  );
 
   return (
     <>
       <Title>Додані статті:</Title>
+
+      <SearchInput
+        setValue={setSearchValue}
+        value={searchValue}
+        inputTitle={"Пошук cтатті"}
+        resetFn={() => setSearchPage({ page: 1 })}
+      />
 
       <ManageItem
         isLoading={isLoading}
@@ -44,8 +60,8 @@ const ArticleManage = () => {
         <Pagination
           totalCount={articles?.[0]?.pages}
           siblingCount={2}
-          currPage={searchParams.get("page")}
-          onLink={setSearchParams}
+          currPage={searchValue ? searchPage.page : searchParams.get("page")}
+          onLink={searchValue ? setSearchPage : setSearchParams}
         />
       </ManageItem>
 

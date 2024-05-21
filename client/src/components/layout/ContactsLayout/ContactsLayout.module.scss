@@ -42,12 +42,14 @@
 
 .places {
   width: 100%;
+  background-color: var(--primary-color);
   @include mixins.mobile {
     order: 1;
   }
 }
 
 .place {
+  background-color: var(--primary-color);
   width: 100%;
   border: 0;
   @include mixins.flexRow(0px, flex-start, center);

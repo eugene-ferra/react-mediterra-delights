@@ -89,7 +89,7 @@
 
 .manageBox {
   @include mixins.position(absolute, 0, unset, 0, 200px);
-  @include mixins.flexColumn(20px);
+  @include mixins.flexColumn(20px, stretch, stretch);
   width: calc(100% - 200px);
   overflow: hidden auto;
   background-color: var(--primary-color);
