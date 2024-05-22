@@ -7,6 +7,8 @@ server/.env
 server/public/products/*
 server/public/articles/*
 server/public/users/*
+server/public/workers/*
 !server/public/products/.gitkeep
 !server/public/articles/.gitkeep
 !server/public/users/.gitkeep
+!server/public/workers/.gitkeep

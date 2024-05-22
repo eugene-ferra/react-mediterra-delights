@@ -19,6 +19,7 @@ import morgan from "morgan";
 import cors from "cors";
 import Stripe from "stripe";
 import { proceedPayment } from "./controllers/orderController.js";
+import workerRouter from "./routers/workerRouter.js";
 const app = express();
 
 app.set("trust proxy", 1);
@@ -60,6 +61,7 @@ app.use("/api/comments", commentRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/workers", workerRouter);
 
 app.use(express.static("public"));
 
