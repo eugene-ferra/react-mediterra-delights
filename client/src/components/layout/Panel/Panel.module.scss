@@ -24,30 +24,30 @@
 }
 
 .aside {
-  @include mixins.flexColumn(0px, flex-start, center);
+  scrollbar-width: thin;
+  @include mixins.flexColumn(0px, stretch, flex-start);
   @include mixins.position(absolute, 0, unset, 0);
   width: 100%;
   max-width: 200px;
   background-color: var(--primary-color);
-  overflow: auto hidden;
+  overflow: auto;
   padding-top: 10px;
   z-index: var(--middle-index);
-  transition: var(--transition);
   box-shadow: 2px 0 2px 0px var(--secondary-light-color);
   @include mixins.tablet {
     padding-right: 5px;
-    max-width: 48px;
+    width: max-content;
   }
   &Open {
     @extend .aside;
+    width: 100%;
     max-width: 200px;
   }
 }
 
 .link {
-  @include mixins.flexRow(20px, flex-start, center);
+  @include mixins.flexRow(10px, stretch, center);
   padding: 15px 10px;
-  transition: var(--transition);
   width: 100%;
   border-radius: var(--radius);
   &:hover,
@@ -58,8 +58,16 @@
   &:global.active {
     background-color: var(--primary-select-color);
   }
+
   @include mixins.tablet {
     padding: 10px 10px;
+    width: max-content;
+  }
+  &Opened {
+    @extend .link;
+    @include mixins.tablet {
+      width: 100%;
+    }
   }
 }
 
@@ -85,6 +93,10 @@
   path {
     fill: var(--secondary-color);
   }
+  @include mixins.tablet {
+    height: 20px;
+    width: 20px;
+  }
 }
 
 .manageBox {
@@ -99,6 +111,6 @@
   @include mixins.tablet {
     padding: 5px 0px 5px 10px;
     left: 50px;
-    width: calc(100% - 48px);
+    width: calc(100% - 50px);
   }
 }

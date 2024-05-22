@@ -88,7 +88,7 @@ export const workerValidationSchema = {
     },
     isLength: {
       options: {
-        min: 1,
+        min: 0,
         max: 700,
       },
       errorMessage: "Допустима кількість символів -  від 1 до 700 символів!",

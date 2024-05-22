@@ -2,8 +2,11 @@
 
 .wrapper {
   overflow-x: auto;
+  min-height: 200px;
   height: 100%;
+  scrollbar-width: thin;
   width: 100%;
+  position: relative;
   * {
     margin: 0 auto;
   }
@@ -48,8 +51,9 @@
 .cell {
   a {
     display: block;
+    height: 100%;
   }
-  padding: 10px;
+  padding: 5px;
   border-right: 2px solid var(--secondary-light-color);
   text-align: center;
   color: var(--secondary-color);
@@ -60,7 +64,6 @@
   @include mixins.tablet {
     a {
       display: block;
-      padding: 10px;
     }
   }
 }

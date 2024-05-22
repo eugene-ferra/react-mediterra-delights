@@ -25,14 +25,7 @@ export class WorkerDTO {
       webp: responseWorker.photo.webp,
       avif: responseWorker.photo.avif,
     };
-    this.dateOfBirth = {
-      day: responseWorker.dateOfBirth.day,
-      month: responseWorker.dateOfBirth.month,
-      year: responseWorker.dateOfBirth.year,
-    };
-    this.startWorkDate = {
-      month: responseWorker.startWorkDate.month,
-      year: responseWorker.startWorkDate.year,
-    };
+    this.dateOfBirth = responseWorker.dateOfBirth;
+    this.startWorkDate = responseWorker.startWorkDate;
   }
 }

@@ -31,6 +31,9 @@ const AdminMain = lazy(() => import("./components/layout/AdminMain/AdminMain.jsx
 const ArticleManage = lazy(() =>
   import("./components/layout/ArticleManage/ArticleManage.jsx")
 );
+const WorkersManage = lazy(() =>
+  import("./components/layout/WorkersManage/WorkersManage.jsx")
+);
 const CommentManage = lazy(() =>
   import("./components/layout/CommentManage/CommentsManage.jsx")
 );
@@ -43,8 +46,14 @@ const OrdersManage = lazy(() =>
 const ProductManageAdd = lazy(() =>
   import("./components/layout/ProductManageAdd/ProductManageAdd.jsx")
 );
+const WorkersManageAdd = lazy(() =>
+  import("./components/layout/WorkersManageAdd/WorkersManageAdd.jsx")
+);
 const ProductManageEdit = lazy(() =>
   import("./components/layout/ProductManageEdit/ProductManageEdit.jsx")
+);
+const WorkersManageEdit = lazy(() =>
+  import("./components/layout/WorkerManageEdit/WorkersManageEdit.jsx")
 );
 const ArticleManageAdd = lazy(() =>
   import("./components/layout/ArticleManageAdd/ArticleManageAdd.jsx")
@@ -90,6 +99,9 @@ const router = createBrowserRouter([
           { path: "articles", element: <ArticleManage /> },
           { path: "articles/new", element: <ArticleManageAdd /> },
           { path: "articles/:id", element: <ArticleManageEdit /> },
+          { path: "workers", element: <WorkersManage /> },
+          { path: "workers/new", element: <WorkersManageAdd /> },
+          { path: "workers/:id", element: <WorkersManageEdit /> },
           { path: "comments", element: <CommentManage /> },
           { path: "reviews", element: <ReviewManage /> },
           { path: "orders", element: <OrdersManage /> },

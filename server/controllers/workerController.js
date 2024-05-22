@@ -124,3 +124,16 @@ export const deleteWorker = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getOptions = (req, res, next) => {
+  try {
+    const data = workerService.getOptions();
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

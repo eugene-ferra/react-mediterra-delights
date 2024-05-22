@@ -88,4 +88,12 @@ export class workerService {
 
     await workerModel.findByIdAndDelete(id);
   }
+
+  static getOptions() {
+    const options = {
+      positionTypes: workerModel.schema.path("positionType").enumValues,
+    };
+
+    return options;
+  }
 }

@@ -23,6 +23,8 @@ workerRouter
     workerController.addWorker
   );
 
+workerRouter.get("/options", workerController.getOptions);
+
 workerRouter
   .route("/:id")
   .get(checkSchema(idValidationSchema), workerController.getWorker)

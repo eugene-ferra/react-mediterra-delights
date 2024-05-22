@@ -11,6 +11,7 @@ import ReviewIcon from "../components/svg/ReviewIcon";
 import OrderIcon from "../components/svg/OrderIcon";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
 import { useEffect } from "react";
+import EmployeeIcon from "../components/svg/EmployeeIcon";
 
 const AdminPage = () => {
   const { user, isLoading } = useUser();
@@ -39,6 +40,7 @@ const AdminPage = () => {
                 { to: "articles?page=1", text: "Статті", image: <ArticleIcon /> },
                 { to: "comments?page=1", text: "Коментарі", image: <CommenIcon /> },
                 { to: "reviews?page=1", text: "Відгуки", image: <ReviewIcon /> },
+                { to: "workers?page=1", text: "Робітники", image: <EmployeeIcon /> },
                 { to: "orders", text: "Замовлення", image: <OrderIcon /> },
               ]}
             >
