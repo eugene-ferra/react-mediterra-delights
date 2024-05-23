@@ -1,0 +1,48 @@
+@use "../../../scss/mixins.scss" as mixins;
+
+.card {
+  padding: 8px;
+  border: 1px solid var(--secondary-color);
+  border-radius: var(--radius);
+}
+
+.inner {
+  @include mixins.flexRow(10px, flex-start, flex-start, wrap);
+}
+
+.img {
+  img {
+    border-radius: var(--radius);
+    @include mixins.image(100%, 200px, cover);
+  }
+  flex-grow: 1;
+  flex-basis: 160px;
+  max-width: 200px;
+}
+
+.text {
+  @include mixins.flexColumn(5px);
+  flex-grow: 1;
+  flex-basis: 160px;
+}
+
+.workerTitle {
+  text-transform: uppercase;
+  width: max-content;
+  span {
+    @include mixins.basicText();
+    font-weight: inherit;
+    text-transform: none;
+  }
+}
+
+.subTitle {
+  @include mixins.basicBold();
+}
+
+.additional,
+.summary {
+  @include mixins.flexColumn(5px);
+  margin-top: 20px;
+  margin-bottom: 10px;
+}

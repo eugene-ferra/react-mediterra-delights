@@ -7,6 +7,9 @@ const Navbar = ({ className, onClick }) => {
       <NavLink to={"/about"} onClick={onClick}>
         Про нас
       </NavLink>
+      <NavLink to={"/workers"} onClick={onClick}>
+        Працівники
+      </NavLink>
       <NavLink to={"/products"} onClick={onClick}>
         Меню
       </NavLink>

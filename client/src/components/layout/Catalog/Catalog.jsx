@@ -7,6 +7,9 @@ const Catalog = ({ children, type }) => {
     case "small":
       classType = styles.catalogSmall;
       break;
+    case "full":
+      classType = styles.catalogFull;
+      break;
     case "no-items":
       classType = styles.catalogNoItems;
       break;

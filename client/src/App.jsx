@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import ChunkLoading from "./pages/ChunkLoading.jsx";
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
+const WorkersPage = lazy(() => import("./pages/WorkersPage.jsx"));
 const ProductsPage = lazy(() => import("./pages/ProductsPage.jsx"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage.jsx"));
 const AppLayout = lazy(() => import("./pages/AppLayout.jsx"));
@@ -130,6 +131,7 @@ const router = createBrowserRouter([
       { path: "/order/success/:orderNumber", element: <OrderSuccessPage /> },
       { path: "/check-order", element: <CheckOrderPage /> },
       { path: "/about", element: <AboutPage /> },
+      { path: "/workers", element: <WorkersPage /> },
       { path: "/contacts", element: <ContactPage /> },
       { path: "/forbidden", element: <ForbiddenPage /> },
       { path: "500", element: <ServerErrorPage /> },
