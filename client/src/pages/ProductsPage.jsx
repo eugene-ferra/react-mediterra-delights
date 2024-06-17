@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import { useProducts } from "../hooks/useProducts";
@@ -38,6 +38,10 @@ const ProductsPage = () => {
   const { pathname } = useLocation();
 
   const onClose = () => setIsModalOpen(false);
+
+  useEffect(() => {
+    document.title = "Меню";
+  }, []);
 
   return (
     <>

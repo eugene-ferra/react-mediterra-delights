@@ -58,6 +58,7 @@ export class orderService {
 
     if (decoded)
       await userModel.findByIdAndUpdate(decoded.id, {
+        cart: [],
         $push: { ["orders"]: order._id },
       });
 

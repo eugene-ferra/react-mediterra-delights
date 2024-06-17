@@ -18,6 +18,10 @@ const AccountPage = () => {
     if (!isLoading && !user) navigate("/forbidden");
   }, [user, navigate, isLoading]);
 
+  useEffect(() => {
+    document.title = "Мій кабінет";
+  }, []);
+
   return (
     <>
       {isLoading && (

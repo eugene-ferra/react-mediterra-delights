@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { useUser } from "../../../hooks/useUser";
@@ -48,6 +48,10 @@ const ArticleBox = ({ slug }) => {
   const { comments, isLoading: isCommentsLoading } = useComments(
     `isModerated=true&articleID=${article?.id}&page=${page?.page}&limit=5`
   );
+
+  useEffect(() => {
+    if (article) document.title = article?.title;
+  }, [article]);
 
   const methods = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);

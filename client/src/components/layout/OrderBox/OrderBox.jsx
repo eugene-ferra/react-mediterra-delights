@@ -37,14 +37,14 @@ const OrderBox = () => {
     }
   }, [user, methods, isLoading]);
 
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
 
   const {
     createOrder,
     createCheckout,
     isLoading: isCreating,
     errors,
-  } = useCreateOrder(clearCart, methods.reset);
+  } = useCreateOrder(methods.reset);
 
   const [deliveryType, setDeliveryType] = useState(options?.[0]);
 

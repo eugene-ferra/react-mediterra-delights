@@ -21,6 +21,10 @@ const AdminPage = () => {
     if (!isLoading && (!user || user?.role !== "admin")) navigate("/forbidden");
   }, [isLoading, user, navigate]);
 
+  useEffect(() => {
+    document.title = "Адмін-панель";
+  }, []);
+
   return (
     <>
       {isLoading && (

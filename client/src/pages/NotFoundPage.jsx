@@ -3,8 +3,13 @@ import Header from "../components/layout/Header/Header";
 import MainLayout from "../components/layout/MainLayout/MainLayout";
 import notFoundPic from "../assets/notFound.png";
 import PageError from "../components/layout/PageError/PageError";
+import { useEffect } from "react";
 
 const NotFoundPage = () => {
+  useEffect(() => {
+    document.title = "404";
+  }, []);
+
   return (
     <>
       <Header />

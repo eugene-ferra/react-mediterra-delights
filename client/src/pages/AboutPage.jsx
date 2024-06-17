@@ -20,8 +20,13 @@ import img10 from "../assets/gallery-10.jpg";
 import img11 from "../assets/gallery-11.jpg";
 import img12 from "../assets/gallery-12.jpg";
 import BlockHeader from "../components/layout/BlockHeader/BlockHeader";
+import { useEffect } from "react";
 
 const AboutPage = () => {
+  useEffect(() => {
+    document.title = "Про нас";
+  }, []);
+
   return (
     <>
       <Header />

@@ -13,6 +13,7 @@ import Footer from "../components/layout/Footer/Footer";
 import Pagination from "../components/block/Pagination/Pagination";
 import Article from "../components/block/Article/Article";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
+import { useEffect } from "react";
 
 const ArticlesPage = () => {
   const { options, isLoading, error } = useArticleOptions();
@@ -22,6 +23,10 @@ const ArticlesPage = () => {
     isLoading: isArticleLoading,
     error: articleError,
   } = useArticles(searchParams.toString());
+
+  useEffect(() => {
+    document.title = "Статті";
+  }, []);
 
   return (
     <>

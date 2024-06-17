@@ -7,6 +7,10 @@ import MainLayout from "../components/layout/MainLayout/MainLayout";
 import OrderBox from "../components/layout/OrderBox/OrderBox";
 
 const OrderPage = () => {
+  useEffect(() => {
+    document.title = "Оформлення замовлення";
+  }, []);
+
   const { cart } = useCart();
   const navigate = useNavigate();
 

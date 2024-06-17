@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
 import { FormProvider, useForm } from "react-hook-form";
@@ -72,6 +72,10 @@ const ProductBox = ({ slug }) => {
   });
 
   const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (product) document.title = product?.title;
+  }, [product]);
 
   const {
     addToCart,

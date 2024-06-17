@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
 
-export const useCreateOrder = (clearCart, resetForm) => {
+export const useCreateOrder = (resetForm) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -13,8 +13,6 @@ export const useCreateOrder = (clearCart, resetForm) => {
   const adding = useMutation({
     mutationFn: async (data) => {
       const order = await postOrder(data);
-      await clearCart();
-
       return order;
     },
     onSuccess: (data) => {
@@ -37,8 +35,6 @@ export const useCreateOrder = (clearCart, resetForm) => {
     mutationFn: async (data) => {
       const { session } = await createCheckout(data);
       const stripe = await loadStripe(`${import.meta.env.VITE_STRIPE_SECRET}`);
-
-      await clearCart();
       await stripe.redirectToCheckout({ sessionId: session.id });
     },
     onSuccess: () => {

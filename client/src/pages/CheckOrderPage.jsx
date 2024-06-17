@@ -11,11 +11,12 @@ import SubmitSearch from "../components/layout/SubmitSearch/SubmitSearch";
 const CheckOrderPage = () => {
   const [number, setNumber] = useState(null);
   const { isLoading } = useOrder(number);
+  const { order } = useOrder(number);
 
   return (
     <>
       <Header />
-      <MainLayout>
+      <MainLayout style={{ paddingBottom: "20px" }}>
         <Container>
           <Title type={"global"}>Відстеження замовлення</Title>
 
@@ -24,7 +25,7 @@ const CheckOrderPage = () => {
             isLoading={isLoading}
             inputTitle={"Введіть номер замовлення*"}
           >
-            <OrderFullBlock id={number} />
+            <OrderFullBlock order={order?.[0]} />
           </SubmitSearch>
         </Container>
       </MainLayout>

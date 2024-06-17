@@ -9,8 +9,13 @@ import WorkerCard from "../components/block/WorkerCard/WorkerCard";
 import Catalog from "../components/layout/Catalog/Catalog";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
 import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
+import { useEffect } from "react";
 
 const WorkersPage = () => {
+  useEffect(() => {
+    document.title = "Працівники";
+  }, []);
+
   const { options } = useWorkersOptions();
   const { isError, error, isLoading, workers } = useWorkers("limit=Infinity");
 
