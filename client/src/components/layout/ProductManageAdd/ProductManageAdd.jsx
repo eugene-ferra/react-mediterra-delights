@@ -12,6 +12,7 @@ import TextArea from "../../common/TextArea/TextArea";
 import CheckBox from "../../common/CheckBox/CheckBox";
 import FieldSet from "../FieldSet/FieldSet";
 import Loader from "../../common/Loader/Loader";
+import { useEffect } from "react";
 
 const ProductManageAdd = () => {
   const { options } = useProductsOptions();
@@ -57,6 +58,7 @@ const ProductManageAdd = () => {
               maxPhotos={1}
               name={"imgCover"}
               disabled={isAdding}
+              initialFiles={methods.getValues()?.imgCover || []}
             />
             <DropZone
               title={"Всі зображення товару*"}
@@ -64,6 +66,7 @@ const ProductManageAdd = () => {
               maxPhotos={10}
               name={"images"}
               disabled={isAdding}
+              initialFiles={methods.getValues()?.images || []}
             />
           </FieldSet>
 

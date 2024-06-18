@@ -68,7 +68,6 @@ export const addArticle = async (req, res, next) => {
       req?.files?.imgCover?.[0]?.buffer
     );
     data = addLinks(req, data[0], ["imgCover"]);
-    data = addLinksToMarkup(req, data, "markup");
 
     res.status(201).json({
       status: "success",
@@ -95,6 +94,7 @@ export const getArticle = async (req, res, next) => {
     });
 
     data = addLinks(req, data[0], ["imgCover"]);
+    data = addLinksToMarkup(req, data, "markup");
 
     res.status(200).json({
       status: "success",
@@ -126,7 +126,6 @@ export const updateArticle = async (req, res, next) => {
     );
 
     data = addLinks(req, data[0], ["imgCover"]);
-    data = addLinksToMarkup(req, data, "markup");
 
     res.status(200).json({
       status: "success",

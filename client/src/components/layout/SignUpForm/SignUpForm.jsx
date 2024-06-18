@@ -15,7 +15,7 @@ const SignUpForm = () => {
   const [isPassShow, setIsPassShow] = useState(false);
 
   const { signup, isLoading, errors } = useRegister();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
 
   const location = useLocation();
 
@@ -39,6 +39,7 @@ const SignUpForm = () => {
           errorMessage={errors?.name}
           register={register("name")}
           disabled={isLoading}
+          onChange={(event) => setValue("name", event.target.value)}
         />
         <Input
           title={"Прізвище*"}
@@ -47,6 +48,7 @@ const SignUpForm = () => {
           errorMessage={errors?.lastName}
           register={register("lastName")}
           disabled={isLoading}
+          onChange={(event) => setValue("lastName", event.target.value)}
         />
         <Input
           title={"Електронна пошта*"}
@@ -55,6 +57,7 @@ const SignUpForm = () => {
           errorMessage={errors?.email}
           register={register("email")}
           disabled={isLoading}
+          onChange={(event) => setValue("email", event.target.value)}
         />
 
         <Input
@@ -65,6 +68,7 @@ const SignUpForm = () => {
           disabled={isLoading}
           isShow={isPassShow}
           onShow={() => setIsPassShow((state) => !state)}
+          onChange={(event) => setValue("password", event.target.value)}
         />
         <Button disabled={isLoading} style={{ width: "100%" }}>
           {isLoading ? <Loader /> : "Реєстрація"}

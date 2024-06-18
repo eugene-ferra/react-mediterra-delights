@@ -56,6 +56,7 @@ const ArticleManageAdd = () => {
             maxPhotos={1}
             name={"imgCover"}
             disabled={isLoading}
+            initialFiles={methods.getValues()?.imgCover || []}
           />
           <TextArea
             title={"Короткий зміст*"}

@@ -1,7 +1,14 @@
 import { Outlet } from "react-router";
 import { Toaster } from "react-hot-toast";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const AppLayout = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <>
       <Outlet />

@@ -88,6 +88,7 @@ const WorkersManageAdd = () => {
               maxPhotos={1}
               name={"photo"}
               disabled={isAdding}
+              initialFiles={methods.getValues()?.photo || []}
             />
             <TextArea
               type={"text"}

@@ -13,7 +13,7 @@ import styles from "./LoginForm.module.scss";
 
 const LoginForm = () => {
   const { login, isLoading, errors } = useLogin();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
 
   const [isPassShow, setIsPassShow] = useState(false);
 
@@ -37,6 +37,7 @@ const LoginForm = () => {
           errorMessage={errors?.email}
           register={register("email")}
           disabled={isLoading}
+          onChange={(event) => setValue("email", event.target.value)}
         />
         <Input
           type={"password"}
@@ -46,6 +47,7 @@ const LoginForm = () => {
           disabled={isLoading}
           isShow={isPassShow}
           onShow={() => setIsPassShow((state) => !state)}
+          onChange={(event) => setValue("password", event.target.value)}
         />
         {errors?.all ? <Text type={"small"}>{errors?.all}</Text> : null}
 

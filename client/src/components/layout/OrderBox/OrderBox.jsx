@@ -97,6 +97,7 @@ const OrderBox = () => {
                     style={{ textTransform: "capitalize" }}
                     errorMessage={errors?.name}
                     disabled={isCreating}
+                    onChange={(event) => methods.setValue("name", event.target.value)}
                   />
                   <Input
                     type={"text"}
@@ -105,6 +106,9 @@ const OrderBox = () => {
                     style={{ textTransform: "capitalize" }}
                     errorMessage={errors?.lastName}
                     disabled={isCreating}
+                    onChange={(event) =>
+                      methods.setValue("lastName", event.target.value)
+                    }
                   />
                   <Input
                     type={"text"}
@@ -112,6 +116,7 @@ const OrderBox = () => {
                     register={methods.register("phone")}
                     errorMessage={errors?.phone}
                     disabled={isCreating}
+                    onChange={(event) => methods.setValue("phone", event.target.value)}
                   />
                   <Input
                     type={"text"}
@@ -119,6 +124,7 @@ const OrderBox = () => {
                     register={methods.register("email")}
                     errorMessage={errors?.email}
                     disabled={isCreating}
+                    onChange={(event) => methods.setValue("email", event.target.value)}
                   />
                 </FieldSet>
 
@@ -153,6 +159,9 @@ const OrderBox = () => {
                         register={methods.register("deliveryAddress.street")}
                         errorMessage={errors?.["deliveryAddress.street"]}
                         disabled={isCreating}
+                        onChange={(event) =>
+                          methods.setValue("deliveryAddress.street", event.target.value)
+                        }
                       />
                       <Input
                         type={"text"}
@@ -160,6 +169,9 @@ const OrderBox = () => {
                         register={methods.register("deliveryAddress.home")}
                         errorMessage={errors?.["deliveryAddress.home"]}
                         disabled={isCreating}
+                        onChange={(event) =>
+                          methods.setValue("deliveryAddress.home", event.target.value)
+                        }
                       />
                       <Input
                         type={"text"}
@@ -167,6 +179,9 @@ const OrderBox = () => {
                         register={methods.register("deliveryAddress.flat")}
                         errorMessage={errors?.["deliveryAddress.flat"]}
                         disabled={isCreating}
+                        onChange={(event) =>
+                          methods.setValue("deliveryAddress.flat", event.target.value)
+                        }
                       />
                     </>
                   )}

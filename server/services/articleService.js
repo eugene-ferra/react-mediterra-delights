@@ -77,6 +77,7 @@ export class articleService {
   }
 
   static async updateOne(id, data, imgCover) {
+    let savedCover;
     try {
       const doc = await articleModel.findById(id);
       if (!doc) {
@@ -98,7 +99,7 @@ export class articleService {
 
       const payload = data?.slug || doc.slug;
 
-      const savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
+      savedCover = await fileService.saveOneImage(imgCover, folder, payload, 500);
 
       if (!Object.keys(savedCover).length) {
         data["imgCover"] = doc.imgCover;
@@ -114,11 +115,11 @@ export class articleService {
         let oldLinks = [];
         let newLinks = [];
         old$("img").each((i, element) => {
-          oldLinks.push(path.join(folder, element.attribs.src.split(`${folder}\\`)[1]));
+          oldLinks.push(path.join(folder, element.attribs.src.split(`${folder}`)[1]));
         });
 
         new$("img").each((i, element) => {
-          newLinks.push(path.join(folder, element.attribs.src.split(`${folder}\\`)[1]));
+          newLinks.push(path.join(folder, element.attribs.src.split(`${folder}`)[1]));
         });
 
         const linksToDelete = oldLinks.filter((link) => !newLinks.includes(link));
