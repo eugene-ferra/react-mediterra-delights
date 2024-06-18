@@ -4,11 +4,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { loadStripe } from "@stripe/stripe-js";
+import { useCart } from "../../../hooks/useCart";
 
 export const useCreateOrder = (resetForm) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { clearCart } = useCart();
 
   const adding = useMutation({
     mutationFn: async (data) => {
@@ -19,7 +21,8 @@ export const useCreateOrder = (resetForm) => {
       queryClient.invalidateQueries({ queryKey: ["adminArticles"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
-
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      clearCart();
       resetForm();
       navigate(`/order/success/${data?.number}`);
     },
@@ -41,6 +44,7 @@ export const useCreateOrder = (resetForm) => {
       queryClient.invalidateQueries({ queryKey: ["adminArticles"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
+      queryClient.invalidateQueries({ queryKey: ["user"] });
 
       resetForm();
     },

@@ -1,17 +1,17 @@
+import { useSearchParams } from "react-router-dom";
+import { useOrderHistory } from "./useOrderHistory";
 import { useUser } from "../../../hooks/useUser";
 import Title from "../../common/Title/Title";
 import OrderFullBlock from "../../block/OrderFullBlock/OrderFullBlock";
-import styles from "./AccountOrders.module.scss";
-import { useManyOrdersByIds } from "../../../hooks/useManyOrdersByIds";
-import { useSearchParams } from "react-router-dom";
 import Pagination from "../../block/Pagination/Pagination";
 import PageLoader from "../PageLoader/PageLoader";
+import styles from "./AccountOrders.module.scss";
 
 const AccountOrders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useUser();
-  const { orders, isLoading } = useManyOrdersByIds(
-    user?.orders,
+  const { orders, isOrdersLoading } = useOrderHistory(
+    user,
     searchParams.get("page") || 1
   );
 
@@ -20,7 +20,7 @@ const AccountOrders = () => {
       <Title>Ваші замовлення:</Title>
 
       <div className={styles.inner}>
-        {isLoading && <PageLoader />}
+        {isOrdersLoading && <PageLoader />}
         <div className={styles.orders}>
           {orders?.[1]?.map((order) => (
             <OrderFullBlock

@@ -5,7 +5,8 @@ export const useComments = (queryStr) => {
   const query = useQuery({
     queryFn: () => getComments(queryStr),
     queryKey: ["comments", queryStr],
-    staleTime: 0,
+    staleTime: 10 * 60 * 1000,
+    enabled: queryStr != null,
   });
 
   return {

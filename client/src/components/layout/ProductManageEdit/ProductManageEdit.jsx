@@ -34,11 +34,11 @@ const ProductManageEdit = () => {
 
   const { pictures: imgCover } = useBlobs(
     [product?.imgCover?.jpg],
-    ["adminProduct", "imgCover", id]
+    ["product", "imgCover", id]
   );
   const { pictures: images } = useBlobs(
     product?.images?.map((item) => item.jpg),
-    ["adminProduct", "images", id]
+    ["product", "images", id]
   );
 
   useEffect(() => {

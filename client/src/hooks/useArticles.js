@@ -6,6 +6,7 @@ export const useArticles = (query) => {
     queryFn: () => getArticles(query),
     queryKey: ["articles", query],
     staleTime: 0,
+    enabled: query != null,
   });
 
   return { articles: data, isLoading, error, isError };

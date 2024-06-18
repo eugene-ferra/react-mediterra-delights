@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../hooks/useUser";
 import { useProducts } from "../hooks/useProducts";
 import { useLocation } from "react-router-dom";
@@ -52,6 +52,10 @@ const HomePage = () => {
   const { pathname } = useLocation();
 
   const onClose = () => setIsModalOpen(false);
+
+  useEffect(() => {
+    document.title = "Ukraine delights";
+  }, []);
 
   return (
     <>

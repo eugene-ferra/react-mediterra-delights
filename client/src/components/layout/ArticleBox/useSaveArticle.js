@@ -12,6 +12,7 @@ export const useSaveArticle = (id) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
+      queryClient.invalidateQueries({ queryKey: ["savedArticles"] });
       toast.success("Стаття успішно збережена!");
     },
     onError: (errObj) => {
@@ -25,6 +26,7 @@ export const useSaveArticle = (id) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["articles"] });
+      queryClient.invalidateQueries({ queryKey: ["savedArticles"] });
       toast.success("Стаття успішно видалена зі збережених!");
     },
     onError: (errObj) => {

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import moon from "../../../assets/moon.svg";
 import sun from "../../../assets/sun.svg";
 import styles from "./SwitchMode.module.scss";
-import { ThemeContext } from "../../../App";
+import ThemeContext from "../../context/ThemeContext";
 
 const SwitchMode = () => {
   const { isDark, setIsDark } = useContext(ThemeContext);

@@ -13,17 +13,9 @@ export const getProducts = async (req, res, next) => {
       sortObj,
       page,
       limit,
-      populateObj: {
-        path: "reviews",
-        match: { isModerated: true },
-        populate: { path: "userID", model: "User" },
-      },
     });
 
     data[1].map((doc) => addLinks(req, doc, ["imgCover", "images"]));
-    data[1].map((doc) =>
-      doc.reviews.map((item) => addLinks(req, item.userID, ["avatar"]))
-    );
 
     res.status(200).json({
       status: "success",
@@ -44,13 +36,7 @@ export const getProduct = async (req, res, next) => {
       });
     }
 
-    let data = await productService.getOne({
-      id: req.params.id,
-      populateObj: {
-        path: "reviews",
-        match: { isModerated: true },
-      },
-    });
+    let data = await productService.getOne({ id: req.params.id });
 
     data = addLinks(req, data[0], ["imgCover", "images"]);
 
@@ -62,6 +48,7 @@ export const getProduct = async (req, res, next) => {
     next(err);
   }
 };
+
 export const addProduct = async (req, res, next) => {
   try {
     let errors = validationResult(req);

@@ -31,7 +31,7 @@ productRouter.route("/options").get(productController.getOptions);
 
 productRouter
   .route("/:id")
-  .get(checkSchema(idValidationSchema), productController.getProduct)
+  .get(productController.getProduct)
   .patch(
     protect(),
     restrictTo("admin"),

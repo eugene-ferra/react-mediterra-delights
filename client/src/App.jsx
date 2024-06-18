@@ -1,10 +1,11 @@
-import { Suspense, createContext, lazy, useEffect, useState } from "react";
+import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import Cookies from "js-cookie";
 
 import ChunkLoading from "./pages/ChunkLoading.jsx";
+import { CartProvider } from "./components/context/CartContext.jsx";
+import { ThemeProvider } from "./components/context/ThemeContext.jsx";
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const WorkersPage = lazy(() => import("./pages/WorkersPage.jsx"));
@@ -149,36 +150,16 @@ const queryClient = new QueryClient({
   },
 });
 
-export const CartContext = createContext();
-export const ThemeContext = createContext();
-
 const App = () => {
-  const [cart, setCart] = useState(
-    Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : []
-  );
-
-  const [isDark, setIsDark] = useState();
-  useEffect(() => {
-    if (
-      (!localStorage.getItem("theme") &&
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches) ||
-      localStorage.getItem("theme") === "dark"
-    ) {
-      document.getElementById("root").classList.add("dark");
-      setIsDark(true);
-    }
-  }, [setIsDark]);
-
   return (
-    <ThemeContext.Provider value={{ isDark, setIsDark }}>
-      <CartContext.Provider value={{ cart, setCart }}>
+    <CartProvider>
+      <ThemeProvider>
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
           <RouterProvider router={router} />
         </QueryClientProvider>
-      </CartContext.Provider>
-    </ThemeContext.Provider>
+      </ThemeProvider>
+    </CartProvider>
   );
 };
 

@@ -5,6 +5,8 @@ export const useArticle = (id) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["article", id],
     queryFn: () => getOneArticle(id),
+    staleTime: 0,
+    enabled: id != null,
   });
 
   return {

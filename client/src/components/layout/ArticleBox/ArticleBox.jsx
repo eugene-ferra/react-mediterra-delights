@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { useUser } from "../../../hooks/useUser";
 import { usePostComment } from "./usePostComment";
+import { useArticle } from "../../../hooks/useArticle";
 import { useLikeArticle } from "./useLikeArticle";
 import { useSaveArticle } from "./useSaveArticle";
 import { useArticles } from "../../../hooks/useArticles";
@@ -19,19 +20,19 @@ import BookMarkIcon from "../../svg/BookMarkIcon";
 import ViewsIcon from "../../svg/ViewsIcon";
 import CommentsIcon from "../../svg/CommentsIcon";
 import Comment from "../../block/Comment/Comment";
-import styles from "./ArticleBox.module.scss";
 import BtnBlock from "../BtnBlock/BtnBlock";
 import BlockHeader from "../BlockHeader/BlockHeader";
 import Gallery from "../Gallery/Gallery";
 import Article from "../../block/Article/Article";
 import PageLoader from "../PageLoader/PageLoader";
 import Pagination from "../../block/Pagination/Pagination";
+import styles from "./ArticleBox.module.scss";
 
 const ArticleBox = ({ slug }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState({ page: 1 });
   const { user } = useUser();
-  const { articles, isLoading: isArticleLoading, error } = useArticles(`slug=${slug}`);
+  const { article, isLoading: isArticleLoading, error } = useArticle(slug);
 
   if (error && error?.status) navigate(`/${error?.status}`);
 
@@ -39,14 +40,13 @@ const ArticleBox = ({ slug }) => {
     articles: more,
     isLoading: moreLoading,
     error: moreError,
-  } = useArticles(`topic=${articles?.[1]?.[0]?.topic}`);
+  } = useArticles(article && `topic=${article?.topic}`);
 
-  const article = articles?.[1]?.[0];
-  const isLiked = user ? user.likedArticles.includes(articles?.[1]?.[0]?.id) : false;
-  const isSaved = user ? user.savedArticles.includes(articles?.[1]?.[0]?.id) : false;
+  const isLiked = user ? user.likedArticles.includes(article?.id) : false;
+  const isSaved = user ? user.savedArticles.includes(article?.id) : false;
 
   const { comments, isLoading: isCommentsLoading } = useComments(
-    `isModerated=true&articleID=${article?.id}&page=${page?.page}&limit=5`
+    article && `isModerated=true&articleID=${article?.id}&page=${page?.page}&limit=5`
   );
 
   useEffect(() => {

@@ -26,6 +26,7 @@ userRouter
   .delete(userController.deleteUser);
 
 userRouter
+  .get("/me/savedProducts", userController.getSavedProducts)
   .post("/me/savedProducts", checkSchema(idValidationSchema), userController.saveProduct)
   .delete(
     "/me/savedProducts/:id",
@@ -42,6 +43,7 @@ userRouter
   );
 
 userRouter
+  .get("/me/savedArticles", userController.getSavedArticles)
   .post("/me/savedArticles", checkSchema(idValidationSchema), userController.saveArticle)
   .delete(
     "/me/savedArticles/:id",
@@ -60,6 +62,8 @@ userRouter
   .delete("/me/cart", userController.clearCart);
 
 userRouter.route("/").get(restrictTo("admin"), userController.getUsers);
+
+userRouter.get("/me/orders", userController.getOrderHistory);
 
 userRouter
   .route("/:id")

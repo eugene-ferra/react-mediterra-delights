@@ -3,6 +3,7 @@ import productModel from "../models/productModel.js";
 import { ProductDTO } from "../dto/productDTO.js";
 import { fileService } from "./fileService.js";
 import slugify from "slugify";
+import mongoose from "mongoose";
 
 const folder = "products";
 export class productService {
@@ -26,9 +27,14 @@ export class productService {
   }
 
   static async getOne({ id, populateObj }) {
-    const doc = await productModel.findById(id).populate(populateObj).exec();
+    let doc;
+    if (mongoose.isValidObjectId(id)) {
+      doc = await productModel.findById(id).populate(populateObj).exec();
+    } else {
+      doc = await productModel.findOne({ slug: id }).populate(populateObj).exec();
+    }
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (!doc) throw new AppError("There aren't documents with this id or slug!", 404);
 
     return [new ProductDTO(doc)];
   }

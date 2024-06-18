@@ -2,7 +2,7 @@ import { forwardRef, useContext, useEffect, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import api from "../../../services/apiClient";
 import Text from "../../common/Text/Text";
-import { ThemeContext } from "../../../App";
+import ThemeContext from "../../context/ThemeContext";
 
 const plugins = [
   "advlist",

@@ -34,8 +34,5 @@ export class ArticleDTO {
       : [];
     this.markup = responseArticle.markup;
     this.previewText = responseArticle.previewText;
-    this.comments = responseArticle.comments
-      ? responseArticle.comments.map((item) => new CommentDTO(item))
-      : [];
   }
 }

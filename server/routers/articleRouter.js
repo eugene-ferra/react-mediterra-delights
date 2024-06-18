@@ -32,7 +32,7 @@ articleRouter
 
 articleRouter
   .route("/:id")
-  .get(checkSchema(idValidationSchema), articleController.getArticle)
+  .get(articleController.getArticle)
   .patch(
     protect(),
     restrictTo("admin"),

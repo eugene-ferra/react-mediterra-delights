@@ -14,6 +14,7 @@ export const useChangeProduct = (resetForm) => {
     onSuccess: (data) => {
       toast.success("Товар успішно оновлено!");
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["product", data?.slug] });
       queryClient.invalidateQueries({ queryKey: ["product", data?.id] });
       resetForm && resetForm();
       navigate("/admin/products");

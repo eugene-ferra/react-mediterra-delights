@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { patchArticle } from "../../../services/apiArticles";
+import toast from "react-hot-toast";
 
 export const useChangeArticle = (editorRef) => {
   const [errors, setErrors] = useState({});
@@ -18,6 +18,7 @@ export const useChangeArticle = (editorRef) => {
     onSuccess: (data) => {
       toast.success("Статтю успішно оновлено!");
       queryClient.invalidateQueries({ queryKey: ["articles"] });
+      queryClient.invalidateQueries({ queryKey: ["article", data?.slug] });
       queryClient.invalidateQueries({ queryKey: ["article", data?.id] });
       navigate("/admin/articles");
     },

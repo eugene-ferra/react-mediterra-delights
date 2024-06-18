@@ -55,9 +55,6 @@ export class ProductDTO {
       protein: responseProduct.nutrients.protein || null,
       fats: responseProduct.nutrients.fats || null,
     };
-    this.reviews = responseProduct.reviews
-      ? responseProduct.reviews.map((item) => new ReviewDTO(item))
-      : [];
     this.cookTime = responseProduct.cookTime;
     this.isNewProduct = responseProduct.isNewProduct || null;
     this.compound = responseProduct.compound

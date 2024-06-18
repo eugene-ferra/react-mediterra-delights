@@ -4,7 +4,6 @@ import Picture from "../../common/Picture/Picture";
 import Title from "../../common/Title/Title";
 import LikesIcon from "../../svg/LikesIcon";
 import ViewsIcon from "../../svg/ViewsIcon";
-import CommentsIcon from "../../svg/CommentsIcon";
 import Text from "../../common/Text/Text";
 import styles from "./Article.module.scss";
 
@@ -23,10 +22,6 @@ const Article = ({ article }) => {
           <p className={styles.info}>
             <ViewsIcon />
             {article?.views}
-          </p>
-          <p className={styles.info}>
-            <CommentsIcon />
-            {article?.comments.length}
           </p>
         </div>
         <Text type={"small"}>{article?.previewText}</Text>

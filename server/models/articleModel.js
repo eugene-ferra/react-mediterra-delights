@@ -14,6 +14,7 @@ const articleSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
+      unique: [true, "Article with this slug has already axists!"],
     },
     topic: {
       type: String,

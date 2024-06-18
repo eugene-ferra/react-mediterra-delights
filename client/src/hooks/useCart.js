@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "./useUser";
-import Cookies from "js-cookie";
 import { useContext } from "react";
-import { CartContext } from "../App";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import {
   addToCart as addToCartApi,
@@ -11,6 +10,7 @@ import {
   updateCart as updateProductApi,
 } from "../services/apiUsers";
 import toast from "react-hot-toast";
+import CartContext from "../components/context/CartContext";
 
 export const useCart = () => {
   const { cart, setCart } = useContext(CartContext);

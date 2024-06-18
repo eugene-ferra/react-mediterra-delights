@@ -5,6 +5,7 @@ import { fileService } from "./fileService.js";
 import * as cheerio from "cheerio";
 import slugify from "slugify";
 import path from "path";
+import mongoose from "mongoose";
 
 const folder = "articles";
 export class articleService {
@@ -29,9 +30,14 @@ export class articleService {
   }
 
   static async getOne({ id, populateObj, ip, userAgent }) {
-    const doc = await articleModel.findById(id).populate(populateObj).exec();
+    let doc;
+    if (mongoose.isValidObjectId(id)) {
+      doc = await articleModel.findById(id).populate(populateObj).exec();
+    } else {
+      doc = await articleModel.findOne({ slug: id }).populate(populateObj).exec();
+    }
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (!doc) throw new AppError("There aren't documents with this id or slug!", 404);
 
     const isOldView = doc.viewsArr.some(
       (elem) => elem.ip === ip && elem.userAgent === userAgent

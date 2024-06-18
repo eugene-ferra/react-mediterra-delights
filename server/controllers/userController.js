@@ -36,6 +36,55 @@ export const getMe = async (req, res, next) => {
   }
 };
 
+export const getSavedArticles = async (req, res, next) => {
+  try {
+    let data = await userService.getSavedArticles(req.user._id, req.query.page || 1);
+
+    data?.[1].map((doc) => addLinks(req, doc, ["imgCover"]));
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSavedProducts = async (req, res, next) => {
+  try {
+    let data = await userService.getSavedProducts(req.user._id, req.query.page || 1);
+
+    data?.[1].map((doc) => addLinks(req, doc, ["imgCover"]));
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOrderHistory = async (req, res, next) => {
+  try {
+    let data = await userService.getOrdersHistory(req.user._id, req.query.page || 1);
+
+    data[1].map((order) =>
+      order.products.map((doc) => {
+        addLinks(req, doc.product, ["imgCover", "images"]);
+      })
+    );
+
+    res.status(200).json({
+      status: "success",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const saveProduct = async (req, res, next) => {
   try {
     const errors = validationResult(req);

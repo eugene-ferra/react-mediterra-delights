@@ -36,17 +36,9 @@ export const getArticles = async (req, res, next) => {
       sortObj,
       page,
       limit,
-      populateObj: {
-        path: "comments",
-        match: { isModerated: true },
-        populate: { path: "userID", model: "User" },
-      },
     });
 
     data[1].map((doc) => addLinks(req, doc, ["imgCover"]));
-    data[1].map((doc) =>
-      doc.comments.map((item) => addLinks(req, item.userID, ["avatar"]))
-    );
 
     res.status(200).json({ status: "success", data });
   } catch (err) {
@@ -98,7 +90,6 @@ export const getArticle = async (req, res, next) => {
 
     let data = await articleService.getOne({
       id: req.params.id,
-      populateObj: { path: "comments", match: { isModerated: true } },
       ip: req.ip,
       userAgent: req.headers["user-agent"],
     });

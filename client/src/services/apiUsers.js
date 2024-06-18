@@ -77,3 +77,13 @@ export async function deleteFromCart(id) {
 export async function clearCart() {
   return await api.delete("/api/users/me/cart");
 }
+
+export async function getSavedProducts(page) {
+  return await api.get(`/api/users/me/savedProducts?page=${page}`);
+}
+export async function getSavedArticles(page) {
+  return await api.get(`/api/users/me/savedArticles?page=${page}`);
+}
+export async function getOrdersHistory(page) {
+  return await api.get(`/api/users/me/orders?page=${page}`);
+}

@@ -1,19 +1,18 @@
+import { useSearchParams } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
-import { useManyProductsByIds } from "../../../hooks/useManyProductsByIds";
+import { useSavedProducts } from "./useSavedProducts";
 import Title from "../../common/Title/Title";
 import Catalog from "../Catalog/Catalog";
 import Product from "../../block/Product/Product";
 import Button from "../../common/Button/Button";
-import ErrorMassage from "../../common/ErrorMassage/ErrorMassage";
 import PageLoader from "../PageLoader/PageLoader";
-import { useSearchParams } from "react-router-dom";
 import Pagination from "../../block/Pagination/Pagination";
 
 const AccountFavourite = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useUser();
-  const { products, isLoading, error } = useManyProductsByIds(
-    user?.savedProducts,
+  const { products, isProductsLoading } = useSavedProducts(
+    user,
     searchParams.get("page") || 1
   );
 
@@ -21,11 +20,9 @@ const AccountFavourite = () => {
     <>
       <Title>Ваші улюблені страви:</Title>
 
-      {error && <ErrorMassage status={error.status} />}
+      {isProductsLoading && <PageLoader />}
 
-      {isLoading && <PageLoader />}
-
-      {!isLoading && products?.[1] && (
+      {!isProductsLoading && products?.[1] && (
         <>
           <Catalog type="small">
             {products?.[1].map((item) => (
@@ -44,7 +41,7 @@ const AccountFavourite = () => {
           />
         </>
       )}
-      {products?.length == 0 && (
+      {!isProductsLoading && products?.length == 0 && (
         <>
           <Title type="small">Ви ще не додали жодного товару в улюблені</Title>
           <Button asTag="Link" to="/products">

@@ -5,6 +5,8 @@ export const useProduct = (id) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getOneProduct(id),
+    staleTime: 0,
+    enabled: id != null,
   });
 
   return {

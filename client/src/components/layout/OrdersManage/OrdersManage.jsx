@@ -14,8 +14,8 @@ import Modal from "../../block/Modal/Modal";
 import Filters from "../Filters/Filters";
 import BtnBlock from "../BtnBlock/BtnBlock";
 import Button from "../../common/Button/Button";
-import styles from "./OrdersManage.module.scss";
 import SearchInput from "../SearchInput/SearchInput";
+import styles from "./OrdersManage.module.scss";
 
 const OrdersManage = () => {
   const { options, isLoading } = useOrderOptions();
@@ -155,9 +155,9 @@ const OrdersManage = () => {
               currPage={searchValue ? searchPage.page : searchParams.get("page")}
               onLink={searchValue ? setSearchPage : setSearchParams}
               savedParams={(() => {
-                if (searchParams) return {};
+                if (!searchParams) return {};
 
-                const saved = {};
+                let saved = {};
                 if (searchParams.get("status"))
                   saved.status = searchParams.get("status");
                 if (searchParams.get("deliveryType"))

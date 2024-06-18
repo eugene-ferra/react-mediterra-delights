@@ -7,11 +7,12 @@ import Container from "../components/layout/Container/Container";
 import Title from "../components/common/Title/Title";
 import OrderFullBlock from "../components/block/OrderFullBlock/OrderFullBlock";
 import SubmitSearch from "../components/layout/SubmitSearch/SubmitSearch";
+import PageLoader from "../components/layout/PageLoader/PageLoader";
+import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
 
 const CheckOrderPage = () => {
   const [number, setNumber] = useState(null);
-  const { isLoading } = useOrder(number);
-  const { order } = useOrder(number);
+  const { isLoading, order, isError, error } = useOrder(number);
 
   return (
     <>
@@ -25,7 +26,9 @@ const CheckOrderPage = () => {
             isLoading={isLoading}
             inputTitle={"Введіть номер замовлення*"}
           >
-            <OrderFullBlock order={order?.[0]} />
+            {order && !isLoading && <OrderFullBlock order={order?.[0]} />}
+            {isLoading && <PageLoader />}
+            {!order && isError && <ErrorMassage status={error?.status} />}
           </SubmitSearch>
         </Container>
       </MainLayout>

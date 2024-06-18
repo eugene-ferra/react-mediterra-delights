@@ -14,6 +14,7 @@ const productSchema = new mongoose.Schema(
     },
     slug: {
       type: String,
+      unique: [true, "Product with this slug has already axists!"],
     },
     category: {
       type: String,
@@ -144,6 +145,8 @@ const productSchema = new mongoose.Schema(
     },
   }
 );
+
+productSchema.index({ slug: 1 }, { unique: true });
 
 productSchema.virtual("reviews", {
   ref: "Review",

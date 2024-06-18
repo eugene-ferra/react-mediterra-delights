@@ -5,7 +5,8 @@ export const useReviews = (queryStr) => {
   const query = useQuery({
     queryFn: () => getReviews(queryStr),
     queryKey: ["reviews", queryStr],
-    staleTime: 0,
+    staleTime: 10 * 60 * 1000,
+    enabled: queryStr != null,
   });
 
   return {

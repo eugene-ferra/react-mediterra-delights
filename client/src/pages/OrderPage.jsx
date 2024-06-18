@@ -20,11 +20,15 @@ const OrderPage = () => {
 
   return (
     <>
-      <Header />
-      <MainLayout>
-        <OrderBox />
-      </MainLayout>
-      <Footer />
+      {cart.length > 0 && (
+        <>
+          <Header />
+          <MainLayout>
+            <OrderBox />
+          </MainLayout>
+          <Footer />
+        </>
+      )}
     </>
   );
 };

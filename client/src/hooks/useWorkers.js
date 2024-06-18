@@ -5,7 +5,7 @@ export const useWorkers = (queryStr) => {
   const query = useQuery({
     queryFn: () => getWorkers(queryStr),
     queryKey: ["workers", queryStr],
-    staleTime: 0,
+    staleTime: 20 * 60 * 1000,
   });
 
   return {

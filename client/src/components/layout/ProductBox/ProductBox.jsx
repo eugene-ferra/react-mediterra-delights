@@ -8,6 +8,7 @@ import { useCart } from "../../../hooks/useCart";
 import { useProducts } from "../../../hooks/useProducts";
 import { useReviews } from "../../../hooks/useReviews";
 import Container from "../Container/Container";
+import { useProduct } from "../../../hooks/useProduct";
 import Title from "../../common/Title/Title";
 import Stars from "../../common/Stars/Stars";
 import Text from "../../common/Text/Text";
@@ -24,24 +25,24 @@ import StarRating from "../../common/StarRating/StarRating";
 import Review from "../../block/Review/Review";
 import Loader from "../../common/Loader/Loader";
 import BtnBlock from "../BtnBlock/BtnBlock";
-import styles from "./ProductBox.module.scss";
 import Pagination from "../../block/Pagination/Pagination";
 import PageLoader from "../PageLoader/PageLoader";
 import Gallery from "../Gallery/Gallery";
 import BlockHeader from "../BlockHeader/BlockHeader";
 import Product from "../../block/Product/Product";
 import loginImg from "../../../assets/login.svg";
+import styles from "./ProductBox.module.scss";
 
 const ProductBox = ({ slug }) => {
   const navigate = useNavigate();
 
   const { user } = useUser();
-  const { products, isLoading: isProductsLoading, error } = useProducts(`slug=${slug}`);
+
+  const { product, isLoading: isProductsLoading, error } = useProduct(slug);
 
   if (error) navigate(`/${error?.status}`);
 
-  const product = products?.[1]?.[0];
-  const isSaved = user ? user.savedProducts.includes(products?.[1]?.[0]?.id) : false;
+  const isSaved = user ? user.savedProducts.includes(product?.id) : false;
 
   const { saveProduct, isSaving, deleteProduct, isDeleting } = useSavedProduct(
     product?.id
@@ -50,18 +51,18 @@ const ProductBox = ({ slug }) => {
   const [page, setPage] = useState({ page: 1 });
 
   const { reviews, isLoading: isReviewsLoading } = useReviews(
-    `isModerated=true&productID=${product?.id}&page=${page.page}&limit=5`
+    product && `isModerated=true&productID=${product?.id}&page=${page.page}&limit=5`
   );
 
   const { reviews: userReview } = useReviews(
-    `&productID=${product?.id}&userID=${user?.id}`
+    product && user && `productID=${product?.id}&userID=${user?.id}`
   );
 
   const {
     products: categoryProducts,
     error: categoryError,
     isLoading: categoryLoading,
-  } = useProducts(`category=${product?.category}&sort=-avgRating`);
+  } = useProducts(product && `category=${product?.category}&sort=-avgRating`);
 
   const methods = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);

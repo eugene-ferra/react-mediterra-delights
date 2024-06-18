@@ -1,5 +1,6 @@
 import { UserDTO } from "../dto/userDTO.js";
 import userModel from "../models/userModel.js";
+import orderModel from "../models/orderModel.js";
 import AppError from "../utils/appError.js";
 import { authService } from "./authService.js";
 import bcrypt from "bcrypt";
@@ -8,6 +9,10 @@ import { fileService } from "./fileService.js";
 import Mailer from "./mailerService.js";
 import crypto from "crypto";
 import productModel from "../models/productModel.js";
+import articleModel from "../models/articleModel.js";
+import { ProductDTO } from "../dto/productDTO.js";
+import { ArticleDTO } from "../dto/articleDTO.js";
+import { OrderDTO } from "../dto/orderDTO.js";
 
 const folder = "users";
 export default class userService {
@@ -189,6 +194,64 @@ export default class userService {
       { new: true }
     );
     return [new UserDTO(updatedUser)];
+  }
+
+  static async getSavedProducts(userId, page, limit = 12) {
+    const user = await userModel.findById(userId);
+    if (!user) throw new AppError("User with this id does not exists!", 404);
+
+    const data = await productModel
+      .find({ _id: { $in: user.savedProducts } })
+      .skip(--page * limit)
+      .limit(limit);
+
+    if (!data.length) {
+      throw new AppError("No documents match the current filters!", 404);
+    }
+    const docs = await productModel.countDocuments({ _id: { $in: user.savedProducts } });
+
+    return [
+      { pages: Math.ceil(docs / limit) },
+      data.map((item) => new ProductDTO(item)),
+    ];
+  }
+
+  static async getSavedArticles(userId, page, limit = 12) {
+    const user = await userModel.findById(userId);
+    if (!user) throw new AppError("User with this id does not exists!", 404);
+
+    const data = await articleModel
+      .find({ _id: { $in: user.savedArticles } })
+      .skip(--page * limit)
+      .limit(limit);
+
+    if (!data.length) {
+      throw new AppError("No documents match the current filters!", 404);
+    }
+    const docs = await articleModel.countDocuments({ _id: { $in: user.savedArticles } });
+
+    return [
+      { pages: Math.ceil(docs / limit) },
+      data.map((item) => new ArticleDTO(item)),
+    ];
+  }
+
+  static async getOrdersHistory(userId, page, limit = 5) {
+    const user = await userModel.findById(userId);
+    if (!user) throw new AppError("User with this id does not exists!", 404);
+
+    const data = await orderModel
+      .find({ _id: { $in: user.orders } })
+      .skip(--page * limit)
+      .limit(limit)
+      .populate({ path: "products.id" });
+
+    if (!data.length) {
+      throw new AppError("No documents match the current filters!", 404);
+    }
+    const docs = await orderModel.countDocuments({ _id: { $in: user.orders } });
+
+    return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new OrderDTO(item))];
   }
 
   static async addToCart(id, product, quantity) {
