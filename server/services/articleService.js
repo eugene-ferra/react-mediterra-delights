@@ -115,11 +115,21 @@ export class articleService {
         let oldLinks = [];
         let newLinks = [];
         old$("img").each((i, element) => {
-          oldLinks.push(path.join(folder, element.attribs.src.split(`${folder}`)[1]));
+          oldLinks.push(
+            path.join(
+              folder,
+              element.attribs.src.split(`${folder}`)?.[1] || element.attribs.src
+            )
+          );
         });
 
         new$("img").each((i, element) => {
-          newLinks.push(path.join(folder, element.attribs.src.split(`${folder}`)[1]));
+          newLinks.push(
+            path.join(
+              folder,
+              element.attribs.src.split(`${folder}`)?.[1] || element.attribs.src
+            )
+          );
         });
 
         const linksToDelete = oldLinks.filter((link) => !newLinks.includes(link));
