@@ -240,8 +240,9 @@ export default class userService {
     const user = await userModel.findById(userId);
     if (!user) throw new AppError("User with this id does not exists!", 404);
 
-    const data = await orderModel
+    let data = await orderModel
       .find({ _id: { $in: user.orders } })
+      .sort("-time")
       .skip(--page * limit)
       .limit(limit)
       .populate({ path: "products.id" });
@@ -250,6 +251,15 @@ export default class userService {
       throw new AppError("No documents match the current filters!", 404);
     }
     const docs = await orderModel.countDocuments({ _id: { $in: user.orders } });
+
+    data = data.map((order) => {
+      order.products = order.products.map((prod) => {
+        if (!prod.id?._id) prod.id = {};
+
+        return prod;
+      });
+      return order;
+    });
 
     return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new OrderDTO(item))];
   }

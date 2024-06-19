@@ -160,7 +160,12 @@ export class articleService {
 
     let links = [];
     $("img").each((i, element) => {
-      links.push(path.join(folder, element.attribs.src.split(`${folder}\\`)[1]));
+      links.push(
+        path.join(
+          folder,
+          element.attribs.src.split(`${folder}`)?.[1] || element.attribs.src
+        )
+      );
     });
 
     await fileService.deleteFiles(links);

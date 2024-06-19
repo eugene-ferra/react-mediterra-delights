@@ -25,7 +25,7 @@ const OrdersManage = () => {
 
   const deliveryType = searchParams.get("deliveryType");
   const status = searchParams.get("status");
-  const baseEnd = `limit=5&sort=time`;
+  const baseEnd = `limit=5&sort=-time`;
 
   const {
     orders,

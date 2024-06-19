@@ -13,7 +13,7 @@ export const useDeleteArticle = () => {
     mutationFn: (id) => deleteArticleApi(id),
     onSuccess: () => {
       toast.success("Статтю успішно видалено!");
-      queryClient.invalidateQueries({ queryKey: ["articles"] });
+      queryClient.removeQueries({ queryKey: ["articles"] });
       navigate("/admin/articles");
     },
     onError: (errObj) => {

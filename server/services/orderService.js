@@ -73,7 +73,7 @@ export class orderService {
   }
 
   static async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
-    const data = await orderModel
+    let data = await orderModel
       .find(filterObj)
       .sort(sortObj)
       .skip(--page * limit)
@@ -85,6 +85,15 @@ export class orderService {
     }
     const docs = await orderModel.countDocuments(filterObj);
 
+    data = data.map((order) => {
+      order.products = order.products.map((prod) => {
+        if (!prod.id?._id) prod.id = {};
+
+        return prod;
+      });
+      return order;
+    });
+
     return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new OrderDTO(item))];
   }
 
@@ -95,6 +104,11 @@ export class orderService {
       doc = await orderModel.findById(id).populate(populateObj).exec();
       if (!doc) throw new AppError("There aren't documents with this id!", 404);
     }
+
+    doc.products = doc.products.map((prod) => {
+      if (!prod.id?._id) prod.id = {};
+      return prod;
+    });
 
     return [new OrderDTO(doc)];
   }
@@ -123,7 +137,7 @@ export class orderService {
           if (!product) throw new AppError("incorrect products!", 400);
 
           return {
-            id: item.id,
+            id: item.id || "",
             quantity: item.quantity,
             price: product[0]?.discountPrice || product[0].price * item.quantity,
           };
@@ -158,6 +172,11 @@ export class orderService {
     const order = await orderModel
       .findByIdAndUpdate(id, { status, isPayed }, { runValidators: true, new: true })
       .populate({ path: "products.id" });
+
+    order.products = order.products.map((prod) => {
+      if (!prod.id?._id) prod.id = {};
+      return prod;
+    });
 
     return [new OrderDTO(order)];
   }
