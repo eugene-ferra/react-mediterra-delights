@@ -39,7 +39,7 @@ const OrdersManage = () => {
       : `${searchParams.toString()}&${baseEnd}`
   );
 
-  const { proceedOrder } = useProceedOrder();
+  const { proceedOrder, isProceeding } = useProceedOrder();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(null);
@@ -171,6 +171,7 @@ const OrdersManage = () => {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             className={styles.modal}
+            isLoading={isProceeding}
           >
             <OrderFullBlock
               order={orders?.[1]?.[currentOrder]}
@@ -185,6 +186,7 @@ const OrdersManage = () => {
                     "Замовлення скасовано",
                     orders?.[1]?.[currentOrder]?.isPayed
                   )}
+                  disabled={isProceeding}
                 >
                   Скасувати замовлення
                 </Button>
@@ -196,6 +198,7 @@ const OrdersManage = () => {
                     "Замовлення підтверджено",
                     orders?.[1]?.[currentOrder]?.isPayed
                   )}
+                  disabled={isProceeding}
                 >
                   Прийняти замовлення
                 </Button>
@@ -207,6 +210,7 @@ const OrdersManage = () => {
                     "Замовлення готове",
                     orders?.[1]?.[currentOrder]?.isPayed
                   )}
+                  disabled={isProceeding}
                 >
                   Передати в службу видачі
                 </Button>
@@ -219,6 +223,7 @@ const OrdersManage = () => {
                       "Замовлення прямує до вас",
                       orders?.[1]?.[currentOrder]?.isPayed
                     )}
+                    disabled={isProceeding}
                   >
                     Взяти замовлення
                   </Button>
@@ -228,6 +233,7 @@ const OrdersManage = () => {
                   <Button
                     type={"success"}
                     onClick={onProceed("Замовлення отримано", true)}
+                    disabled={isProceeding}
                   >
                     Замовлення видано
                   </Button>
@@ -236,6 +242,7 @@ const OrdersManage = () => {
                 <Button
                   type={"success"}
                   onClick={onProceed("Замовлення отримано", true)}
+                  disabled={isProceeding}
                 >
                   Замовлення доставлено
                 </Button>

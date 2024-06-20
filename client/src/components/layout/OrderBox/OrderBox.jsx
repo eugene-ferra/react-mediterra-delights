@@ -23,6 +23,7 @@ import Button from "../../common/Button/Button";
 import DateInput from "../../common/DateInput/DateInput";
 import PageLoader from "../PageLoader/PageLoader";
 import styles from "./OrderBox.module.scss";
+import { prepareData } from "../../../utils/prepareData";
 
 const OrderBox = () => {
   const methods = useForm();
@@ -64,9 +65,9 @@ const OrderBox = () => {
     }
 
     if (data["paymentType"] == options["paymentType"][1]) {
-      createCheckout(data);
+      createCheckout(prepareData(data));
     } else {
-      createOrder(data);
+      createOrder(prepareData(data));
     }
   }
 

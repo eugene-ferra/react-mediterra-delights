@@ -8,7 +8,7 @@ import TrashIcon from "../../svg/TrashIcon";
 import Counter from "../../common/Counter/Counter";
 import styles from "./CartItem.module.scss";
 
-const CartItem = ({ id, quantity, updateCart, deleteFromCart }) => {
+const CartItem = ({ id, quantity, updateCart, deleteFromCart, isLoading }) => {
   const { product } = useProduct(id);
 
   return (
@@ -39,13 +39,18 @@ const CartItem = ({ id, quantity, updateCart, deleteFromCart }) => {
                 updateCart({ id: id, quantity: quantity + 1 });
               }}
               label={quantity}
+              disabled={isLoading}
             />
             <Price
               className={styles.priceBlock}
               discountPrice={product?.discountPrice * quantity}
               price={product?.price * quantity}
             />
-            <button className={styles.delete} onClick={() => deleteFromCart(id)}>
+            <button
+              className={styles.delete}
+              onClick={() => deleteFromCart(id)}
+              disabled={isLoading}
+            >
               <TrashIcon />
             </button>
           </div>

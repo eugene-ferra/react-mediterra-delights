@@ -27,6 +27,8 @@ import Article from "../../block/Article/Article";
 import PageLoader from "../PageLoader/PageLoader";
 import Pagination from "../../block/Pagination/Pagination";
 import styles from "./ArticleBox.module.scss";
+import { prepareData } from "../../../utils/prepareData";
+import Loader from "../../common/Loader/Loader";
 
 const ArticleBox = ({ slug }) => {
   const navigate = useNavigate();
@@ -75,7 +77,7 @@ const ArticleBox = ({ slug }) => {
   async function onSubmit(data) {
     data["articleID"] = article?.id;
     data["userID"] = user?.id;
-    postComment(data);
+    postComment(prepareData(data));
   }
 
   return (
@@ -176,7 +178,12 @@ const ArticleBox = ({ slug }) => {
         )}
       </Container>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} align="center">
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        align="center"
+        isLoading={isLoading}
+      >
         {user ? (
           <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -190,7 +197,9 @@ const ArticleBox = ({ slug }) => {
                 disabled={isLoading}
                 errorMessage={errors?.comment}
               />
-              <Button className={styles.addComment}>Додати коментар</Button>
+              <Button className={styles.addComment} disabled={isLoading}>
+                {isLoading && <Loader type={"small"} />} Додати коментар
+              </Button>
             </Form>
           </FormProvider>
         ) : (

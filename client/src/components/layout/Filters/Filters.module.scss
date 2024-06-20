@@ -17,7 +17,7 @@
 
 .item {
   display: block;
-  padding: 20px 10px;
+  padding: 15px 10px;
   width: 100%;
   border: 0;
   white-space: nowrap;
@@ -26,6 +26,9 @@
   border-radius: var(--radius);
   border: 1px solid var(--secondary-color);
   transition: var(--transition);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   @include mixins.basicBold;
   cursor: pointer;
   &:hover {

@@ -24,6 +24,7 @@ import PageLoader from "../../layout/PageLoader/PageLoader";
 import FieldSet from "../FieldSet/FieldSet";
 import BtnBlock from "../BtnBlock/BtnBlock";
 import styles from "./AdminMain.module.scss";
+import errorImg from "../../../assets/default.jpg";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -46,8 +47,12 @@ const CustomProductTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className={styles.tooltip}>
-        <p className="label">{`Назва: ${payload[0]?.payload?.product?.[0]?.title}`}</p>
-        <p className="label">{`Категорія: ${payload[0]?.payload?.product?.[0]?.category}`}</p>
+        <p className="label">{`Назва: ${
+          payload[0]?.payload?.product?.[0]?.title || "Страву видалено"
+        }`}</p>
+        {payload[0]?.payload?.product?.[0]?.category && (
+          <p className="label">{`Категорія: ${payload[0]?.payload?.product?.[0]?.category}`}</p>
+        )}
         <p className="label">{`Продано: ${payload[0]?.payload?.["Кількість продажів"]} шт`}</p>
       </div>
     );
@@ -63,7 +68,7 @@ const renderCustomizedLabel = (props) => {
   return (
     <g>
       <image
-        href={value[0]?.imgCover.jpg}
+        href={value[0]?.imgCover?.jpg || errorImg}
         x={x + width / 2 - width / 2} //
         y={y - radius - 50}
         width={width}

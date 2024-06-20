@@ -14,7 +14,7 @@ const Picture = ({ formats, alt, defaultImg, className, style }) => {
       {imageLoaded ? (
         <img
           className={`${styles.img} ${className || ""}`}
-          src={formats?.jpg}
+          src={formats?.jpg || defaultImg}
           srcSet={`${formats?.avif || ""}, ${formats?.webp || ""}, ${formats?.jpg}`}
           alt={alt || "image"}
           onError={handleImageError}

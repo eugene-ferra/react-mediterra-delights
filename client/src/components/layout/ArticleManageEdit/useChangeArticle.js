@@ -17,9 +17,9 @@ export const useChangeArticle = (editorRef) => {
     },
     onSuccess: (data) => {
       toast.success("Статтю успішно оновлено!");
-      queryClient.invalidateQueries({ queryKey: ["articles"] });
-      queryClient.invalidateQueries({ queryKey: ["article", data?.slug] });
-      queryClient.invalidateQueries({ queryKey: ["article", data?.id] });
+      queryClient.removeQueries({ queryKey: ["articles"] });
+      queryClient.removeQueries({ queryKey: ["article", data?.slug] });
+      queryClient.removeQueries({ queryKey: ["article", data?.id] });
       navigate("/admin/articles");
     },
     onError: (errObj) => {

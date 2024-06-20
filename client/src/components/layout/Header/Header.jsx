@@ -41,7 +41,8 @@ const Header = () => {
           <>
             <Link to={"/account"}>
               <Picture
-                formats={user?.avatar}
+                formats={user?.avatar?.jpg ? user.avatar : defaultAvatar}
+                // formats={user?.avatar?.jpg}
                 defaultImg={defaultAvatar}
                 className={styles.avatar}
               />

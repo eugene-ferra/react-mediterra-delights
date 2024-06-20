@@ -44,6 +44,11 @@
       border-top-color: transparent;
     }
   }
+  &Small {
+    @extend .loaderBody;
+    min-width: 10px;
+    min-height: 10px;
+  }
   &Accent {
     @extend .loaderBody;
     div {

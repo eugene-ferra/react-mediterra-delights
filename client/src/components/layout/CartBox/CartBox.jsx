@@ -13,7 +13,7 @@ import PageLoader from "../PageLoader/PageLoader";
 import styles from "./CartBox.module.scss";
 
 const CartBox = () => {
-  const { cart, updateCart, deleteFromCart } = useCart();
+  const { cart, updateCart, deleteFromCart, isUpdating, isDeleting } = useCart();
 
   const {
     products,
@@ -47,6 +47,7 @@ const CartBox = () => {
                   key={item?.id}
                   updateCart={updateCart}
                   deleteFromCart={deleteFromCart}
+                  isLoading={isDeleting || isUpdating}
                 />
               ))}
             </div>

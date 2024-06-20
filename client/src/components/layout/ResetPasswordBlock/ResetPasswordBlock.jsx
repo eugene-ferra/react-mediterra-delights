@@ -9,6 +9,7 @@ import Form from "../Form/Form";
 import MainLayout from "../MainLayout/MainLayout";
 import Loader from "../../common/Loader/Loader";
 import styles from "./ResetPasswordBlock.module.scss";
+import { prepareData } from "../../../utils/prepareData";
 
 const ResetPasswordBlock = () => {
   const { errors, isLoading, resetPassword } = useResetPassword();
@@ -21,7 +22,7 @@ const ResetPasswordBlock = () => {
     data["email"] = new URLSearchParams(location.search).get("email");
     data["token"] = token;
 
-    resetPassword(data);
+    resetPassword(prepareData(data));
   }
 
   return (

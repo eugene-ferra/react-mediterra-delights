@@ -7,6 +7,9 @@ const Loader = ({ type }) => {
     case "default":
       classType = styles.loaderBody;
       break;
+    case "small":
+      classType = styles.loaderBodySmall;
+      break;
     case "accent":
       classType = styles.loaderBodyAccent;
       break;

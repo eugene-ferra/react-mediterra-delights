@@ -10,6 +10,7 @@ import MainLayout from "../MainLayout/MainLayout";
 import Button from "../../common/Button/Button";
 import Loader from "../../common/Loader/Loader";
 import styles from "./SignUpForm.module.scss";
+import { prepareData } from "../../../utils/prepareData";
 
 const SignUpForm = () => {
   const [isPassShow, setIsPassShow] = useState(false);
@@ -22,7 +23,7 @@ const SignUpForm = () => {
   const pathname = new URLSearchParams(location?.search).get("next") || "/";
 
   async function onSubmit(data) {
-    signup(data);
+    signup(prepareData(data));
   }
 
   return (

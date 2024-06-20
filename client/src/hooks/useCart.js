@@ -113,6 +113,7 @@ export const useCart = () => {
     clearCart: user ? clearing.mutate : clearCart,
     isInCart: user ? isInCart : isInCookieCart,
     isAdding: user ? adding.isPending : false,
+    isUpdating: user ? updating.isPending : false,
     isDeleting: user ? deleting.isPending : false,
   };
 };

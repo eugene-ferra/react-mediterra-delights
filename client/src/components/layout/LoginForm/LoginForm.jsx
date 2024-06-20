@@ -10,6 +10,7 @@ import MainLayout from "../MainLayout/MainLayout";
 import Button from "../../common/Button/Button";
 import Loader from "../../common/Loader/Loader";
 import styles from "./LoginForm.module.scss";
+import { prepareData } from "../../../utils/prepareData";
 
 const LoginForm = () => {
   const { login, isLoading, errors } = useLogin();
@@ -22,7 +23,7 @@ const LoginForm = () => {
   const pathname = new URLSearchParams(location?.search).get("next") || "/";
 
   async function onSubmit(data) {
-    login(data);
+    login(prepareData(data));
   }
 
   return (

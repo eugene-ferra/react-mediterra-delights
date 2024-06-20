@@ -157,7 +157,12 @@ const AccountMain = () => {
         </Button>
       </Form>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} align="center">
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        align="center"
+        isLoading={isDeleting}
+      >
         <Title align={"center"}>Ви впевнені?</Title>
         <Text align={"center"}>
           У разі видалення аккаунта ви більше не зможете його відновити. Всі дані з

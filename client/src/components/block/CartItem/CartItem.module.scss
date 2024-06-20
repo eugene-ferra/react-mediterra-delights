@@ -32,9 +32,6 @@
     @include mixins.image(100px, 60px, cover);
     min-width: 100px;
   }
-  // @media (max-width: 350px) {
-  //   @include mixins.image(160px, 100px, cover);
-  // }
 }
 
 .priceBlock {
@@ -57,5 +54,8 @@
     svg path {
       stroke: var(--accent-color);
     }
+  }
+  &:disabled {
+    opacity: 60%;
   }
 }

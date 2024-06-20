@@ -32,6 +32,7 @@ import BlockHeader from "../BlockHeader/BlockHeader";
 import Product from "../../block/Product/Product";
 import loginImg from "../../../assets/login.svg";
 import styles from "./ProductBox.module.scss";
+import { prepareData } from "../../../utils/prepareData";
 
 const ProductBox = ({ slug }) => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const ProductBox = ({ slug }) => {
   async function onSubmit(data) {
     data["productID"] = product?.id;
     data["userID"] = user?.id;
-    postReview(data);
+    postReview(prepareData(data));
   }
 
   return (
@@ -139,14 +140,10 @@ const ProductBox = ({ slug }) => {
                             ? () => deleteFromCart(product?.id)
                             : () => addToCart({ id: product?.id, quantity: 1 })
                         }
+                        disabled={isAddingToCart || isDeletingFromCart}
                       >
-                        {isAddingToCart || isDeletingFromCart ? (
-                          <Loader />
-                        ) : isInCart(product?.id) ? (
-                          "Видалити з кошика"
-                        ) : (
-                          "До кошика"
-                        )}
+                        {(isAddingToCart || isDeletingFromCart) && <Loader />}{" "}
+                        {isInCart(product?.id) ? "Видалити з кошика" : "До кошика"}
                       </Button>
                     </>
                   </div>
@@ -270,7 +267,11 @@ const ProductBox = ({ slug }) => {
         )}
       </Container>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        isLoading={isLoading}
+      >
         {user ? (
           <FormProvider {...methods}>
             <Form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -290,7 +291,9 @@ const ProductBox = ({ slug }) => {
                 disabled={isLoading}
                 errorMessage={errors?.review}
               />
-              <Button style={{ margin: "0 auto" }}>Залишити відгук</Button>
+              <Button style={{ margin: "0 auto" }} disabled={isLoading}>
+                {isLoading && <Loader type={"small"} />} Залишити відгук
+              </Button>
             </Form>
           </FormProvider>
         ) : (

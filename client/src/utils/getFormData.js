@@ -1,4 +1,8 @@
+import { prepareData } from "./prepareData";
+
 export function getFormData(obj, formData = new FormData(), parentKey = "") {
+  obj = prepareData(obj);
+
   for (let key in obj) {
     let fullKey = parentKey ? `${parentKey}.${key}` : key;
     let value = obj[key];

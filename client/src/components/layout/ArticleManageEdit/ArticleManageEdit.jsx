@@ -126,7 +126,12 @@ const ArticleManageEdit = () => {
         </FormProvider>
       )}
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} align="center">
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        align="center"
+        isLoading={isDeleting}
+      >
         <Title align={"center"}>Ви впевнені?</Title>
         <Text align={"center"}>
           У разі видалення статті ви більше не зможете її відновити. Всі коментарі, лайки

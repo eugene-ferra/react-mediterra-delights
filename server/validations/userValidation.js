@@ -34,7 +34,7 @@ export const userValidationSchema = {
   },
   phone: {
     isMobilePhone: {
-      if: body("phone").notEmpty(),
+      if: body("phone").exists().notEmpty(),
       options: ["uk-UA", { strictMode: false }],
       errorMessage: "Будь-ласка, вкажіть коректний телефон!",
     },

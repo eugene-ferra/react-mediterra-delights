@@ -68,6 +68,7 @@ const orderSchema = new mongoose.Schema({
         "Харків, вул. Сумська, 123",
         "Харків, вул. Григорія Сковороди, 55",
         "Харків, вул. Мироносицька, 65",
+        null,
       ],
       message: "{VALUE} is not supported!",
     },

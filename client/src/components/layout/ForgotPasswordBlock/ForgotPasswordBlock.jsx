@@ -11,6 +11,7 @@ import Text from "../../common/Text/Text";
 import Button from "../../common/Button/Button";
 import Loader from "../../common/Loader/Loader";
 import styles from "./ForgotPasswordBlock.module.scss";
+import { prepareData } from "../../../utils/prepareData";
 
 const ForgotPasswordBlock = () => {
   const { errors, isLoading, forgotPassword } = useForgotPassword();
@@ -20,7 +21,7 @@ const ForgotPasswordBlock = () => {
 
   async function onSubmit(data) {
     data["path"] = pathname;
-    forgotPassword(data);
+    forgotPassword(prepareData(data));
   }
 
   return (
