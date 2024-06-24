@@ -3,7 +3,7 @@ import AppError from "../utils/appError.js";
 
 const whitelist = ["image/png", "image/jpeg", "image/jpg"];
 
-export const imageUpload = multer({
+const imageUpload = multer({
   storage: multer.memoryStorage(),
   fileFilter: (req, file, cb) => {
     if (!whitelist.includes(file.mimetype)) {
@@ -22,3 +22,5 @@ export const imageUpload = multer({
     fieldSize: 1024 * 1024 * 10,
   },
 });
+
+export default imageUpload;

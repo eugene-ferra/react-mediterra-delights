@@ -1,17 +1,4 @@
-import { CommentDTO } from "./commentDTO.js";
-
-export class WorkerDTO {
-  id;
-  name;
-  lastName;
-  positionType;
-  position;
-  summary;
-  additionalInfo;
-  photo;
-  dateOfBirth;
-  startWorkDate;
-
+export default class WorkerDTO {
   constructor(responseWorker) {
     this.id = responseWorker._id;
     this.name = responseWorker.name;

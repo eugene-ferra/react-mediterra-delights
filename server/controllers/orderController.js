@@ -1,7 +1,7 @@
-import { orderService } from "../services/orderService.js";
-import { getOrderData } from "../utils/getOrderData.js";
-import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
+import orderService from "../services/orderService.js";
+import getOrderData from "../utils/getOrderData.js";
+import getQueryData from "../utils/getQueryData.js";
 import addLinks from "../utils/addLinks.js";
 
 export const createCheckout = async (req, res, next) => {
@@ -62,7 +62,7 @@ export const getAllOrders = async (req, res, next) => {
   try {
     const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-    let data = await orderService.getAll({
+    const data = await orderService.getAll({
       filterObj,
       sortObj,
       page,
@@ -70,9 +70,7 @@ export const getAllOrders = async (req, res, next) => {
     });
 
     data[1].map((order) =>
-      order.products.map((doc) => {
-        addLinks(req, doc.product, ["imgCover", "images"]);
-      })
+      order.products.map((doc) => addLinks(req, doc.product, ["imgCover", "images"]))
     );
 
     res.status(200).json({ status: "success", data });
@@ -83,7 +81,7 @@ export const getAllOrders = async (req, res, next) => {
 
 export const getOrder = async (req, res, next) => {
   try {
-    let data = await orderService.getOne(req.params.id, { path: "products.id" });
+    const data = await orderService.getOne(req.params.id, { path: "products.id" });
     data?.[0].products?.map((item) =>
       addLinks(req, item?.product, ["imgCover", "images"])
     );
@@ -153,7 +151,7 @@ export const proceedOrder = async (req, res, next) => {
 
 export const getStatsByYear = async (req, res, next) => {
   try {
-    let data = await orderService.getStatsByYear(req.params.year);
+    const data = await orderService.getStatsByYear(req.params.year);
 
     data.topSalers.map((item) => addLinks(req, item.product[0], "imgCover"));
 
@@ -164,7 +162,7 @@ export const getStatsByYear = async (req, res, next) => {
 };
 export const getStatsByMonth = async (req, res, next) => {
   try {
-    let data = await orderService.getStatsByMonth(req.params.year, req.params.month);
+    const data = await orderService.getStatsByMonth(req.params.year, req.params.month);
     data.topSalers.map((item) => addLinks(req, item.product[0], "imgCover"));
 
     res.status(200).json({ status: "success", data: data });

@@ -1,15 +1,15 @@
 import AppError from "../utils/appError.js";
 import commentModel from "../models/commentModel.js";
-import { CommentDTO } from "../dto/commentDTO.js";
+import CommentDTO from "../dto/commentDTO.js";
 import articleModel from "../models/articleModel.js";
 import userService from "./userService.js";
 
-export class commentService {
+export default class commentService {
   static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
     const data = await commentModel
       .find(filterObj)
       .sort(sortObj)
-      .skip(--page * limit)
+      .skip(page * limit - 1)
       .limit(limit)
       .populate(populateObj);
 
@@ -52,9 +52,9 @@ export class commentService {
       if (!user[0].addedComments.includes(id))
         throw new AppError("You can't change other comments!", 403);
 
-      data["isModerated"] = false;
+      data.isModerated = false;
     } else {
-      delete data["comment"];
+      delete data.comment;
     }
 
     const doc = await commentModel.findByIdAndUpdate(id, data, {

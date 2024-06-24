@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import { idValidationSchema } from "./idValidation.js";
+import idValidationSchema from "./idValidation.js";
 
 export const userValidationSchema = {
   name: {

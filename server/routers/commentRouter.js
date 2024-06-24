@@ -1,15 +1,14 @@
 import express from "express";
+import multer from "multer";
+import { checkSchema } from "express-validator";
 import * as commentController from "../controllers/commentController.js";
-import restrictTo from "../middlewares/restrictTo.js";
 import protect from "../middlewares/protect.js";
 import prefillReqBody from "../middlewares/prefillReqBody.js";
 import {
   commentValidationSchema,
   postCommentValidationSchema,
 } from "../validations/commentValidator.js";
-import { idValidationSchema } from "../validations/idValidation.js";
-import { checkSchema } from "express-validator";
-import multer from "multer";
+import idValidationSchema from "../validations/idValidation.js";
 
 const commentRouter = express.Router({ mergeParams: true });
 

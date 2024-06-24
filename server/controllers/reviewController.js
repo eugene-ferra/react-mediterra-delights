@@ -1,7 +1,7 @@
-import { reviewService } from "../services/reviewService.js";
-import addLinks from "../utils/addLinks.js";
-import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
+import reviewService from "../services/reviewService.js";
+import addLinks from "../utils/addLinks.js";
+import getQueryData from "../utils/getQueryData.js";
 
 export const addReview = async (req, res, next) => {
   try {
@@ -34,12 +34,13 @@ export const addReview = async (req, res, next) => {
 
 export const getAllReviews = async (req, res, next) => {
   try {
-    let { filterObj, sortObj, page, limit } = getQueryData(req);
+    let { filterObj } = getQueryData(req);
+    const { sortObj, page, limit } = getQueryData(req);
 
     if (req.params.productID) {
       filterObj = { ...filterObj, productID: req.params.productID, isModerated: true };
     }
-    let data = await reviewService.getAll({
+    const data = await reviewService.getAll({
       filterObj,
       sortObj,
       page,
@@ -93,7 +94,7 @@ export const updateReview = async (req, res, next) => {
       });
     }
 
-    let updateReview = {
+    const reviewBody = {
       review: req.body.review,
       rating: req.body.rating,
       isModerated: req.body.isModerated,
@@ -101,7 +102,7 @@ export const updateReview = async (req, res, next) => {
 
     const data = await reviewService.updateOne(
       req.params.id,
-      updateReview,
+      reviewBody,
       req.user._id,
       req.user.role
     );

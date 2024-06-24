@@ -1,14 +1,14 @@
-import { productService } from "../services/productService.js";
-import addLinks from "../utils/addLinks.js";
-import { getProductData } from "../utils/getProductData.js";
-import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
+import productService from "../services/productService.js";
+import addLinks from "../utils/addLinks.js";
+import getProductData from "../utils/getProductData.js";
+import getQueryData from "../utils/getQueryData.js";
 
 export const getProducts = async (req, res, next) => {
   try {
     const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-    let data = await productService.getAll({
+    const data = await productService.getAll({
       filterObj,
       sortObj,
       page,
@@ -51,7 +51,7 @@ export const getProduct = async (req, res, next) => {
 
 export const addProduct = async (req, res, next) => {
   try {
-    let errors = validationResult(req);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty() || !req?.files?.imgCover?.[0]?.buffer) {
       return res.status(400).json({
@@ -65,7 +65,7 @@ export const addProduct = async (req, res, next) => {
       });
     }
 
-    let textData = getProductData(req);
+    const textData = getProductData(req);
 
     let data = await productService.addOne(
       textData,

@@ -1,27 +1,4 @@
-import { ReviewDTO } from "./reviewDTO.js";
-
-export class ProductDTO {
-  id;
-  pages;
-  title;
-  slug;
-  category;
-  description;
-  fullText;
-  avgRating;
-  reviewCount;
-  imgCover;
-  images;
-  weight;
-  price;
-  discountPrice;
-  nutrients;
-  isVegan;
-  cookTime;
-  isNewProduct;
-  compound;
-  reviews;
-
+export default class ProductDTO {
   constructor(responseProduct) {
     this.id = responseProduct._id;
     this.pages = responseProduct.pages || null;
@@ -38,13 +15,11 @@ export class ProductDTO {
       avif: responseProduct.imgCover.avif,
     };
     this.images = responseProduct.images
-      ? responseProduct.images.map((item) => {
-          return {
-            jpg: item.jpg || null,
-            webp: item.webp || null,
-            avif: item.avif || null,
-          };
-        })
+      ? responseProduct.images.map((item) => ({
+          jpg: item.jpg,
+          webp: item.webp,
+          avif: item.avif,
+        }))
       : [];
     this.weight = responseProduct.weight;
     this.price = responseProduct.price;

@@ -6,7 +6,10 @@ import ExpressMongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
 import hpp from "hpp";
 import compression from "compression";
-import productRouter from "./routers/ProductRouter.js";
+// eslint-disable-next-line import/no-extraneous-dependencies, node/no-unpublished-import
+import morgan from "morgan";
+import cors from "cors";
+import productRouter from "./routers/productRouter.js";
 import AppError from "./utils/appError.js";
 import * as globalErrorHandler from "./controllers/errorController.js";
 import reviewRouter from "./routers/reviewRouter.js";
@@ -15,11 +18,9 @@ import commentRouter from "./routers/commentRouter.js";
 import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
 import orderRouter from "./routers/orderRouter.js";
-import morgan from "morgan";
-import cors from "cors";
-import Stripe from "stripe";
 import { proceedPayment } from "./controllers/orderController.js";
 import workerRouter from "./routers/workerRouter.js";
+
 const app = express();
 
 app.set("trust proxy", 1);
@@ -32,14 +33,14 @@ app.use(
   })
 );
 
-// app.use(
-//   "/api",
-//   rateLimit({
-//     max: 500,
-//     windowMs: 60 * 60 * 1000,
-//     message: "Too many requests from this IP, please try again in an hour!",
-//   })
-// );
+app.use(
+  "/api",
+  rateLimit({
+    max: 300,
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    message: "Too many requests from this IP, please try again in an hour!",
+  })
+);
 
 app.post("/webhook", express.raw({ type: "application/json" }), proceedPayment);
 

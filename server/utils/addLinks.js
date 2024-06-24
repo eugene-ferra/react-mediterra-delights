@@ -6,22 +6,24 @@ export default function addLinks(req, data, fieldsToModify) {
     if (typeof fieldValue === "string") {
       if (fieldValue.startsWith(linkBegin)) return fieldValue.replace(/\\/g, "/");
       return `${linkBegin}/${fieldValue.replace(/\\/g, "/")}`;
-    } else if (Array.isArray(fieldValue)) {
+    }
+    if (Array.isArray(fieldValue)) {
       return fieldValue.map((item) => processField(item));
-    } else if (typeof fieldValue === "object" && fieldValue !== null) {
-      for (let key in fieldValue) {
+    }
+    if (typeof fieldValue === "object" && fieldValue !== null) {
+      Object.keys(fieldValue).forEach((key) => {
         fieldValue[key] = processField(fieldValue[key]);
-      }
+      });
     }
     return fieldValue;
   };
 
   if (typeof data === "object") {
-    for (let key in data) {
+    Object.keys(data).forEach((key) => {
       if (fieldsToModify.includes(key)) {
         data[key] = processField(data[key]);
       }
-    }
+    });
   }
 
   return data;

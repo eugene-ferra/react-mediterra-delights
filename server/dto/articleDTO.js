@@ -1,19 +1,4 @@
-import { CommentDTO } from "./commentDTO.js";
-
-export class ArticleDTO {
-  id;
-  title;
-  slug;
-  topic;
-  imgCover;
-  createdAt;
-  likes;
-  views;
-  viewsArr;
-  markup;
-  previewText;
-  comments;
-
+export default class ArticleDTO {
   constructor(responseArticle) {
     this.id = responseArticle._id;
     this.title = responseArticle.title;
@@ -27,12 +12,15 @@ export class ArticleDTO {
     this.createdAt = responseArticle.createdAt;
     this.likes = responseArticle.likes;
     this.views = responseArticle.views;
-    this.viewsArr = responseArticle.viewsArr
-      ? responseArticle.viewsArr.map((item) => {
-          return { ip: item.ip || null, userAgent: item.userAgent || null };
-        })
-      : [];
+    this.viewsArr =
+      responseArticle.viewsArr.lenght > 0
+        ? responseArticle.viewsArr.map((item) => ({
+            ip: item.ip || null,
+            userAgent: item.userAgent || null,
+          }))
+        : [];
     this.markup = responseArticle.markup;
     this.previewText = responseArticle.previewText;
+    this.fullText = responseArticle.fullText;
   }
 }

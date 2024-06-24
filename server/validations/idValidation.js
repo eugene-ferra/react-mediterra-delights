@@ -1,4 +1,4 @@
-export const idValidationSchema = {
+const idValidationSchema = {
   id: {
     exists: {
       errorMessage: "id is required!",
@@ -9,3 +9,5 @@ export const idValidationSchema = {
     },
   },
 };
+
+export default idValidationSchema;

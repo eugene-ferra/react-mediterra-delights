@@ -1,20 +1,18 @@
 import express from "express";
+import { checkSchema } from "express-validator";
 import * as userController from "../controllers/userController.js";
 import protect from "../middlewares/protect.js";
 import restrictTo from "../middlewares/restrictTo.js";
-import { imageUpload } from "../middlewares/imageUpload.js";
-import { checkSchema } from "express-validator";
-import { idValidationSchema } from "../validations/idValidation.js";
+import imageUpload from "../middlewares/imageUpload.js";
+import idValidationSchema from "../validations/idValidation.js";
 import {
   cartValidationSchema,
   userValidationSchema,
 } from "../validations/userValidation.js";
-import multer from "multer";
 
 const userRouter = express.Router();
 
 userRouter.use(protect());
-// userRouter.use(multer({ storage: multer.memoryStorage() }).none());
 userRouter
   .route("/me")
   .get(userController.getMe)

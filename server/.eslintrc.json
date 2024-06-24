@@ -13,21 +13,33 @@
     "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "prefer-destructuring": ["error", { "object": true, "array": false }],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }],
-    "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }]
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false,
+        "argsIgnorePattern": "req|res|next|val"
+      }
+    ],
+    "node/no-unsupported-features/es-syntax": ["error", { "ignores": ["modules"] }],
+    "import/extensions": [
+      "off",
+      "always",
+      {
+        "js": "never"
+      }
+    ],
+    "no-undef": "error",
+    "no-global-assign": "error",
+    "no-redeclare": "error",
+    "no-use-before-define": [
+      "error",
+      { "functions": false, "classes": true, "variables": true }
+    ]
   },
   "parserOptions": {
+    "ecmaVersion": 2020,
     "sourceType": "module"
-  },
-  "module.exports": {
-    "rules": {
-      "import/extensions": [
-        "error",
-        "always",
-        {
-          "js": "never"
-        }
-      ]
-    }
   }
 }

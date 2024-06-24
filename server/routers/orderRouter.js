@@ -1,15 +1,14 @@
 import express from "express";
+import { checkSchema } from "express-validator";
+import multer from "multer";
 import * as orderController from "../controllers/orderController.js";
 import protect from "../middlewares/protect.js";
 import restrictTo from "../middlewares/restrictTo.js";
-import { idValidationSchema } from "../validations/idValidation.js";
-import { checkSchema } from "express-validator";
 import {
   orderProceedValidation,
   orderValidationSchema,
   orderValidationStrictSchema,
 } from "../validations/orderValidation.js";
-import multer from "multer";
 
 const orderRouter = express.Router();
 

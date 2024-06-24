@@ -1,6 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import reviewModel from "./reviewModel.js";
+import mongoose from "mongoose";
 import userModel from "./userModel.js";
+// eslint-disable-next-line import/no-cycle
+import reviewModel from "./reviewModel.js";
 
 const productSchema = new mongoose.Schema(
   {

@@ -1,18 +1,18 @@
-import { UserDTO } from "../dto/userDTO.js";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import UserDTO from "../dto/userDTO.js";
 import userModel from "../models/userModel.js";
 import orderModel from "../models/orderModel.js";
 import AppError from "../utils/appError.js";
-import { authService } from "./authService.js";
-import bcrypt from "bcrypt";
-import { AuthDTO } from "../dto/authDTO.js";
-import { fileService } from "./fileService.js";
+import authService from "./authService.js";
+import AuthDTO from "../dto/authDTO.js";
+import FileService from "./fileService.js";
 import Mailer from "./mailerService.js";
-import crypto from "crypto";
 import productModel from "../models/productModel.js";
 import articleModel from "../models/articleModel.js";
-import { ProductDTO } from "../dto/productDTO.js";
-import { ArticleDTO } from "../dto/articleDTO.js";
-import { OrderDTO } from "../dto/orderDTO.js";
+import ProductDTO from "../dto/productDTO.js";
+import ArticleDTO from "../dto/articleDTO.js";
+import OrderDTO from "../dto/orderDTO.js";
 
 const folder = "users";
 export default class userService {
@@ -20,7 +20,7 @@ export default class userService {
     const data = await userModel
       .find(filterObj)
       .sort(sortObj)
-      .skip(--page * limit)
+      .skip((page - 1) * limit)
       .limit(limit)
       .populate(populateObj);
 
@@ -57,7 +57,8 @@ export default class userService {
     const tokens = authService.generateTokens({ ...payload });
     await authService.saveToken(payload.id, tokens.refreshToken, device);
 
-    await Mailer.sendMail(
+    const mailer = new Mailer();
+    await mailer.sendMail(
       user.email,
       "Ваш аккаунт успішно створено!",
       "welcomeEmail.ejs",
@@ -124,7 +125,9 @@ export default class userService {
       }
     );
 
-    await Mailer.sendMail(email, "Запит на скидання пароля", "resetPassEmail.ejs", {
+    const mailer = new Mailer();
+
+    await mailer.sendMail(email, "Запит на скидання пароля", "resetPassEmail.ejs", {
       name: user.name,
       link: `${process.env.CLIENT_URL}/reset-password/${plainResetToken}?email=${email}&next=${path}`,
       time: `${hours} години`,
@@ -162,7 +165,6 @@ export default class userService {
     tokensData.refreshTokens.forEach(async (item) => {
       await authService.removeOldTokens(user._id, item.refreshToken, item.device);
     });
-    return;
   }
 
   static async addToArray(id, arrName, itemId, dataModel) {
@@ -202,7 +204,7 @@ export default class userService {
 
     const data = await productModel
       .find({ _id: { $in: user.savedProducts } })
-      .skip(--page * limit)
+      .skip((page - 1) * limit)
       .limit(limit);
 
     if (!data.length) {
@@ -222,7 +224,7 @@ export default class userService {
 
     const data = await articleModel
       .find({ _id: { $in: user.savedArticles } })
-      .skip(--page * limit)
+      .skip((page - 1) * limit)
       .limit(limit);
 
     if (!data.length) {
@@ -243,7 +245,7 @@ export default class userService {
     let data = await orderModel
       .find({ _id: { $in: user.orders } })
       .sort("-time")
-      .skip(--page * limit)
+      .skip((page - 1) * limit)
       .limit(limit)
       .populate({ path: "products.id" });
 
@@ -271,14 +273,14 @@ export default class userService {
     const user = await userModel.findById(id);
     if (!user) throw new AppError("User with this id does not exists!", 404);
 
-    const foundItem = user["cart"].find(
+    const foundItem = user.cart.find(
       (item) => item.id.toString() === product.toString()
     );
     if (foundItem) throw new AppError("item already added!", 409);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
-      { $push: { ["cart"]: { id: product, quantity: quantity } } },
+      { $push: { cart: { id: product, quantity: quantity } } },
       { new: true }
     );
     return [new UserDTO(updatedUser)];
@@ -289,7 +291,7 @@ export default class userService {
 
     if (!user) throw new AppError("User with this id does not exist!", 404);
 
-    const foundItem = user["cart"].find(
+    const foundItem = user.cart.find(
       (item) => item.id.toString() === productId.toString()
     );
 
@@ -297,7 +299,7 @@ export default class userService {
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
-      { $pull: { ["cart"]: foundItem } },
+      { $pull: { cart: foundItem } },
       { new: true }
     );
     return [new UserDTO(updatedUser)];
@@ -334,15 +336,16 @@ export default class userService {
   }
 
   static async updateOne(id, data, avatar) {
+    const FS = new FileService();
     const doc = await userModel.findById(id);
     if (!doc) throw new AppError(`There aren't users with this id!`, 404);
     const payload = `${data?.name || doc.name}-${data?.lastName || doc.lastName}`;
 
     const savedAvatar = !data?.password
-      ? await fileService.saveOneImage(avatar, folder, payload, 300)
+      ? await FS.saveOneImage(avatar, folder, payload, 300)
       : null;
 
-    if (savedAvatar) data["avatar"] = savedAvatar;
+    if (savedAvatar) data.avatar = savedAvatar;
 
     if (data?.oldPassword || data?.password) {
       if (!data?.oldPassword) throw new AppError("Provide oldPassword!", 400);
@@ -359,21 +362,22 @@ export default class userService {
         new: true,
       });
 
-      if (savedAvatar) await fileService.deleteFiles(doc.avatar);
+      if (savedAvatar) await FS.deleteFiles(doc.avatar);
 
       return [new UserDTO(updatedDoc)];
     } catch (err) {
-      await fileService.deleteFiles(savedAvatar);
+      await FS.deleteFiles(savedAvatar);
       throw err;
     }
   }
 
   static async deleteOne(id) {
+    const FS = new FileService();
     const doc = await userModel.findById(id);
 
     if (!doc) throw new AppError(`There aren't users with this id!`, 404);
 
-    await fileService.deleteFiles(doc?.avatar);
+    await FS.deleteFiles(doc?.avatar);
 
     await userModel.findByIdAndDelete(id);
   }

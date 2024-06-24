@@ -1,12 +1,12 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import tokenModel from "../models/tokenModel.js";
 import { promisify } from "util";
+import tokenModel from "../models/tokenModel.js";
 import AppError from "../utils/appError.js";
 
 dotenv.config({ path: "./.env" });
 
-export class authService {
+export default class authService {
   static generateTokens(payload) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
       expiresIn: "15m",

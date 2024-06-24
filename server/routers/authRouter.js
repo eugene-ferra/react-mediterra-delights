@@ -1,4 +1,6 @@
 import express from "express";
+import { checkSchema } from "express-validator";
+import multer from "multer";
 import * as authController from "../controllers/authController.js";
 import {
   emailValidationSchema,
@@ -6,8 +8,6 @@ import {
   passwordValidationSchema,
   registerValidationSchema,
 } from "../validations/authValidator.js";
-import { checkSchema } from "express-validator";
-import multer from "multer";
 
 const authRouter = express.Router();
 

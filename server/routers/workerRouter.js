@@ -1,4 +1,5 @@
 import express from "express";
+import { checkSchema } from "express-validator";
 import * as workerController from "../controllers/workerController.js";
 import protect from "../middlewares/protect.js";
 import restrictTo from "../middlewares/restrictTo.js";
@@ -6,9 +7,8 @@ import {
   workerValidationSchema,
   workerValidationStrictSchema,
 } from "../validations/workerValidator.js";
-import { idValidationSchema } from "../validations/idValidation.js";
-import { checkSchema } from "express-validator";
-import { imageUpload } from "../middlewares/imageUpload.js";
+import idValidationSchema from "../validations/idValidation.js";
+import imageUpload from "../middlewares/imageUpload.js";
 
 const workerRouter = express.Router();
 

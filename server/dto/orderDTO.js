@@ -1,34 +1,17 @@
-import { ProductDTO } from "./productDTO.js";
-export class OrderDTO {
-  id;
-  name;
-  lastName;
-  phone;
-  products;
-  deliveryType;
-  deliveryAddress;
-  pickupLocation;
-  time;
-  deliveryTime;
-  totalSum;
-  paymentType;
-  status;
-  isPayed;
-  number;
+import ProductDTO from "./productDTO.js";
 
+export default class OrderDTO {
   constructor(responseOrder) {
     this.id = responseOrder._id;
     this.name = responseOrder.name;
     this.lastName = responseOrder.lastName;
     this.phone = responseOrder.phone;
     this.email = responseOrder.email;
-    this.products = responseOrder.products.map((item) => {
-      return {
-        product: new ProductDTO(item.id),
-        quantity: item.quantity,
-        price: item.price,
-      };
-    });
+    this.products = responseOrder.products.map((item) => ({
+      product: new ProductDTO(item.id),
+      quantity: item.quantity,
+      price: item.price,
+    }));
     this.deliveryType = responseOrder.deliveryType;
     this.deliveryAddress = {
       street: responseOrder?.deliveryAddress?.street || null,

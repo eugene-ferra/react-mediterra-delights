@@ -1,11 +1,4 @@
-export class CommentDTO {
-  id;
-  articleID;
-  userID;
-  createdAt;
-  comment;
-  isModerated;
-
+export default class CommentDTO {
   constructor(responseComment) {
     this.id = responseComment._id;
     this.articleID = responseComment.articleID;

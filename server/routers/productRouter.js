@@ -1,15 +1,15 @@
 import express from "express";
-import * as productController from "../controllers/ProductController.js";
+import { checkSchema } from "express-validator";
+import * as productController from "../controllers/productController.js";
 import reviewRouter from "./reviewRouter.js";
 import protect from "../middlewares/protect.js";
 import restrictTo from "../middlewares/restrictTo.js";
-import { checkSchema } from "express-validator";
 import {
   productValidationSchema,
   productValidationStrictSchema,
 } from "../validations/productValidation.js";
-import { idValidationSchema } from "../validations/idValidation.js";
-import { imageUpload } from "../middlewares/imageUpload.js";
+import idValidationSchema from "../validations/idValidation.js";
+import imageUpload from "../middlewares/imageUpload.js";
 
 const productRouter = express.Router();
 

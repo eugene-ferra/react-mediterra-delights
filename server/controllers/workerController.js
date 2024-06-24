@@ -1,13 +1,13 @@
-import { workerService } from "../services/workerService.js";
-import addLinks from "../utils/addLinks.js";
-import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
+import workerService from "../services/workerService.js";
+import addLinks from "../utils/addLinks.js";
+import getQueryData from "../utils/getQueryData.js";
 
 export const getWorkers = async (req, res, next) => {
   try {
     const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-    let data = await workerService.getAll({
+    const data = await workerService.getAll({
       filterObj,
       sortObj,
       page,
@@ -49,7 +49,7 @@ export const getWorker = async (req, res, next) => {
 };
 export const addWorker = async (req, res, next) => {
   try {
-    let errors = validationResult(req);
+    const errors = validationResult(req);
 
     if (!errors.isEmpty() || !req?.files?.photo?.[0]?.buffer) {
       return res.status(400).json({
@@ -63,9 +63,7 @@ export const addWorker = async (req, res, next) => {
       });
     }
 
-    let textData = req.body;
-
-    let data = await workerService.addOne(textData, req?.files?.photo?.[0]?.buffer);
+    let data = await workerService.addOne(req.body, req?.files?.photo?.[0]?.buffer);
 
     data = addLinks(req, data[0], ["photo"]);
 

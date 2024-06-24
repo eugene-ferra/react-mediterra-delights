@@ -1,13 +1,13 @@
-import { OrderDTO } from "../dto/orderDTO.js";
-import orderModel from "../models/orderModel.js";
-import { productService } from "../services/productService.js";
-import AppError from "../utils/appError.js";
-import { authService } from "./authService.js";
-import Mailer from "./mailerService.js";
 import Stripe from "stripe";
+import OrderDTO from "../dto/orderDTO.js";
+import orderModel from "../models/orderModel.js";
+import productService from "./productService.js";
+import AppError from "../utils/appError.js";
+import authService from "./authService.js";
+import Mailer from "./mailerService.js";
 import userModel from "../models/userModel.js";
 
-export class orderService {
+export default class orderService {
   static async addOrder(data, userToken) {
     let decoded;
 
@@ -16,9 +16,9 @@ export class orderService {
       if (!decoded) throw new AppError("invalid token!");
     }
 
-    let addedProducts = [];
+    const addedProducts = [];
 
-    data["products"] = await Promise.all(
+    data.products = await Promise.all(
       data.products.map(async (item) => {
         const product = await productService.getOne({ id: item.id });
         if (!product) throw new AppError("incorrect products!", 400);
@@ -46,11 +46,12 @@ export class orderService {
         break;
       case "Доставка кур'єром": {
         data.pickupLocation = null;
+        break;
       }
       default:
         break;
     }
-    data["number"] = new Date().valueOf();
+    data.number = new Date().valueOf();
 
     const order = await (
       await orderModel.create(data)
@@ -59,10 +60,12 @@ export class orderService {
     if (decoded)
       await userModel.findByIdAndUpdate(decoded.id, {
         cart: [],
-        $push: { ["orders"]: order._id },
+        $push: { orders: order._id },
       });
 
-    await Mailer.sendMail(data.email, "Замовлення прийнято!", "orderEmail.ejs", {
+    const mailer = new Mailer();
+
+    await mailer.sendMail(data.email, "Замовлення прийнято!", "orderEmail.ejs", {
       name: data.name,
       orderNum: order.number,
       products: addedProducts,
@@ -76,7 +79,7 @@ export class orderService {
     let data = await orderModel
       .find(filterObj)
       .sort(sortObj)
-      .skip(--page * limit)
+      .skip((page - 1) * limit)
       .limit(limit)
       .populate({ path: "products.id" });
 
@@ -153,6 +156,7 @@ export class orderService {
         break;
       case "Доставка кур'єром": {
         data.pickupLocation = null;
+        break;
       }
       default:
         break;
@@ -308,12 +312,12 @@ export class orderService {
       throw new AppError("Даних за цей період не знайдено", 404);
     }
 
-    for (let i = 1; i <= 12; i++) {
-      if (!incomeStats.some((item) => item.month == i)) {
+    for (let i = 1; i <= 12; i += 1) {
+      if (!incomeStats.some((item) => item.month === i)) {
         incomeStats.push({
           totalSum: 0,
           orders: 0,
-          avgOrderSum: 1,
+          avgOrderSum: 0,
           month: i,
         });
       }
@@ -405,8 +409,8 @@ export class orderService {
       throw new AppError("Даних за цей період не знайдено", 404);
     }
 
-    for (let i = 1; i <= lastDayOfMonth; i++) {
-      if (!incomeStats.some((item) => item.day == i)) {
+    for (let i = 1; i <= lastDayOfMonth; i += 1) {
+      if (!incomeStats.some((item) => item.day === i)) {
         incomeStats.push({
           totalSum: 0,
           orders: 0,

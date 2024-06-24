@@ -1,6 +1,6 @@
 export default function prefillReqBody(fields) {
   return (req, res, next) => {
-    for (const key in fields) {
+    Object.keys(fields).forEach((key) => {
       let value = fields[key];
       if (!req.body[key]) {
         if (typeof value === "function") {
@@ -8,7 +8,7 @@ export default function prefillReqBody(fields) {
         }
         req.body[key] = value;
       }
-    }
+    });
     next();
   };
 }

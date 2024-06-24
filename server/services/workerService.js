@@ -1,97 +1,97 @@
-import AppError from "../utils/appError.js";
-import workerModel from "../models/workerModel.js";
-import { WorkerDTO } from "../dto/workerDTO.js";
-import { fileService } from "./fileService.js";
 import slugify from "slugify";
+import AppError from "../utils/appError.js";
+import WorkerModel from "../models/workerModel.js";
+import WorkerDTO from "../dto/workerDTO.js";
+import FileService from "./fileService.js";
 
 const folder = "workers";
 
-export class workerService {
+export default class workerService {
   static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
-    const data = await workerModel
-      .find(filterObj)
+    const data = await WorkerModel.find(filterObj)
       .sort(sortObj)
-      .skip(--page * limit)
+      .skip((page - 1) * limit)
       .limit(limit)
       .populate(populateObj);
 
     if (!data.length) {
       throw new AppError("No documents match the current filters!", 404);
     }
-    const docs = await workerModel.countDocuments(filterObj);
+    const docs = await WorkerModel.countDocuments(filterObj);
 
     return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new WorkerDTO(item))];
   }
 
   static async getOne({ id, populateObj }) {
-    const doc = await workerModel.findById(id).populate(populateObj).exec();
+    const doc = await WorkerModel.findById(id).populate(populateObj).exec();
 
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
-    return [new workerModel(doc)];
+    return [new WorkerModel(doc)];
   }
 
   static async addOne(textData, photo) {
+    const FS = new FileService();
     const payload = slugify(`${textData.name}-${textData.lastName}`);
 
-    const savedPhoto = await fileService.saveOneImage(photo, folder, payload, 500);
+    const savedPhoto = await FS.saveOneImage(photo, folder, payload, 500);
 
-    textData["photo"] = savedPhoto;
+    textData.photo = savedPhoto;
 
     try {
-      const doc = await workerModel.create(textData);
+      const doc = await WorkerModel.create(textData);
       return [new WorkerDTO(doc)];
     } catch (err) {
-      await fileService.deleteFiles(savedPhoto);
+      await FS.deleteFiles(savedPhoto);
       throw err;
     }
   }
 
   static async updateOne(id, data, photo) {
-    let doc = await workerModel.findById(id);
+    const FS = new FileService();
+    const doc = await WorkerModel.findById(id);
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
     const oldPhoto = JSON.parse(JSON.stringify(doc.photo));
 
     const payload = slugify(`${doc.name}-${doc.lastName}`);
 
-    const savedPhoto = photo
-      ? await fileService.saveOneImage(photo, folder, payload, 500)
-      : null;
+    const savedPhoto = photo ? await FS.saveOneImage(photo, folder, payload, 500) : null;
 
     if (!savedPhoto) {
-      data["photo"] = oldPhoto;
+      data.photo = oldPhoto;
     } else {
-      data["photo"] = savedPhoto;
-      await fileService.deleteFiles(oldPhoto);
+      data.photo = savedPhoto;
+      await FS.deleteFiles(oldPhoto);
     }
 
     try {
-      const updatedDoc = await workerModel.findByIdAndUpdate(id, data, {
+      const updatedDoc = await WorkerModel.findByIdAndUpdate(id, data, {
         runValidators: true,
         new: true,
       });
 
       return [new WorkerDTO(updatedDoc)];
     } catch (err) {
-      await fileService.deleteFiles(savedPhoto);
+      await FS.deleteFiles(savedPhoto);
       throw err;
     }
   }
 
   static async deleteOne(id) {
-    const doc = await workerModel.findById(id);
+    const FS = new FileService();
+    const doc = await WorkerModel.findById(id);
     if (!doc) throw new AppError("There aren't documents with this id!", 404);
 
     const photo = JSON.parse(JSON.stringify(doc.photo));
-    await fileService.deleteFiles(photo);
+    await FS.deleteFiles(photo);
 
-    await workerModel.findByIdAndDelete(id);
+    await WorkerModel.findByIdAndDelete(id);
   }
 
   static getOptions() {
     const options = {
-      positionTypes: workerModel.schema.path("positionType").enumValues,
+      positionTypes: WorkerModel.schema.path("positionType").enumValues,
     };
 
     return options;

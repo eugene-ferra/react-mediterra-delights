@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import productModel from "./productModel.js";
 import userModel from "./userModel.js";
+// eslint-disable-next-line import/no-cycle
+import productModel from "./productModel.js";
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -85,7 +86,7 @@ reviewSchema.post("save", function () {
   this.constructor.calcAvgRating(this.productID);
 });
 
-reviewSchema.post("save", async function (doc) {
+reviewSchema.post("save", async (doc) => {
   await userModel.findByIdAndUpdate(doc.userID, {
     $push: {
       addedReviews: doc._id,

@@ -1,4 +1,5 @@
 import express from "express";
+import { checkSchema } from "express-validator";
 import * as articleController from "../controllers/articleController.js";
 import commentRouter from "./commentRouter.js";
 import protect from "../middlewares/protect.js";
@@ -7,9 +8,8 @@ import {
   articleValidationSchema,
   articleValidationStrictSchema,
 } from "../validations/articleValidator.js";
-import { idValidationSchema } from "../validations/idValidation.js";
-import { checkSchema } from "express-validator";
-import { imageUpload } from "../middlewares/imageUpload.js";
+import idValidationSchema from "../validations/idValidation.js";
+import imageUpload from "../middlewares/imageUpload.js";
 
 const articleRouter = express.Router();
 

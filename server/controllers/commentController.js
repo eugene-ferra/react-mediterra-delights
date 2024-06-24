@@ -1,7 +1,7 @@
-import { commentService } from "../services/commentService.js";
-import addLinks from "../utils/addLinks.js";
-import { getQueryData } from "../utils/getQueryData.js";
 import { validationResult } from "express-validator";
+import commentService from "../services/commentService.js";
+import addLinks from "../utils/addLinks.js";
+import getQueryData from "../utils/getQueryData.js";
 
 export const addComment = async (req, res, next) => {
   try {
@@ -33,12 +33,13 @@ export const addComment = async (req, res, next) => {
 
 export const getAllComments = async (req, res, next) => {
   try {
-    let { filterObj, sortObj, page, limit } = getQueryData(req);
+    let { filterObj } = getQueryData(req);
+    const { sortObj, page, limit } = getQueryData(req);
     if (req.params.articleID) {
       filterObj = { ...filterObj, articleID: req.params.articleID, isModerated: true };
     }
 
-    let data = await commentService.getAll({
+    const data = await commentService.getAll({
       filterObj,
       sortObj,
       page,

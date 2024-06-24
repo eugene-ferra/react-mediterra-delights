@@ -1,14 +1,15 @@
-import { articleService } from "../services/articleService.js";
-import { getArticleData } from "../utils/getArticleData.js";
-import { getQueryData } from "../utils/getQueryData.js";
+import { validationResult } from "express-validator";
+import articleService from "../services/articleService.js";
+import getArticleData from "../utils/getArticleData.js";
+import getQueryData from "../utils/getQueryData.js";
 import addLinks from "../utils/addLinks.js";
 import addLinksToMarkup from "../utils/addLinksToMarkup.js";
-import { validationResult } from "express-validator";
-import { fileService } from "../services/fileService.js";
+import FileService from "../services/fileService.js";
 
 export const handleImages = async (req, res, next) => {
   try {
-    const fileName = await fileService.saveOneFormatImage(
+    const FS = new FileService();
+    const fileName = await FS.saveOneFormatImage(
       req.file.buffer,
       "articles",
       req.body?.name || "article"
@@ -31,7 +32,7 @@ export const getArticles = async (req, res, next) => {
   try {
     const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-    let data = await articleService.getAll({
+    const data = await articleService.getAll({
       filterObj,
       sortObj,
       page,

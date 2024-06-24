@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import userModel from "./userModel.js";
+// eslint-disable-next-line import/no-cycle
 import articleModel from "./articleModel.js";
 
 const commentSchema = new mongoose.Schema(
@@ -38,7 +39,7 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-commentSchema.post("save", async function (doc) {
+commentSchema.post("save", async (doc) => {
   await userModel.findByIdAndUpdate(doc.userID, {
     $push: {
       addedComments: doc._id,

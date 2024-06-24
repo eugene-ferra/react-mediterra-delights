@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import commentModel from "./commentModel.js";
 import userModel from "./userModel.js";
+// eslint-disable-next-line import/no-cycle
+import commentModel from "./commentModel.js";
 
 const articleSchema = new mongoose.Schema(
   {

@@ -1,15 +1,15 @@
 import AppError from "../utils/appError.js";
 import reviewModel from "../models/reviewModel.js";
-import { ReviewDTO } from "../dto/reviewDTO.js";
+import ReviewDTO from "../dto/reviewDTO.js";
 import productModel from "../models/productModel.js";
 import userService from "./userService.js";
 
-export class reviewService {
+export default class reviewService {
   static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
     const data = await reviewModel
       .find(filterObj)
       .sort(sortObj)
-      .skip(--page * limit)
+      .skip((page - 1) * limit)
       .limit(limit)
       .populate(populateObj);
 
@@ -48,10 +48,10 @@ export class reviewService {
       if (!user[0].addedReviews.includes(id))
         throw new AppError("You can't change other reviews!", 403);
 
-      data["isModerated"] = false;
+      data.isModerated = false;
     } else {
-      delete data["review"];
-      delete data["rating"];
+      delete data.review;
+      delete data.rating;
     }
 
     const doc = await reviewModel.findByIdAndUpdate(id, data, {

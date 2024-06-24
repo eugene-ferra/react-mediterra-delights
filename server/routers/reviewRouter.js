@@ -1,4 +1,6 @@
 import express from "express";
+import { checkSchema } from "express-validator";
+import multer from "multer";
 import * as reviewController from "../controllers/reviewController.js";
 import protect from "../middlewares/protect.js";
 import prefillReqBody from "../middlewares/prefillReqBody.js";
@@ -6,9 +8,7 @@ import {
   reviewValidationSchema,
   postReviewValidationSchema,
 } from "../validations/reviewValidation.js";
-import { checkSchema } from "express-validator";
-import { idValidationSchema } from "../validations/idValidation.js";
-import multer from "multer";
+import idValidationSchema from "../validations/idValidation.js";
 
 const reviewRouter = express.Router({ mergeParams: true });
 

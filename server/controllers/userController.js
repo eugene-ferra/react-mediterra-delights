@@ -1,10 +1,10 @@
+import { validationResult } from "express-validator";
 import userService from "../services/userService.js";
-import { getQueryData } from "../utils/getQueryData.js";
+import getQueryData from "../utils/getQueryData.js";
 import addLinks from "../utils/addLinks.js";
 import productModel from "../models/productModel.js";
 import articleModel from "../models/articleModel.js";
-import { validationResult } from "express-validator";
-import { articleService } from "../services/articleService.js";
+import articleService from "../services/articleService.js";
 
 export const getUsers = async (req, res, next) => {
   try {
@@ -38,7 +38,7 @@ export const getMe = async (req, res, next) => {
 
 export const getSavedArticles = async (req, res, next) => {
   try {
-    let data = await userService.getSavedArticles(req.user._id, req.query.page || 1);
+    const data = await userService.getSavedArticles(req.user._id, req.query.page || 1);
 
     data?.[1].map((doc) => addLinks(req, doc, ["imgCover"]));
 
@@ -53,7 +53,7 @@ export const getSavedArticles = async (req, res, next) => {
 
 export const getSavedProducts = async (req, res, next) => {
   try {
-    let data = await userService.getSavedProducts(req.user._id, req.query.page || 1);
+    const data = await userService.getSavedProducts(req.user._id, req.query.page || 1);
 
     data?.[1].map((doc) => addLinks(req, doc, ["imgCover"]));
 
@@ -68,12 +68,10 @@ export const getSavedProducts = async (req, res, next) => {
 
 export const getOrderHistory = async (req, res, next) => {
   try {
-    let data = await userService.getOrdersHistory(req.user._id, req.query.page || 1);
+    const data = await userService.getOrdersHistory(req.user._id, req.query.page || 1);
 
     data[1].map((order) =>
-      order.products.map((doc) => {
-        addLinks(req, doc.product, ["imgCover", "images"]);
-      })
+      order.products.map((doc) => addLinks(req, doc.product, ["imgCover", "images"]))
     );
 
     res.status(200).json({
@@ -376,7 +374,7 @@ export const changeRole = async (req, res, next) => {
       });
     }
 
-    let data = await userService.updateOne(req.params.id, { role: req.body.role });
+    const data = await userService.updateOne(req.params.id, { role: req.body.role });
 
     res.status(200).json({ status: "success", data });
   } catch (err) {

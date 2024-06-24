@@ -5,14 +5,14 @@ const workerSchema = new mongoose.Schema(
     name: {
       type: String,
       minLenght: [3, "Worker's name must contain at least 3 characters!"],
-      minLenght: [20, "Worker's name must not contain more than 40 characters!"],
+      maxLenght: [20, "Worker's name must not contain more than 40 characters!"],
       trim: true,
       required: [true, "Worker must have a name!"],
     },
     lastName: {
       type: String,
       minLenght: [3, "Worker's lastname must contain at least 3 characters!"],
-      minLenght: [40, "Worker's lastname must not contain more than 40 characters!"],
+      maxLenght: [40, "Worker's lastname must not contain more than 40 characters!"],
       trim: true,
       required: [true, "Worker must have a lastname!"],
     },
@@ -30,7 +30,7 @@ const workerSchema = new mongoose.Schema(
     position: {
       type: String,
       minLenght: [3, "Worker's position must contain at least 3 characters!"],
-      minLenght: [80, "Worker's position must not contain more than 80 characters!"],
+      maxLenght: [80, "Worker's position must not contain more than 80 characters!"],
       trim: true,
       required: [true, "Worker must have a position!"],
     },

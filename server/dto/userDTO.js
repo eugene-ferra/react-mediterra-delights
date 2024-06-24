@@ -1,20 +1,4 @@
-export class UserDTO {
-  id;
-  name;
-  lastName;
-  email;
-  phone;
-  role;
-  password;
-  avatar;
-  savedProducts;
-  likedArticles;
-  savedArticles;
-  addedReviews;
-  addedComments;
-  orders;
-  cart;
-
+export default class UserDTO {
   constructor(userResponse) {
     this.id = userResponse._id;
     this.name = userResponse.name;
@@ -35,9 +19,7 @@ export class UserDTO {
     this.addedComments = userResponse.addedComments || [];
     this.orders = userResponse.orders || [];
     this.cart = userResponse?.cart
-      ? userResponse.cart.map((item) => {
-          return { id: item.id, quantity: item.quantity };
-        })
+      ? userResponse.cart.map((item) => ({ id: item.id, quantity: item.quantity }))
       : [];
   }
 }

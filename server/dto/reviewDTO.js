@@ -1,14 +1,6 @@
-import { UserDTO } from "./userDTO.js";
+import UserDTO from "./userDTO.js";
 
-export class ReviewDTO {
-  id;
-  productID;
-  userID;
-  createdAt;
-  review;
-  rating;
-  isModerated;
-
+export default class ReviewDTO {
   constructor(responseReview) {
     this.id = responseReview._id;
     this.productID = responseReview.productID;

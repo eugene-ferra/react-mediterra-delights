@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 import AppError from "../utils/appError.js";
-import { authService } from "../services/authService.js";
+import authService from "../services/authService.js";
 
 dotenv.config({ path: "./.env" });
 
 export default function protect() {
   return async (req, res, next) => {
     try {
-      let token = req?.cookies?.access;
+      const token = req?.cookies?.access;
 
       if (!token) {
         return next(new AppError("Please provide authorization token!", 401));

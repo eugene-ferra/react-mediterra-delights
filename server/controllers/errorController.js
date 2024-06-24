@@ -1,36 +1,26 @@
 import multer from "multer";
-import AppError from "../utils/appError.js";
 import mongoose from "mongoose";
+import AppError from "../utils/appError.js";
 
-const handleValidationErrorDB = (err) => {
-  return new AppError(err.message, 400);
-};
+const handleValidationErrorDB = (err) => new AppError(err.message, 400);
 
 const handleDublicateKeysErrorDB = (err) => {
-  const value = JSON.stringify(err.keyValue).match(/(["'])(\\?.)*?\1/)[0];
-  const message = `Dublicate value ${value}. Use another one!`;
+  const message = `Запис '${
+    Object.values(err.keyValue)[0]
+  }' вже існує! Спробуйте ще раз!`;
 
   return new AppError(message, 409);
 };
 
-const handleCastErrorDB = (err) => {
-  return new AppError(`Invalid type of ${err.path}!`, 400);
-};
+const handleCastErrorDB = (err) => new AppError(`Invalid type of ${err.path}!`, 400);
 
-const handleJWTError = (err) => {
-  return new AppError("Invalid authorization token!", 400);
-};
+const handleJWTError = () => new AppError("Invalid authorization token!", 400);
 
-const handleTokenExpiredError = (err) => {
-  return new AppError("Authorization token has been expired!", 401);
-};
+const handleTokenExpiredError = () =>
+  new AppError("Authorization token has been expired!", 401);
 
-const handleMulterError = (err) => {
-  return new AppError(
-    `${err.field ? err.field + " : " : ""}${err.message.toLowerCase()}`,
-    400
-  );
-};
+const handleMulterError = (err) =>
+  new AppError(`${err.field ? `${err.field} : ` : ""}${err.message.toLowerCase()}`, 400);
 
 const sendError = (err, req, res) => {
   if (err.isOperational) {
@@ -39,6 +29,8 @@ const sendError = (err, req, res) => {
       message: err.message,
     });
   }
+
+  console.error("ERROR 💥", err);
   return res.status(500).json({
     status: "error",
     message: "Something went very wrong!",
@@ -56,5 +48,9 @@ export default function (err, req, res, next) {
   if (err.code === 11000) error = handleDublicateKeysErrorDB(err);
   if (err instanceof multer.MulterError) error = handleMulterError(err);
 
-  error ? sendError(error, req, res) : sendError(err, req, res);
+  if (error) {
+    sendError(error, req, res);
+  } else {
+    sendError(err, req, res);
+  }
 }
