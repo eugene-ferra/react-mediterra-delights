@@ -22,7 +22,7 @@ const AccountOrders = () => {
       <div className={styles.inner}>
         {isOrdersLoading && <PageLoader />}
         <div className={styles.orders}>
-          {orders?.[1]?.map((order) => (
+          {orders.data?.map((order) => (
             <OrderFullBlock
               order={order}
               key={order?.id}
@@ -32,7 +32,7 @@ const AccountOrders = () => {
           ))}
         </div>
         <Pagination
-          totalCount={orders?.[0]?.pages}
+          totalCount={orders?.pages}
           siblingCount={2}
           currPage={searchParams.get("page") || 1}
           onLink={setSearchParams}

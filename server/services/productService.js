@@ -4,100 +4,118 @@ import AppError from "../utils/appError.js";
 import productModel from "../models/productModel.js";
 import ProductDTO from "../dto/productDTO.js";
 import FileService from "./fileService.js";
+import addLinks from "../utils/addLinks.js";
 
-const folder = "products";
 export default class productService {
-  static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
+  constructor() {
+    this._folder = "products";
+  }
+
+  createSlug(title) {
+    /* create slug from title */
+
+    return slugify(title, { lower: true, strict: true });
+  }
+
+  async countDocuments(filterObj, limit = 15) {
+    /* count all pages based on filters and items per page (limit) */
+
+    const docs = await productModel.countDocuments(filterObj);
+    return Math.ceil(docs / limit);
+  }
+
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }, completeUrl = true) {
+    /* get all products with pagination, sorting and filtering */
     const data = await productModel
       .find(filterObj)
       .sort(sortObj)
       .skip((page - 1) * limit)
-      .limit(limit)
-      .populate(populateObj);
+      .limit(limit);
 
     if (!data.length) {
-      throw new AppError("No documents match the current filters!", 404);
+      throw new AppError("Страв по такому запиту не знайдено!", 404);
     }
-    const docs = await productModel.countDocuments(filterObj);
 
-    return [
-      { pages: Math.ceil(docs / limit) },
-      data.map((item) => new ProductDTO(item)),
-    ];
+    return data.map((item) => {
+      const productDTO = new ProductDTO(item);
+      if (completeUrl) return addLinks(productDTO, ["imgCover", "images"]);
+
+      return productDTO;
+    });
   }
 
-  static async getOne({ id, populateObj }) {
+  async getOne(id, completeUrl = true) {
+    /* get one product by id or slug */
     let doc;
     if (mongoose.isValidObjectId(id)) {
-      doc = await productModel.findById(id).populate(populateObj).exec();
+      doc = await productModel.findById(id).exec();
     } else {
-      doc = await productModel.findOne({ slug: id }).populate(populateObj).exec();
+      doc = await productModel.findOne({ slug: id }).exec();
     }
 
-    if (!doc) throw new AppError("There aren't documents with this id or slug!", 404);
+    if (!doc) throw new AppError("Такої страви не знайдено!", 404);
 
-    return [new ProductDTO(doc)];
+    if (completeUrl) return addLinks(new ProductDTO(doc), ["imgCover", "images"]);
+    return new ProductDTO(doc);
   }
 
-  static async addOne(textData, imgCover, images = []) {
-    const FS = new FileService();
-    textData.slug = slugify(textData.title, { lower: true, strict: true });
+  async testSlug(title) {
+    /*created slug from title, test it for uniqueness and return */
 
-    const testDoc = await productModel.findOne({ slug: textData.slug });
+    const slug = this.createSlug(title);
 
+    // Check if the document with this slug already exists
+    const testDoc = await productModel.findOne({ slug: slug });
     if (testDoc) throw new AppError("Страва з такою назвою вже існує!", 409);
 
-    const payload = textData.slug;
+    return slug;
+  }
 
-    const savedCover = await FS.saveOneImage(imgCover, folder, payload, 500);
-    const savedImages = await FS.saveManyImages(images, folder, payload, 700);
+  async addOne(textData, imgCover, images, completeUrl = true) {
+    /* add one product to database */
+    const fileService = new FileService();
 
+    const slug = await this.testSlug(textData.title);
+    const savedCover = await fileService.saveOneImage(imgCover, this._folder, slug, 500);
+    const savedImg = await fileService.saveManyImages(images, this._folder, slug, 700);
+
+    textData.slug = slug;
     textData.imgCover = savedCover;
-    textData.images = savedImages;
+    textData.images = savedImg;
 
     try {
       const doc = await productModel.create(textData);
-      return [new ProductDTO(doc)];
-    } catch (err) {
-      await FS.deleteFiles(savedCover);
-      await FS.deleteFiles(savedImages);
 
-      throw err;
+      if (completeUrl) return addLinks(new ProductDTO(doc), ["imgCover", "images"]);
+      return new ProductDTO(doc);
+    } catch (err) {
+      await fileService.deleteFiles(savedCover);
+      await fileService.deleteFiles(savedImg);
+
+      throw new AppError("Сталася не передбачувана помилка, спробуйте пізніше!", 400);
     }
   }
 
-  static async updateOne(id, data, imgCover, images = []) {
-    const FS = new FileService();
-    const doc = await productModel.findById(id);
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+  async updateOne({ id, data, newImgCover, newImages }, completeUrl = true) {
+    const fileService = new FileService();
+    let savedCover;
 
-    if (data.title !== doc.title) {
-      const newSlug = slugify(data.title, { lower: true });
-      if (await productModel.findOne({ slug: newSlug }))
-        throw new AppError("Страва з такою назвою вже існує!", 409);
+    const prevDoc = await this.getOne(id, false);
+    let { slug } = prevDoc;
+    const { imgCover: oldCover, images: oldImages } = prevDoc;
 
-      data.slug = newSlug;
-    }
+    if (this.createSlug(data.title) !== slug) slug = await this.testSlug(data.title);
 
-    const oldCover = JSON.parse(JSON.stringify(doc.imgCover));
-    const oldImages = JSON.parse(JSON.stringify(doc.images));
+    if (newImgCover)
+      savedCover = await fileService.saveOneImage(newImgCover, this._folder, slug);
 
-    const payload = data?.slug || doc.slug;
+    const savedImages = await fileService.saveManyImages(newImages, this._folder, slug);
 
-    const savedCover = await FS.saveOneImage(imgCover, folder, payload, 500);
-    const savedImages = await FS.saveManyImages(images, folder, payload, 700);
-
-    if (Object.keys(savedCover).length === 0) {
-      data.imgCover = doc.imgCover;
-    } else {
-      data.imgCover = savedCover;
-      await FS.deleteFiles(oldCover);
-    }
-
+    // add slug and images to product data
+    data.slug = slug;
+    data.imgCover = savedCover || oldCover;
     data.images = savedImages;
-    await FS.deleteFiles(oldImages);
-
-    data.price = data?.price || doc.price;
+    data.price = data.price || prevDoc.price;
 
     try {
       const updatedDoc = await productModel.findByIdAndUpdate(id, data, {
@@ -105,22 +123,30 @@ export default class productService {
         new: true,
       });
 
-      return [new ProductDTO(updatedDoc)];
-    } catch (err) {
-      await FS.deleteFiles(savedCover);
-      await FS.deleteFiles(savedImages);
+      if (savedCover && newImgCover) await fileService.deleteFiles(oldCover);
+      await fileService.deleteFiles(oldImages);
 
-      throw err;
+      if (completeUrl)
+        return addLinks(new ProductDTO(updatedDoc), ["imgCover", "images"]);
+
+      return new ProductDTO(updatedDoc);
+    } catch (err) {
+      if (savedCover) {
+        await fileService.deleteFiles(savedCover);
+      }
+      await fileService.deleteFiles(savedImages);
+
+      throw new AppError("Сталася не передбачувана помилка, спробуйте пізніше!", 400);
     }
   }
 
-  static async deleteOne(id) {
-    const FS = new FileService();
-    const doc = await productModel.findById(id);
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+  async deleteOne(id) {
+    /* delete one product by id with images */
 
-    const imgCover = JSON.parse(JSON.stringify(doc.imgCover));
-    const images = JSON.parse(JSON.stringify(doc.images));
+    const FS = new FileService();
+
+    const doc = await this.getOne(id, false);
+    const { imgCover, images } = doc;
 
     await FS.deleteFiles(imgCover);
     await FS.deleteFiles(images);
@@ -128,7 +154,9 @@ export default class productService {
     await productModel.findByIdAndDelete(id);
   }
 
-  static getOptions() {
+  getOptions() {
+    /* get all categories for the product */
+
     const options = {
       categories: productModel.schema.path("category").enumValues,
     };

@@ -1,10 +1,8 @@
-import { validationResult } from "express-validator";
-import articleService from "../services/articleService.js";
 import getArticleData from "../utils/getArticleData.js";
 import getQueryData from "../utils/getQueryData.js";
-import addLinks from "../utils/addLinks.js";
-import addLinksToMarkup from "../utils/addLinksToMarkup.js";
 import FileService from "../services/fileService.js";
+import ArticleService from "../services/articleService.js";
+import sendResponse from "../utils/sendResponse.js";
 
 export const handleImages = async (req, res, next) => {
   try {
@@ -16,13 +14,13 @@ export const handleImages = async (req, res, next) => {
     );
 
     const port = process.env.PORT || 3000;
-    const linkBegin = `${req.protocol}://${req.hostname}:${port}`;
+    const protocol = process.env.PROTOCOL || "http";
+    const hostname = process.env.HOSTNAME || "localhost";
 
-    res.status(200).json({
-      data: {
-        location: `${linkBegin}/${fileName}`,
-      },
-    });
+    const linkBegin = `${protocol}://${hostname}:${port}`;
+    const location = `${linkBegin}/${fileName}`;
+
+    sendResponse({ res, statusCode: 200, data: { location } });
   } catch (err) {
     next(err);
   }
@@ -30,140 +28,74 @@ export const handleImages = async (req, res, next) => {
 
 export const getArticles = async (req, res, next) => {
   try {
+    const articleService = new ArticleService();
     const { filterObj, sortObj, page, limit } = getQueryData(req);
+    const data = await articleService.getAll({ filterObj, sortObj, page, limit });
+    const pages = await articleService.countPages(filterObj, limit);
 
-    const data = await articleService.getAll({
-      filterObj,
-      sortObj,
-      page,
-      limit,
-    });
-
-    data[1].map((doc) => addLinks(req, doc, ["imgCover"]));
-
-    res.status(200).json({ status: "success", data });
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (err) {
     next(err);
   }
 };
 export const addArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty() || !req?.files?.imgCover?.[0]?.buffer) {
-      return res.status(400).json({
-        status: "fail",
-        errors: req?.files?.imgCover?.[0]?.buffer
-          ? errors.array()
-          : [
-              ...errors.array(),
-              { path: "imgCover", msg: "Будь-ласка, додайте зображення до статті!" },
-            ],
-      });
-    }
-
+    const articleService = new ArticleService();
     const newArticleData = getArticleData(req);
+    const imgCover = req?.files?.imgCover?.[0]?.buffer;
 
-    let data = await articleService.addOne(
-      newArticleData,
-      req?.files?.imgCover?.[0]?.buffer
-    );
-    data = addLinks(req, data[0], ["imgCover"]);
+    const data = await articleService.addOne(newArticleData, imgCover);
 
-    res.status(201).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 201, data });
   } catch (err) {
     next(err);
   }
 };
 export const getArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const articleService = new ArticleService();
+    const { id } = req.params;
+    const { ip } = req;
+    const { userAgent } = req.headers;
 
-    let data = await articleService.getOne({
-      id: req.params.id,
-      ip: req.ip,
-      userAgent: req.headers["user-agent"],
-    });
+    const data = await articleService.getAndAddViews({ id, ip, userAgent });
 
-    data = addLinks(req, data[0], ["imgCover"]);
-    data = addLinksToMarkup(req, data, "markup");
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }
 };
 export const updateArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const articleService = new ArticleService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
+    const { id } = req.params;
     const updatedObj = getArticleData(req);
+    const imgCover = req?.files?.imgCover?.[0]?.buffer;
 
-    let data = await articleService.updateOne(
-      req.params.id,
-      updatedObj,
-      req?.files?.imgCover?.[0]?.buffer,
-      req.protocol,
-      req.hostname
-    );
+    const data = await articleService.updateOne(id, updatedObj, imgCover);
 
-    data = addLinks(req, data[0], ["imgCover"]);
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }
 };
 export const deleteArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const articleService = new ArticleService();
 
     await articleService.deleteOne(req.params.id);
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
+    sendResponse({ res, statusCode: 204 });
   } catch (err) {
     next(err);
   }
 };
 export const getOptions = (req, res, next) => {
   try {
+    const articleService = new ArticleService();
     const data = articleService.getOptions();
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }

@@ -36,7 +36,7 @@ const ArticleManage = () => {
         isError={isError}
         error={<ErrorMassage status={error?.status} />}
         columns={["", "Назва", "Тема", "Лайки", "Перегляди", "Дата створення"]}
-        rowsData={articles?.[1]?.map((item) => [
+        rowsData={articles?.data?.map((item) => [
           <Link to={`${item.id}`} key={item.id}>
             <EditIcon />
           </Link>,
@@ -58,7 +58,7 @@ const ArticleManage = () => {
         ])}
       >
         <Pagination
-          totalCount={articles?.[0]?.pages}
+          totalCount={articles?.pages}
           siblingCount={2}
           currPage={searchValue ? searchPage.page : searchParams.get("page")}
           onLink={searchValue ? setSearchPage : setSearchParams}

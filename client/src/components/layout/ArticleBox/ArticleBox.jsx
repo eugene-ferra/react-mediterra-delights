@@ -144,14 +144,14 @@ const ArticleBox = ({ slug }) => {
 
                 {isCommentsLoading && <PageLoader />}
 
-                {!isCommentsLoading && comments?.length > 0 && (
+                {!isCommentsLoading && comments?.data?.length > 0 && (
                   <>
-                    {comments?.[1]?.map((comment) => (
+                    {comments?.data?.map((comment) => (
                       <Comment comment={comment} key={comment.id} />
                     ))}
 
                     <Pagination
-                      totalCount={comments?.[0]?.pages}
+                      totalCount={comments?.pages}
                       currPage={page.page}
                       onLink={setPage}
                     />

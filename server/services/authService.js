@@ -3,11 +3,12 @@ import jwt from "jsonwebtoken";
 import { promisify } from "util";
 import tokenModel from "../models/tokenModel.js";
 import AppError from "../utils/appError.js";
+import AuthDTO from "../dto/authDTO.js";
 
 dotenv.config({ path: "./.env" });
 
 export default class authService {
-  static generateTokens(payload) {
+  generateTokens(payload) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
       expiresIn: "15m",
     });
@@ -20,28 +21,28 @@ export default class authService {
     };
   }
 
-  static async validateAccessToken(token) {
+  async validateAccessToken(token) {
     try {
       const data = await promisify(jwt.verify)(token, process.env.JWT_ACCESS_SECRET);
-      return data;
+      return new AuthDTO(data);
     } catch (err) {
       if (err instanceof jwt.TokenExpiredError) throw new jwt.TokenExpiredError();
-      return null;
+      throw new AppError("Invalid access token", 401);
     }
   }
 
-  static async validateRefreshToken(token) {
+  async validateRefreshToken(token) {
     try {
       const data = await promisify(jwt.verify)(token, process.env.JWT_REFRESH_SECRET);
-      return data;
+      return new AuthDTO(data);
     } catch (err) {
       if (err instanceof jwt.TokenExpiredError)
         throw new AppError("you are not log in!", 401);
-      return null;
+      throw new AppError("Invalid refresh token", 400);
     }
   }
 
-  static async saveToken(userId, refreshToken, device) {
+  async saveToken(userId, refreshToken, device) {
     const tokenData = await tokenModel.findOne({ user: userId });
     let token;
 
@@ -64,8 +65,8 @@ export default class authService {
     return token;
   }
 
-  static async removeToken(refreshToken, device) {
-    const user = await authService.validateRefreshToken(refreshToken);
+  async removeToken(refreshToken, device) {
+    const user = await this.validateRefreshToken(refreshToken);
     if (!user) throw new AppError("Invalid token!", 400);
 
     await tokenModel.findOneAndUpdate(
@@ -81,7 +82,7 @@ export default class authService {
     );
   }
 
-  static async removeOldTokens(userId, refreshToken, device) {
+  async removeOldTokens(userId, refreshToken, device) {
     await tokenModel.findOneAndUpdate(
       { user: userId },
       {
@@ -95,8 +96,10 @@ export default class authService {
     );
   }
 
-  static async findUserTokens(userId) {
+  async findUserTokens(userId) {
     const tokenData = await tokenModel.findOne({ user: userId });
+    if (!tokenData) throw new AppError("You are not log in!", 401);
+
     return tokenData;
   }
 }

@@ -51,7 +51,7 @@ const OrdersManage = () => {
 
   const onProceed = (status, isPayed) => {
     return () => {
-      proceedOrder({ id: orders?.[1]?.[currentOrder]?.id, data: { status, isPayed } });
+      proceedOrder({ id: orders?.data?.[currentOrder]?.id, data: { status, isPayed } });
       setIsModalOpen(false);
     };
   };
@@ -124,7 +124,7 @@ const OrdersManage = () => {
               "Сума",
               "Дата",
             ]}
-            rowsData={orders?.[1]?.map((item) => [
+            rowsData={orders?.data?.map((item) => [
               <Text key={item?.id}>№ {item?.number}</Text>,
               <Text key={item?.id} style={{ textTransform: "capitalize" }}>
                 {item?.name} {item?.lastName}
@@ -150,7 +150,7 @@ const OrdersManage = () => {
             rowOnClick={onClick}
           >
             <Pagination
-              totalCount={orders?.[0]?.pages}
+              totalCount={orders?.pages}
               siblingCount={2}
               currPage={searchValue ? searchPage.page : searchParams.get("page")}
               onLink={searchValue ? setSearchPage : setSearchParams}
@@ -174,62 +174,62 @@ const OrdersManage = () => {
             isLoading={isProceeding}
           >
             <OrderFullBlock
-              order={orders?.[1]?.[currentOrder]}
-              key={orders?.[1]?.[currentOrder]?.number}
+              order={orders?.data?.[currentOrder]}
+              key={orders?.data?.[currentOrder]?.number}
               isPersonalData={true}
             />
             <BtnBlock>
-              {orders?.[1]?.[currentOrder]?.status === "Замовлення в обробці" && (
+              {orders?.data?.[currentOrder]?.status === "Замовлення в обробці" && (
                 <Button
                   type={"outline-red"}
                   onClick={onProceed(
                     "Замовлення скасовано",
-                    orders?.[1]?.[currentOrder]?.isPayed
+                    orders?.data?.[currentOrder]?.isPayed
                   )}
                   disabled={isProceeding}
                 >
                   Скасувати замовлення
                 </Button>
               )}
-              {orders?.[1]?.[currentOrder]?.status === "Замовлення в обробці" && (
+              {orders?.data?.[currentOrder]?.status === "Замовлення в обробці" && (
                 <Button
                   type={"success"}
                   onClick={onProceed(
                     "Замовлення підтверджено",
-                    orders?.[1]?.[currentOrder]?.isPayed
+                    orders?.data?.[currentOrder]?.isPayed
                   )}
                   disabled={isProceeding}
                 >
                   Прийняти замовлення
                 </Button>
               )}
-              {orders?.[1]?.[currentOrder]?.status === "Замовлення підтверджено" && (
+              {orders?.data?.[currentOrder]?.status === "Замовлення підтверджено" && (
                 <Button
                   type={"success"}
                   onClick={onProceed(
                     "Замовлення готове",
-                    orders?.[1]?.[currentOrder]?.isPayed
+                    orders?.data?.[currentOrder]?.isPayed
                   )}
                   disabled={isProceeding}
                 >
                   Передати в службу видачі
                 </Button>
               )}
-              {orders?.[1]?.[currentOrder]?.status === "Замовлення готове" &&
-                orders?.[1]?.[currentOrder]?.deliveryType == "Доставка кур'єром" && (
+              {orders?.data?.[currentOrder]?.status === "Замовлення готове" &&
+                orders?.data?.[currentOrder]?.deliveryType == "Доставка кур'єром" && (
                   <Button
                     type={"success"}
                     onClick={onProceed(
                       "Замовлення прямує до вас",
-                      orders?.[1]?.[currentOrder]?.isPayed
+                      orders?.data?.[currentOrder]?.isPayed
                     )}
                     disabled={isProceeding}
                   >
                     Взяти замовлення
                   </Button>
                 )}
-              {orders?.[1]?.[currentOrder]?.status === "Замовлення готове" &&
-                orders?.[1]?.[currentOrder]?.deliveryType == "Самовивіз" && (
+              {orders?.data?.[currentOrder]?.status === "Замовлення готове" &&
+                orders?.data?.[currentOrder]?.deliveryType == "Самовивіз" && (
                   <Button
                     type={"success"}
                     onClick={onProceed("Замовлення отримано", true)}
@@ -238,7 +238,7 @@ const OrdersManage = () => {
                     Замовлення видано
                   </Button>
                 )}
-              {orders?.[1]?.[currentOrder]?.status === "Замовлення прямує до вас" && (
+              {orders?.data?.[currentOrder]?.status === "Замовлення прямує до вас" && (
                 <Button
                   type={"success"}
                   onClick={onProceed("Замовлення отримано", true)}

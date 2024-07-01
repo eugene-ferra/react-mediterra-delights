@@ -22,7 +22,7 @@ const WorkersManage = () => {
         isError={isError}
         error={<ErrorMassage status={error?.status} />}
         columns={["", "Прізвище", "Ім'я", "Группа", "Посада", "Працює з"]}
-        rowsData={workers?.[1]?.map((item, i) => [
+        rowsData={workers?.data?.map((item, i) => [
           <Link to={`${item.id}`} key={`${item.id}-${i}`}>
             <Picture
               formats={item.photo}
@@ -51,7 +51,7 @@ const WorkersManage = () => {
         ])}
       >
         <Pagination
-          totalCount={workers?.[0]?.pages}
+          totalCount={workers?.pages}
           siblingCount={2}
           currPage={searchParams.get("page")}
           onLink={setSearchParams}

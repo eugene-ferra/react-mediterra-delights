@@ -22,15 +22,15 @@ const AccountSaved = () => {
 
       {isArticlesLoading && <PageLoader />}
 
-      {!isArticlesLoading && articles?.[1] && (
+      {!isArticlesLoading && articles && (
         <>
           <Catalog type={"small"}>
-            {articles?.[1]?.map((item) => (
+            {articles?.data?.map((item) => (
               <Article article={item} key={item?.id} />
             ))}
           </Catalog>
           <Pagination
-            totalCount={articles?.[0]?.pages}
+            totalCount={articles?.pages}
             siblingCount={2}
             currPage={searchParams.get("page") || 1}
             onLink={setSearchParams}
@@ -38,7 +38,7 @@ const AccountSaved = () => {
         </>
       )}
 
-      {!isArticlesLoading && articles.length == 0 && (
+      {!isArticlesLoading && articles?.data?.length == 0 && (
         <>
           <Title type={"small"}>Ви ще не зберегли жодної статті</Title>
           <Button asTag={"Link"} to={"/articles"}>

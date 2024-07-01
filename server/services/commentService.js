@@ -1,81 +1,105 @@
 import AppError from "../utils/appError.js";
 import commentModel from "../models/commentModel.js";
 import CommentDTO from "../dto/commentDTO.js";
-import articleModel from "../models/articleModel.js";
-import userService from "./userService.js";
+import addLinks from "../utils/addLinks.js";
+import ArticleService from "./articleService.js";
+import UserService from "./userService.js";
 
 export default class commentService {
-  static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
+  async countPages(filterObj, limit = 15) {
+    /* count all pages based on filters and items per page (limit) */
+
+    const docs = await commentModel.countDocuments(filterObj);
+    return Math.ceil(docs / limit);
+  }
+
+  async checkUserCanChangeComment(reviewId, userId) {
+    /* check if user can change review */
+
+    const userService = new UserService();
+
+    const user = await userService.getOne(userId);
+    if (!user.addedReviews.includes(reviewId))
+      throw new AppError("Ви не можете змінювати коментарі інших користувачів!", 403);
+
+    return true;
+  }
+
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+    /* get all comments with pagination, sorting and filtering */
+
     const data = await commentModel
       .find(filterObj)
       .sort(sortObj)
-      .skip(page * limit - 1)
+      .skip((page - 1) * limit)
       .limit(limit)
-      .populate(populateObj);
+      .populate({ path: "userID", model: "User" });
 
     if (!data.length) {
-      throw new AppError("No documents match the current filters!", 404);
+      throw new AppError("Коментарів за таким запитом не знайдено!", 404);
     }
 
-    const docs = await commentModel.countDocuments(filterObj);
+    return data.map((item) => {
+      const transformedItem = new CommentDTO(item);
 
-    return [
-      { pages: Math.ceil(docs / limit) },
-      data.map((item) => new CommentDTO(item)),
-    ];
+      transformedItem.user = addLinks(transformedItem.user, "avatar");
+      return transformedItem;
+    });
   }
 
-  static async getOne({ id, articleID, populateObj }) {
+  async getOne({ id, articleID }) {
+    /* get one comment by id and (optional) articleID */
+
     const doc = await commentModel
       .find({ _id: id, articleID: articleID || { $exists: true } })
-      .populate(populateObj)
+      .populate({ path: "userID", model: "User" })
       .exec();
 
     if (doc.length === 0)
-      throw new AppError("There aren't documents with this id!", 404);
+      throw new AppError("Коментаря за таким запитом не знайдено!", 404);
 
-    return [new CommentDTO(doc[0])];
+    const transformedItem = new CommentDTO(doc);
+    transformedItem.user = addLinks(transformedItem.user, "avatar");
+
+    return transformedItem;
   }
 
-  static async addOne(data) {
-    const isExist = await articleModel.findById(data.articleID);
+  async addOne(data) {
+    /* add new comment */
 
-    if (!isExist) throw new AppError("Article with provided id does not exists!", 400);
+    const articleService = new ArticleService();
+    await articleService.getOne(data.articleID);
 
+    data.isModerated = false;
     const doc = await commentModel.create(data);
-    return [new CommentDTO(doc)];
+
+    const transformedItem = new CommentDTO(doc);
+    transformedItem.user = addLinks(transformedItem.user, "avatar");
+
+    return transformedItem;
   }
 
-  static async updateOne(id, data, role, userId) {
-    if (role === "user") {
-      const user = await userService.getOne({ id: userId });
-      if (!user[0].addedComments.includes(id))
-        throw new AppError("You can't change other comments!", 403);
-
-      data.isModerated = false;
-    } else {
-      delete data.comment;
-    }
+  async updateOne(id, data) {
+    // update comment by id
 
     const doc = await commentModel.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true,
     });
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (!doc) throw new AppError("Такого коментаря не знайдено!", 404);
 
-    return [new CommentDTO(doc)];
+    const transformedItem = new CommentDTO(doc);
+    transformedItem.user = addLinks(transformedItem.user, "avatar");
+
+    return transformedItem;
   }
 
-  static async deleteOne(id, role, userId) {
-    if (role === "user") {
-      const user = await userService.getOne({ id: userId });
-      if (!user[0].addedComments.includes(id))
-        throw new AppError("You can't delete other comments!", 403);
-    }
+  async deleteOne(id) {
+    // delete comment by id
 
     const doc = await commentModel.findByIdAndDelete(id);
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (!doc) throw new AppError("Такого коментаря не існує!", 404);
   }
 }

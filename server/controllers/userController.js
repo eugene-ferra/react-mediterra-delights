@@ -1,21 +1,19 @@
-import { validationResult } from "express-validator";
-import userService from "../services/userService.js";
+import UserService from "../services/userService.js";
 import getQueryData from "../utils/getQueryData.js";
-import addLinks from "../utils/addLinks.js";
-import productModel from "../models/productModel.js";
-import articleModel from "../models/articleModel.js";
-import articleService from "../services/articleService.js";
+import sendResponse from "../utils/sendResponse.js";
+import ProductService from "../services/productService.js";
+import OrderService from "../services/orderService.js";
+import ArticleService from "../services/articleService.js";
 
 export const getUsers = async (req, res, next) => {
   try {
-    const { filterObj, sortObj, page, limit } = getQueryData(req);
-    let data = await userService.getAll({ filterObj, sortObj, page, limit });
-    data = data.map((item) => addLinks(req, item, "avatar"));
+    const userService = new UserService();
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    const { filterObj, sortObj, page, limit } = getQueryData(req);
+    const data = await userService.getAll({ filterObj, sortObj, page, limit });
+    const pages = await userService.countDocuments(filterObj, limit);
+
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (error) {
     next(error);
   }
@@ -23,14 +21,11 @@ export const getUsers = async (req, res, next) => {
 
 export const getMe = async (req, res, next) => {
   try {
-    let data = await userService.getOne({ id: req.user._id });
+    const userService = new UserService();
 
-    data = addLinks(req, data[0], "avatar");
+    const data = await userService.getOne(req.user._id);
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
@@ -38,14 +33,18 @@ export const getMe = async (req, res, next) => {
 
 export const getSavedArticles = async (req, res, next) => {
   try {
-    const data = await userService.getSavedArticles(req.user._id, req.query.page || 1);
+    const userService = new UserService();
+    const articleService = new ArticleService();
+    const { page, limit } = getQueryData(req);
+    const userId = req.user._id;
 
-    data?.[1].map((doc) => addLinks(req, doc, ["imgCover"]));
+    const user = await userService.getOne(userId);
+    const filterObj = { _id: { $in: user.savedArticles } };
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    const data = await articleService.getAll({ filterObj, page, limit });
+    const pages = await articleService.countPages(filterObj, limit);
+
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (error) {
     next(error);
   }
@@ -53,14 +52,19 @@ export const getSavedArticles = async (req, res, next) => {
 
 export const getSavedProducts = async (req, res, next) => {
   try {
-    const data = await userService.getSavedProducts(req.user._id, req.query.page || 1);
+    const userId = req.user._id;
+    const { page, limit } = getQueryData(req);
 
-    data?.[1].map((doc) => addLinks(req, doc, ["imgCover"]));
+    const productService = new ProductService();
+    const userService = new UserService();
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    const user = await userService.getOne(userId);
+    const filterObj = { _id: { $in: user.savedProducts } };
+
+    const data = await productService.getAll({ filterObj, page, limit });
+    const pages = await productService.countDocuments(filterObj, limit);
+
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (error) {
     next(error);
   }
@@ -68,16 +72,18 @@ export const getSavedProducts = async (req, res, next) => {
 
 export const getOrderHistory = async (req, res, next) => {
   try {
-    const data = await userService.getOrdersHistory(req.user._id, req.query.page || 1);
+    const userService = new UserService();
+    const orderService = new OrderService();
+    const { page, limit } = getQueryData(req);
+    const userId = req.user._id;
 
-    data[1].map((order) =>
-      order.products.map((doc) => addLinks(req, doc.product, ["imgCover", "images"]))
-    );
+    const user = await userService.getOne(userId);
+    const filterObj = { _id: { $in: user.orders } };
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    const data = await orderService.getAll({ filterObj, sortObj: "-time", page, limit });
+    const pages = await orderService.countPages(filterObj, limit);
+
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (error) {
     next(error);
   }
@@ -85,53 +91,28 @@ export const getOrderHistory = async (req, res, next) => {
 
 export const saveProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const productService = new ProductService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const userId = req.user._id;
+    const productId = req.body.id;
 
-    let data = await userService.addToArray(
-      req.user._id,
-      "savedProducts",
-      req.body.id,
-      productModel
-    );
-    data = addLinks(req, data[0], "avatar");
+    await productService.getOne(req.body.id);
+    const data = await userService.addToArray(userId, "savedProducts", productId);
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
 };
 export const discardProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const userId = req.user._id;
+    const productId = req.params.id;
+    const data = await userService.deleteFromArray(userId, "savedProducts", productId);
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
-    let data = await userService.deleteFromArray(
-      req.user._id,
-      "savedProducts",
-      req.params.id
-    );
-    data = addLinks(req, data[0], "avatar");
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
@@ -139,55 +120,34 @@ export const discardProduct = async (req, res, next) => {
 
 export const likeArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const articleService = new ArticleService();
+    const userId = req.user._id;
+    const articleId = req.body.id;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    let data = await userService.addToArray(
-      req.user._id,
-      "likedArticles",
-      req.body.id,
-      articleModel
-    );
+    await articleService.getOne(articleId);
+    const data = await userService.addToArray(userId, "likedArticles", articleId);
 
-    await articleService.updateOne(req.body.id, { $inc: { likes: 1 } });
+    await articleService.updateOne(articleId, { $inc: { likes: 1 } });
 
-    data = addLinks(req, data[0], "avatar");
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
 };
 export const unlikeArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const articleService = new ArticleService();
+    const userId = req.user._id;
+    const articleId = req.params.id;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    let data = await userService.deleteFromArray(
-      req.user._id,
-      "likedArticles",
-      req.params.id
-    );
-    data = addLinks(req, data[0], "avatar");
+    await articleService.getOne(articleId);
 
-    await articleService.updateOne(req.params.id, { $inc: { likes: -1 } });
+    const data = await userService.deleteFromArray(userId, "likedArticles", articleId);
+    await articleService.updateOne(articleId, { $inc: { likes: -1 } });
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
@@ -195,52 +155,28 @@ export const unlikeArticle = async (req, res, next) => {
 
 export const saveArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const articleService = new ArticleService();
+    const userId = req.user._id;
+    const articleId = req.body.id;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    let data = await userService.addToArray(
-      req.user._id,
-      "savedArticles",
-      req.body.id,
-      articleModel
-    );
+    await articleService.getOne(articleId);
+    const data = await userService.addToArray(userId, "savedArticles", articleId);
 
-    data = addLinks(req, data[0], "avatar");
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
 };
 export const discardArticle = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const userId = req.user._id;
+    const articleId = req.params.id;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    let data = await userService.deleteFromArray(
-      req.user._id,
-      "savedArticles",
-      req.params.id
-    );
-    data = addLinks(req, data[0], "avatar");
+    const data = await userService.deleteFromArray(userId, "savedArticles", articleId);
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
@@ -248,23 +184,15 @@ export const discardArticle = async (req, res, next) => {
 
 export const addToCart = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const userService = new UserService();
+    const productService = new ProductService();
     const { id, quantity } = req.body;
+    const userId = req.user._id;
 
-    let data = await userService.addToCart(req.user._id, id, quantity);
-    data = addLinks(req, data[0], "avatar");
+    await productService.getOne(id);
+    const data = await userService.addToCart(userId, id, quantity);
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 201, data });
   } catch (error) {
     next(error);
   }
@@ -272,20 +200,10 @@ export const addToCart = async (req, res, next) => {
 
 export const deleteFromCart = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    let data = await userService.deleteFromCart(req.user._id, req.params.id);
-    data = addLinks(req, data[0], "avatar");
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    const data = await userService.deleteFromCart(req.user._id, req.params.id);
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
@@ -293,25 +211,13 @@ export const deleteFromCart = async (req, res, next) => {
 
 export const updateCartItem = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const userId = req.user._id;
+    const productId = req.params.id;
+    const { quantity } = req.body;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    let data = await userService.updateCart(
-      req.user._id,
-      req.params.id,
-      req.body.quantity
-    );
-    data = addLinks(req, data[0], "avatar");
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    const data = await userService.updateCart(userId, productId, quantity);
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
@@ -319,8 +225,10 @@ export const updateCartItem = async (req, res, next) => {
 
 export const clearCart = async (req, res, next) => {
   try {
-    await userService.clearCart(req.user._id);
-    res.status(204).json({ status: "success" });
+    const userService = new UserService();
+
+    const user = await userService.clearCart(req.user._id);
+    sendResponse({ res, statusCode: 204, data: user });
   } catch (error) {
     next(error);
   }
@@ -328,14 +236,8 @@ export const clearCart = async (req, res, next) => {
 
 export const updateUserInfo = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
     const userInfo = {
       name: req.body?.name,
       lastName: req.body?.lastName,
@@ -343,12 +245,12 @@ export const updateUserInfo = async (req, res, next) => {
       oldPassword: req.body?.oldPassword,
       password: req.body?.password,
     };
+    const userId = req.user._id;
+    const avatar = req?.file?.buffer;
 
-    let data = await userService.updateOne(req.user._id, userInfo, req?.file?.buffer);
+    const data = await userService.updateOne(userId, userInfo, avatar);
 
-    data = addLinks(req, data[0], "avatar");
-
-    res.status(200).json({ status: "success", data });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }
@@ -356,8 +258,10 @@ export const updateUserInfo = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   try {
+    const userService = new UserService();
+
     await userService.deleteOne(req.user._id);
-    res.status(204).json({ status: "success" });
+    sendResponse({ res, statusCode: 204 });
   } catch (err) {
     next(err);
   }
@@ -365,18 +269,11 @@ export const deleteUser = async (req, res, next) => {
 
 export const changeRole = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const userService = new UserService();
 
     const data = await userService.updateOne(req.params.id, { role: req.body.role });
 
-    res.status(200).json({ status: "success", data });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }

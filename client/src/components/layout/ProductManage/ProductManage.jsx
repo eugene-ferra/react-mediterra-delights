@@ -36,7 +36,7 @@ const ProductManage = () => {
         isError={isError}
         error={<ErrorMassage status={error?.status} />}
         columns={["", "Назва", "Категорія", "Ціна", "Зі знижкою", "Вага", "Рейтинг"]}
-        rowsData={products?.[1]?.map((item) => [
+        rowsData={products?.data?.map((item) => [
           <Link to={`${item.id}`} key={item.id}>
             <EditIcon />
           </Link>,
@@ -61,7 +61,7 @@ const ProductManage = () => {
         ])}
       >
         <Pagination
-          totalCount={products?.[0]?.pages}
+          totalCount={products?.pages}
           siblingCount={2}
           currPage={searchValue ? searchPage.page : searchParams.get("page")}
           onLink={searchValue ? setSearchPage : setSearchParams}

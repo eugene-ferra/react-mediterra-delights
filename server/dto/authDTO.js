@@ -1,6 +1,6 @@
 export default class AuthDTO {
   constructor(userResponse) {
-    this.id = userResponse._id;
+    this.id = userResponse.id;
     this.role = userResponse.role;
   }
 }

@@ -28,7 +28,7 @@ export default class fileService {
     }
   }
 
-  async saveOneImage(buffer, folder = "", payload = "", width = null) {
+  async saveOneImage(buffer, folder = "", payload = "", width = 500) {
     const baseName = `${Date.now()}-${slugify(payload, { lower: true })}`;
     const fullNameObj = {};
 

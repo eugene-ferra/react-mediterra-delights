@@ -1,32 +1,16 @@
-import { validationResult } from "express-validator";
-import reviewService from "../services/reviewService.js";
-import addLinks from "../utils/addLinks.js";
+import ReviewService from "../services/reviewService.js";
 import getQueryData from "../utils/getQueryData.js";
+import getReviewData from "../utils/getReviewData.js";
+import sendResponse from "../utils/sendResponse.js";
 
 export const addReview = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const reviewService = new ReviewService();
+    const reviewBody = getReviewData(req);
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const doc = await reviewService.addOne(reviewBody);
 
-    const newReview = {
-      productID: req.body.productID,
-      userID: req.body.userID,
-      review: req.body.review,
-      rating: req.body.rating,
-    };
-
-    const data = await reviewService.addOne(newReview);
-
-    res.status(201).json({
-      status: "success",
-      data,
-    });
+    sendResponse(res, 201, doc);
   } catch (error) {
     next(error);
   }
@@ -34,26 +18,19 @@ export const addReview = async (req, res, next) => {
 
 export const getAllReviews = async (req, res, next) => {
   try {
+    const reviewService = new ReviewService();
+
     let { filterObj } = getQueryData(req);
     const { sortObj, page, limit } = getQueryData(req);
 
+    // If productID is provided, get reviews for that product only
     if (req.params.productID) {
       filterObj = { ...filterObj, productID: req.params.productID, isModerated: true };
     }
-    const data = await reviewService.getAll({
-      filterObj,
-      sortObj,
-      page,
-      limit,
-      populateObj: { path: "userID", model: "User" },
-    });
+    const data = await reviewService.getAll({ filterObj, sortObj, page, limit });
+    const pages = await reviewService.countPages(filterObj, limit);
 
-    data[1].map((review) => addLinks(req, review?.userID, "avatar"));
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (err) {
     next(err);
   }
@@ -61,23 +38,13 @@ export const getAllReviews = async (req, res, next) => {
 
 export const getReview = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const reviewService = new ReviewService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const { id, productID } = req.params;
 
-    const data = await reviewService.getOne({
-      id: req.params.id,
-      productID: req.params?.productID,
-    });
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    const data = await reviewService.getOne({ id, productID });
+
+    sendResponse({ res, statusCode: 200, data });
   } catch (error) {
     next(error);
   }
@@ -85,43 +52,48 @@ export const getReview = async (req, res, next) => {
 
 export const updateReview = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const reviewService = new ReviewService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
-    const reviewBody = {
+    const reviewId = req.params.id;
+    const userId = req.user._id;
+    const userRole = req.user.role;
+    let reviewBody = {
       review: req.body.review,
       rating: req.body.rating,
-      isModerated: req.body.isModerated,
     };
 
-    const data = await reviewService.updateOne(
-      req.params.id,
-      reviewBody,
-      req.user._id,
-      req.user.role
-    );
+    if (userRole === "user") {
+      reviewBody = {
+        review: req.body.review,
+        rating: req.body.rating,
+      };
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+      await reviewService.checkUserCanChangeReview(reviewId, userId);
+    } else {
+      reviewBody = { ...reviewBody, isModerated: req.body.isModerated };
+    }
+
+    const doc = await reviewService.updateOne(reviewId, reviewBody);
+
+    sendResponse({ res, statusCode: 200, data: doc });
   } catch (error) {
     next(error);
   }
 };
 export const deleteReview = async (req, res, next) => {
   try {
-    await reviewService.deleteOne(req.params.id, req.user.role, req.user._id);
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
+    const reviewService = new ReviewService();
+    const userRole = req.user.role;
+    const userId = req.user._id;
+    const reviewId = req.params.id;
+
+    if (userRole === "user") {
+      await reviewService.checkUserCanChangeReview(reviewId, userId);
+    }
+
+    await reviewService.deleteOne(reviewId);
+
+    sendResponse({ res, statusCode: 204 });
   } catch (error) {
     next(error);
   }
@@ -129,12 +101,11 @@ export const deleteReview = async (req, res, next) => {
 
 export const getOptions = (req, res, next) => {
   try {
+    const reviewService = new ReviewService();
+
     const data = reviewService.getOptions();
 
-    res.status(200).json({
-      status: "succes",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }

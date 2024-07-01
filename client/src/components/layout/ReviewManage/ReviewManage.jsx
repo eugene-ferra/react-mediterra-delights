@@ -29,7 +29,7 @@ const ReviewManage = () => {
         isError={isError}
         error={<ErrorMassage status={error?.status} />}
         columns={["Оцінка", "Відгук", ""]}
-        rowsData={reviews?.[1]?.map((item, i) => [
+        rowsData={reviews?.data?.map((item, i) => [
           <Stars rating={item?.rating} key={i} />,
           <Text key={i} style={{ minWidth: "300px" }}>
             {item?.review}

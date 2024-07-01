@@ -1,81 +1,113 @@
 import AppError from "../utils/appError.js";
 import reviewModel from "../models/reviewModel.js";
 import ReviewDTO from "../dto/reviewDTO.js";
-import productModel from "../models/productModel.js";
-import userService from "./userService.js";
+import UserService from "./userService.js";
+import ProductService from "./productService.js";
+import addLinks from "../utils/addLinks.js";
 
 export default class reviewService {
-  static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
+  async countPages(filterObj, limit = 5) {
+    /* count all pages based on filters and items per page (limit) */
+
+    const docs = await reviewModel.countDocuments(filterObj);
+    return Math.ceil(docs / limit);
+  }
+
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+    /* get all reviews with pagination, sorting and filtering */
+
     const data = await reviewModel
       .find(filterObj)
       .sort(sortObj)
       .skip((page - 1) * limit)
       .limit(limit)
-      .populate(populateObj);
+      .populate({
+        path: "userID",
+        model: "User",
+      });
 
     if (!data.length || data.length === 0) {
-      throw new AppError("No documents match the current filters!", 404);
+      throw new AppError("Відгуків за даним запитом не знайдено!", 404);
     }
 
-    const docs = await reviewModel.countDocuments(filterObj);
+    return data.map((item) => {
+      const transformedItem = new ReviewDTO(item);
 
-    return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new ReviewDTO(item))];
+      transformedItem.user = addLinks(transformedItem.user, "avatar");
+      return transformedItem;
+    });
   }
 
-  static async getOne({ id, productID, populateObj }) {
+  async getOne({ id, productID }) {
+    /* get one review by id and (optional) productID */
+
     const doc = await reviewModel
-      .find({ _id: id, productID: productID || { $exists: true } })
-      .populate(populateObj)
+      .findOne({ _id: id, productID: productID || { $exists: true } })
+      .populate({ path: "userID", model: "User" })
       .exec();
 
-    if (doc.length === 0)
-      throw new AppError("There aren't documents with this id!", 404);
+    if (doc.length === 0) throw new AppError("Даний відгук не знайдено!", 404);
 
-    return [new ReviewDTO(doc[0])];
+    const transformedItem = new ReviewDTO(doc);
+    transformedItem.user = addLinks(transformedItem.user, "avatar");
+
+    return transformedItem;
   }
 
-  static async addOne(data) {
-    const isExist = await productModel.findById(data.productID);
-    if (!isExist) throw new AppError("Product with provided id does not exists!", 400);
+  async addOne(data) {
+    /* add new review */
 
+    //test product existence
+    const productService = new ProductService();
+    await productService.getOne(data.productID);
+
+    data.isModerated = false;
     const doc = await reviewModel.create(data);
-    return [new ReviewDTO(doc)];
+
+    const transformedItem = new ReviewDTO(doc);
+    transformedItem.user = addLinks(transformedItem.user, "avatar");
+
+    return transformedItem;
   }
 
-  static async updateOne(id, data, userId, role) {
-    if (role === "user") {
-      const user = await userService.getOne({ id: userId });
-      if (!user[0].addedReviews.includes(id))
-        throw new AppError("You can't change other reviews!", 403);
+  async checkUserCanChangeReview(reviewId, userId) {
+    /* check if user can change review */
 
-      data.isModerated = false;
-    } else {
-      delete data.review;
-      delete data.rating;
-    }
+    const userService = new UserService();
 
-    const doc = await reviewModel.findByIdAndUpdate(id, data, {
+    const user = await userService.getOne(userId);
+    if (!user.addedReviews.includes(reviewId))
+      throw new AppError("Ви не можете змінювати відгуки інших користувачів!", 403);
+
+    return true;
+  }
+
+  async updateOne(reviewId, data) {
+    /* update review for user */
+
+    const doc = await reviewModel.findByIdAndUpdate(reviewId, data, {
       new: true,
       runValidators: true,
     });
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (!doc) throw new AppError("Такого відгуку не знайдено!", 404);
 
-    return [new ReviewDTO(doc)];
+    const transformedItem = new ReviewDTO(doc);
+    transformedItem.user = addLinks(transformedItem.user, "avatar");
+
+    return transformedItem;
   }
 
-  static async deleteOne(id, role, userId) {
-    if (role === "user") {
-      const user = await userService.getOne({ id: userId });
-      if (!user[0].addedReviews.includes(id))
-        throw new AppError("You can't delete other reviews!", 403);
-    }
+  async deleteOne(id) {
+    /* delete review */
     const doc = await reviewModel.findByIdAndDelete(id);
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    if (!doc) throw new AppError("Такого відгуку не існує!", 404);
   }
 
-  static getOptions() {
+  getOptions() {
+    /* get all options for review */
+
     const options = {
       rating: reviewModel.schema.path("rating").options.enum.values,
     };

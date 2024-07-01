@@ -36,7 +36,7 @@ app.use(
 app.use(
   "/api",
   rateLimit({
-    max: 300,
+    max: 30000,
     windowMs: 10 * 60 * 1000, // 10 minutes
     message: "Too many requests from this IP, please try again in an hour!",
   })

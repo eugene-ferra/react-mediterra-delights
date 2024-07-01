@@ -9,6 +9,7 @@ import {
   postCommentValidationSchema,
 } from "../validations/commentValidator.js";
 import idValidationSchema from "../validations/idValidation.js";
+import handleValidation from "../middlewares/handleValidation.js";
 
 const commentRouter = express.Router({ mergeParams: true });
 
@@ -23,17 +24,24 @@ commentRouter
       articleID: (req) => req.params.articleID,
     }),
     checkSchema(postCommentValidationSchema),
+    handleValidation,
     commentController.addComment
   );
 
 commentRouter
   .route("/:id")
-  .get(checkSchema(idValidationSchema), commentController.getComment)
+  .get(checkSchema(idValidationSchema), handleValidation, commentController.getComment)
   .patch(
     protect(),
     checkSchema(commentValidationSchema),
+    handleValidation,
     commentController.updateComment
   )
-  .delete(protect(), checkSchema(idValidationSchema), commentController.deleteComment);
+  .delete(
+    protect(),
+    checkSchema(idValidationSchema),
+    handleValidation,
+    commentController.deleteComment
+  );
 
 export default commentRouter;

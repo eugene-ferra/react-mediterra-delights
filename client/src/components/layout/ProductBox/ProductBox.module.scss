@@ -23,6 +23,7 @@
   width: 100%;
   min-width: 400px;
   max-width: 500px;
+
   @include mixins.mobile {
     width: 100%;
     min-width: unset;

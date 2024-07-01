@@ -22,10 +22,10 @@ const AccountFavourite = () => {
 
       {isProductsLoading && <PageLoader />}
 
-      {!isProductsLoading && products?.[1] && (
+      {!isProductsLoading && products?.data && (
         <>
           <Catalog type="small">
-            {products?.[1].map((item) => (
+            {products?.data?.map((item) => (
               <Product
                 product={item}
                 key={item?.id}
@@ -34,14 +34,14 @@ const AccountFavourite = () => {
             ))}
           </Catalog>
           <Pagination
-            totalCount={products?.[0]?.pages}
+            totalCount={products?.pages}
             siblingCount={2}
             currPage={searchParams.get("page") || 1}
             onLink={setSearchParams}
           />
         </>
       )}
-      {!isProductsLoading && products?.length == 0 && (
+      {!isProductsLoading && products?.data?.length == 0 && (
         <>
           <Title type="small">Ви ще не додали жодного товару в улюблені</Title>
           <Button asTag="Link" to="/products">

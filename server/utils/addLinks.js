@@ -1,6 +1,9 @@
-export default function addLinks(req, data, fieldsToModify) {
+export default function addLinks(data, fieldsToModify) {
   const port = process.env.PORT || 3000;
-  const linkBegin = `${req.protocol}://${req.hostname}:${port}`;
+  const protocol = process.env.PROTOCOL || "http";
+  const hostname = process.env.HOSTNAME || "localhost";
+
+  const linkBegin = `${protocol}://${hostname}:${port}`;
 
   const processField = (fieldValue) => {
     if (typeof fieldValue === "string") {
@@ -20,7 +23,7 @@ export default function addLinks(req, data, fieldsToModify) {
 
   if (typeof data === "object") {
     Object.keys(data).forEach((key) => {
-      if (fieldsToModify.includes(key)) {
+      if (fieldsToModify?.includes(key)) {
         data[key] = processField(data[key]);
       }
     });

@@ -1,7 +1,6 @@
 export default class ProductDTO {
   constructor(responseProduct) {
     this.id = responseProduct._id;
-    this.pages = responseProduct.pages || null;
     this.title = responseProduct.title;
     this.slug = responseProduct.slug;
     this.category = responseProduct.category;
@@ -32,9 +31,6 @@ export default class ProductDTO {
     };
     this.cookTime = responseProduct.cookTime;
     this.isNewProduct = responseProduct.isNewProduct || null;
-    this.compound = responseProduct.compound
-      ? responseProduct.compound.map((item) => item)
-      : [];
     this.isVegan = responseProduct.isVegan;
   }
 }

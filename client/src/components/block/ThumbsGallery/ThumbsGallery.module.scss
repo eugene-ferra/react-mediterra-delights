@@ -62,6 +62,6 @@
   @include mixins.flexRow(0, center, center);
   height: 300px;
   img {
-    @include mixins.image(500px, 100%, cover);
+    @include mixins.image(500px, 400px, cover);
   }
 }

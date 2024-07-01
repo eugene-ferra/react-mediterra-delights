@@ -10,6 +10,8 @@ import {
 } from "../validations/productValidation.js";
 import idValidationSchema from "../validations/idValidation.js";
 import imageUpload from "../middlewares/imageUpload.js";
+import handleValidation from "../middlewares/handleValidation.js";
+import fileValidation from "../middlewares/fileValidation.js";
 
 const productRouter = express.Router();
 
@@ -24,6 +26,10 @@ productRouter
       { name: "images", maxCount: 10 },
     ]),
     checkSchema(productValidationStrictSchema),
+    fileValidation([
+      { path: "imgCover", msg: "Будь-ласка, додайте зображення до товару!" },
+    ]),
+    handleValidation,
     productController.addProduct
   );
 
@@ -40,12 +46,14 @@ productRouter
       { name: "images", maxCount: 10 },
     ]),
     checkSchema(productValidationSchema),
+    handleValidation,
     productController.updateProduct
   )
   .delete(
     protect(),
     restrictTo("admin"),
     checkSchema(idValidationSchema),
+    handleValidation,
     productController.deleteProduct
   );
 

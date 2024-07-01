@@ -9,13 +9,12 @@ const Comment = ({ comment }) => {
       <div className={styles.userData}>
         <Picture
           className={styles.avatar}
-          formats={comment?.userID?.avatar}
-          alt={comment?.userID?.name}
+          formats={comment?.user?.avatar}
+          alt={comment?.user?.name}
           defaultImg={defaultUser}
         />
         <Text style={{ textTransform: "capitalize" }}>
-          {comment?.userID?.name || "видалений"}{" "}
-          {comment?.userID?.lastName || "користувач"}
+          {comment?.user?.name || "видалений"} {comment?.user?.lastName || "користувач"}
         </Text>
       </div>
 

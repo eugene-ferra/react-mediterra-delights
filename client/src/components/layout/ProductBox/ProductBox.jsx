@@ -56,7 +56,7 @@ const ProductBox = ({ slug }) => {
   );
 
   const { reviews: userReview } = useReviews(
-    product && user && `productID=${product?.id}&userID=${user?.id}`
+    product && user && `productID=${product?.id}&user=${user?.id}`
   );
 
   const {
@@ -89,7 +89,7 @@ const ProductBox = ({ slug }) => {
 
   async function onSubmit(data) {
     data["productID"] = product?.id;
-    data["userID"] = user?.id;
+    data["user"] = user?.id;
     postReview(prepareData(data));
   }
 
@@ -221,13 +221,13 @@ const ProductBox = ({ slug }) => {
                 <div className={styles.reviews}>
                   {isReviewsLoading && <PageLoader />}
 
-                  {!isReviewsLoading && reviews?.length > 0 && (
+                  {!isReviewsLoading && reviews?.data.length > 0 && (
                     <>
-                      {reviews?.[1]?.map((review) => (
+                      {reviews?.data?.map((review) => (
                         <Review review={review} key={review.id} />
                       ))}
                       <Pagination
-                        totalCount={reviews?.[0]?.pages}
+                        totalCount={reviews?.pages}
                         currPage={page.page}
                         onLink={setPage}
                       />

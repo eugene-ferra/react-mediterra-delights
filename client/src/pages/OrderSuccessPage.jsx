@@ -25,7 +25,7 @@ const OrderSuccessPage = () => {
 
         {isError && <ErrorMassage status={error.status} />}
 
-        {!isLoading && !isError && order && <OrderSuccess order={order?.[0]} />}
+        {!isLoading && !isError && order && <OrderSuccess order={order} />}
       </MainLayout>
       <Footer />
     </>

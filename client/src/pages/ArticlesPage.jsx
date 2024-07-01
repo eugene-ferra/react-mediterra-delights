@@ -76,12 +76,12 @@ const ArticlesPage = () => {
             {articles && (
               <>
                 <Catalog>
-                  {articles?.[1].map((article) => (
+                  {articles?.data?.map((article) => (
                     <Article article={article} key={article?.id} />
                   ))}
                 </Catalog>
                 <Pagination
-                  totalCount={articles?.[0].pages}
+                  totalCount={articles?.pages}
                   siblingCount={2}
                   currPage={searchParams.get("page") || 1}
                   onLink={setSearchParams}

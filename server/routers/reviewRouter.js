@@ -4,6 +4,7 @@ import multer from "multer";
 import * as reviewController from "../controllers/reviewController.js";
 import protect from "../middlewares/protect.js";
 import prefillReqBody from "../middlewares/prefillReqBody.js";
+import handleValidation from "../middlewares/handleValidation.js";
 import {
   reviewValidationSchema,
   postReviewValidationSchema,
@@ -23,6 +24,7 @@ reviewRouter
       productID: (req) => req.params.productID,
     }),
     checkSchema(postReviewValidationSchema),
+    handleValidation,
     reviewController.addReview
   );
 
@@ -30,8 +32,18 @@ reviewRouter.route("/options").get(reviewController.getOptions);
 
 reviewRouter
   .route("/:id")
-  .get(checkSchema(idValidationSchema), reviewController.getReview)
-  .patch(protect(), checkSchema(reviewValidationSchema), reviewController.updateReview)
-  .delete(protect(), checkSchema(idValidationSchema), reviewController.deleteReview);
+  .get(checkSchema(idValidationSchema), handleValidation, reviewController.getReview)
+  .patch(
+    protect(),
+    checkSchema(reviewValidationSchema),
+    handleValidation,
+    reviewController.updateReview
+  )
+  .delete(
+    protect(),
+    checkSchema(idValidationSchema),
+    handleValidation,
+    reviewController.deleteReview
+  );
 
 export default reviewRouter;

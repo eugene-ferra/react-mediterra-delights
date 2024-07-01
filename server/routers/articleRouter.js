@@ -10,6 +10,8 @@ import {
 } from "../validations/articleValidator.js";
 import idValidationSchema from "../validations/idValidation.js";
 import imageUpload from "../middlewares/imageUpload.js";
+import handleValidation from "../middlewares/handleValidation.js";
+import fileValidation from "../middlewares/fileValidation.js";
 
 const articleRouter = express.Router();
 
@@ -21,6 +23,10 @@ articleRouter
     restrictTo("admin"),
     imageUpload.fields([{ name: "imgCover", maxCount: 1 }]),
     checkSchema(articleValidationStrictSchema),
+    fileValidation([
+      { path: "imgCover", msg: "Будь-ласка, додайте зображення до статті!" },
+    ]),
+    handleValidation,
     articleController.addArticle
   );
 
@@ -38,12 +44,14 @@ articleRouter
     restrictTo("admin"),
     imageUpload.fields([{ name: "imgCover", maxCount: 1 }]),
     checkSchema(articleValidationSchema),
+    handleValidation,
     articleController.updateArticle
   )
   .delete(
     protect(),
     restrictTo("admin"),
     checkSchema(idValidationSchema),
+    handleValidation,
     articleController.deleteArticle
   );
 

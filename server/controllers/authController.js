@@ -1,41 +1,41 @@
-import { validationResult } from "express-validator";
-import userService from "../services/userService.js";
+import UserService from "../services/userService.js";
+import AuthService from "../services/authService.js";
+import AuthDTO from "../dto/authDTO.js";
+import Mailer from "../services/mailerService.js";
+import sendResponse from "../utils/sendResponse.js";
 
 export const signup = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const userService = new UserService();
+    const authService = new AuthService();
+    const mailer = new Mailer();
+    const device = req.headers["user-agent"];
 
     const { name, lastName, email, password } = req.body;
-    const userData = await userService.registration({
-      name,
-      lastName,
-      email,
-      password,
-      device: req.headers["user-agent"],
-    });
-    res.cookie("refresh", userData.refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+    const userData = await userService.addOne({ name, lastName, email, password });
+
+    const payload = new AuthDTO(userData);
+    const tokens = authService.generateTokens({ ...payload });
+    await authService.saveToken(payload.id, tokens.refreshToken, device);
+
+    await mailer.sendMail(
+      userData.email,
+      "Ваш аккаунт успішно створено!",
+      "welcomeEmail.ejs",
+      { name: userData.name, link: `${process.env.CLIENT_URL}/account` }
+    );
+
+    res.cookie("refresh", tokens.refreshToken, {
       httpOnly: true,
       secure: !!req.secure,
     });
 
-    res.cookie("access", userData.accessToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+    res.cookie("access", tokens.accessToken, {
       httpOnly: true,
       secure: !!req.secure,
     });
 
-    res.status(201).json({
-      status: "success",
-      data: userData.user,
-    });
+    sendResponse({ res, statusCode: 201, data: userData });
   } catch (e) {
     next(e);
   }
@@ -43,31 +43,28 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const userService = new UserService();
+    const authService = new AuthService();
+    const device = req.headers["user-agent"];
 
     const { email, password } = req.body;
-    const userData = await userService.login(email, password, req.headers["user-agent"]);
-    res.cookie("refresh", userData.refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+    const userData = await userService.login(email, password);
+
+    const payload = new AuthDTO(userData);
+    const tokens = authService.generateTokens({ ...payload });
+
+    await authService.saveToken(payload.id, tokens.refreshToken, device);
+
+    res.cookie("refresh", tokens.refreshToken, {
       httpOnly: true,
       secure: !!req.secure,
     });
-    res.cookie("access", userData.accessToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+    res.cookie("access", tokens.accessToken, {
       httpOnly: true,
       secure: !!req.secure,
     });
-    res.status(200).json({
-      status: "success",
-      data: userData.user,
-    });
+
+    sendResponse({ res, statusCode: 200, data: userData });
   } catch (e) {
     next(e);
   }
@@ -75,23 +72,16 @@ export const login = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
+    const authService = new AuthService();
     const refreshToken = req.cookies.refresh;
-    await userService.logout(refreshToken, req.headers["user-agent"]);
+    const device = req.headers["user-agent"];
+
+    await authService.removeToken(refreshToken, device);
+
     res.clearCookie("refresh");
     res.clearCookie("access");
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
+
+    sendResponse({ res, statusCode: 204, data: null });
   } catch (e) {
     next(e);
   }
@@ -99,31 +89,30 @@ export const logout = async (req, res, next) => {
 
 export const refresh = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
+    const userService = new UserService();
+    const authService = new AuthService();
+    const device = req.headers["user-agent"];
     const { refresh: refreshToken } = req.cookies;
-    const userData = await userService.refresh(refreshToken, req.headers["user-agent"]);
-    res.cookie("refresh", userData.refreshToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+
+    const tokenData = await authService.validateRefreshToken(refreshToken);
+    await authService.findUserTokens(tokenData.id);
+
+    const user = await userService.getOne(tokenData.id);
+    const payload = new AuthDTO(user);
+    const tokens = authService.generateTokens({ ...payload });
+
+    await authService.saveToken(payload.id, tokens.refreshToken, device);
+
+    res.cookie("refresh", tokens.refreshToken, {
       httpOnly: true,
       secure: !!req.secure,
     });
-    res.cookie("access", userData.accessToken, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
+    res.cookie("access", tokens.accessToken, {
       httpOnly: true,
       secure: !!req.secure,
     });
-    res.status(200).json({
-      status: "success",
-      data: userData.user,
-    });
+
+    sendResponse({ res, statusCode: 200, data: user });
   } catch (e) {
     next(e);
   }
@@ -131,16 +120,19 @@ export const refresh = async (req, res, next) => {
 
 export const forgotPassword = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const mailer = new Mailer();
+    const { path, email } = req.body;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const letterData = await userService.createResetToken(email, path);
 
-    await userService.sendResetToken(req.body.email, req.body.path);
+    await mailer.sendMail(
+      email,
+      "Запит на скидання пароля",
+      "resetPassEmail.ejs",
+      letterData
+    );
+
     res.status(200).json({ status: "success" });
   } catch (error) {
     next(error);
@@ -149,21 +141,22 @@ export const forgotPassword = async (req, res, next) => {
 
 export const resetPassword = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const userService = new UserService();
+    const authService = new AuthService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-
-    await userService.resetPassword(
+    const user = await userService.resetPassword(
       req.params.token,
       req.query.email,
       req.body.password
     );
-    res.status(200).json({ status: "success" });
+
+    const tokensData = await authService.findUserTokens(user.id);
+
+    tokensData.refreshTokens.forEach(async (item) => {
+      await authService.removeOldTokens(user._id, item.refreshToken, item.device);
+    });
+
+    sendResponse({ res, statusCode: 200, data: null });
   } catch (error) {
     next(error);
   }

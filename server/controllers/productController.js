@@ -1,49 +1,29 @@
-import { validationResult } from "express-validator";
-import productService from "../services/productService.js";
-import addLinks from "../utils/addLinks.js";
+import ProductService from "../services/productService.js";
 import getProductData from "../utils/getProductData.js";
 import getQueryData from "../utils/getQueryData.js";
+import FileService from "../services/fileService.js";
+import sendResponse from "../utils/sendResponse.js";
 
 export const getProducts = async (req, res, next) => {
   try {
+    const productService = new ProductService();
     const { filterObj, sortObj, page, limit } = getQueryData(req);
 
-    const data = await productService.getAll({
-      filterObj,
-      sortObj,
-      page,
-      limit,
-    });
+    const data = await productService.getAll({ filterObj, sortObj, page, limit });
+    const pages = await productService.countDocuments(filterObj, limit);
 
-    data[1].map((doc) => addLinks(req, doc, ["imgCover", "images"]));
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (err) {
     next(err);
   }
 };
 export const getProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const productService = new ProductService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const data = await productService.getOne(req.params.id);
 
-    let data = await productService.getOne({ id: req.params.id });
-
-    data = addLinks(req, data[0], ["imgCover", "images"]);
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }
@@ -51,94 +31,59 @@ export const getProduct = async (req, res, next) => {
 
 export const addProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty() || !req?.files?.imgCover?.[0]?.buffer) {
-      return res.status(400).json({
-        status: "fail",
-        errors: req?.files?.imgCover?.[0]?.buffer
-          ? errors.array()
-          : [
-              ...errors.array(),
-              { path: "imgCover", msg: "Будь-ласка, додайте зображення до товару!" },
-            ],
-      });
-    }
+    const productService = new ProductService();
 
     const textData = getProductData(req);
+    const imgCover = req?.files?.imgCover?.[0]?.buffer;
+    const images = req.files?.images?.map((item) => item?.buffer);
 
-    let data = await productService.addOne(
-      textData,
-      req?.files?.imgCover?.[0]?.buffer,
-      req.files?.images?.map((item) => item?.buffer)
-    );
+    const data = await productService.addOne(textData, imgCover, images);
 
-    data = addLinks(req, data[0], ["imgCover", "images"]);
-
-    res.status(201).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 201, data });
   } catch (err) {
     next(err);
   }
 };
 export const updateProduct = async (req, res, next) => {
+  const fileService = new FileService();
+  const productService = new ProductService();
+  let savedCover;
+  let savedImages;
+
   try {
-    const errors = validationResult(req);
+    const data = getProductData(req);
+    const newImgCover = req?.files?.imgCover?.[0]?.buffer || null;
+    const newImages = req.files?.images?.map((item) => item?.buffer) || null;
+    const { id } = req.params;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    const updateProd = getProductData(req);
+    const doc = await productService.updateOne({ id, data, newImgCover, newImages });
 
-    let data = await productService.updateOne(
-      req.params.id,
-      updateProd,
-      req.files?.imgCover?.[0]?.buffer,
-      req.files?.images?.map((item) => item?.buffer)
-    );
-
-    data = addLinks(req, data[0], ["imgCover", "images"]);
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data: { doc } });
   } catch (err) {
+    if (savedCover) await fileService.deleteFiles(savedCover);
+    if (savedImages?.length) await fileService.deleteFiles(savedImages);
     next(err);
   }
 };
 export const deleteProduct = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const productService = new ProductService();
+    const { id } = req.params;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    await productService.deleteOne(req.params.id);
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
+    await productService.deleteOne(id);
+
+    sendResponse({ res, statusCode: 204 });
   } catch (err) {
     next(err);
   }
 };
 export const getOptions = (req, res, next) => {
   try {
+    const productService = new ProductService();
+
     const data = productService.getOptions();
 
-    res.status(200).json({
-      status: "succes",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }

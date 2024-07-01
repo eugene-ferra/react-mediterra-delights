@@ -24,17 +24,19 @@ const handleMulterError = (err) =>
 
 const sendError = (err, req, res) => {
   if (err.isOperational) {
-    return res.status(err.statusCode).json({
-      status: err.status,
+    console.error("ERROR (operational)", err);
+
+    res.status(err.statusCode).json({
+      status: "error",
       message: err.message,
     });
+  } else {
+    console.error("ERROR 💥", err);
+    res.status(500).json({
+      status: "error",
+      error: err.message,
+    });
   }
-
-  console.error("ERROR 💥", err);
-  return res.status(500).json({
-    status: "error",
-    message: "Something went very wrong!",
-  });
 };
 
 export default function (err, req, res, next) {

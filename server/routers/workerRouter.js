@@ -9,6 +9,8 @@ import {
 } from "../validations/workerValidator.js";
 import idValidationSchema from "../validations/idValidation.js";
 import imageUpload from "../middlewares/imageUpload.js";
+import fileValidation from "../middlewares/fileValidation.js";
+import handleValidation from "../middlewares/handleValidation.js";
 
 const workerRouter = express.Router();
 
@@ -20,6 +22,8 @@ workerRouter
     restrictTo("admin"),
     imageUpload.fields([{ name: "photo", maxCount: 1 }]),
     checkSchema(workerValidationStrictSchema),
+    fileValidation([{ path: "photo", msg: "Будь-ласка, додайте фото працівника!" }]),
+    handleValidation,
     workerController.addWorker
   );
 
@@ -27,18 +31,20 @@ workerRouter.get("/options", workerController.getOptions);
 
 workerRouter
   .route("/:id")
-  .get(checkSchema(idValidationSchema), workerController.getWorker)
+  .get(checkSchema(idValidationSchema), handleValidation, workerController.getWorker)
   .patch(
     protect(),
     restrictTo("admin"),
     imageUpload.fields([{ name: "photo", maxCount: 1 }]),
     checkSchema(workerValidationSchema),
+    handleValidation,
     workerController.updateWorker
   )
   .delete(
     protect(),
     restrictTo("admin"),
     checkSchema(idValidationSchema),
+    handleValidation,
     workerController.deleteWorker
   );
 

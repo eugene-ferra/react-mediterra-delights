@@ -2,48 +2,74 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import UserDTO from "../dto/userDTO.js";
 import userModel from "../models/userModel.js";
-import orderModel from "../models/orderModel.js";
 import AppError from "../utils/appError.js";
-import authService from "./authService.js";
-import AuthDTO from "../dto/authDTO.js";
 import FileService from "./fileService.js";
-import Mailer from "./mailerService.js";
-import productModel from "../models/productModel.js";
-import articleModel from "../models/articleModel.js";
-import ProductDTO from "../dto/productDTO.js";
-import ArticleDTO from "../dto/articleDTO.js";
-import OrderDTO from "../dto/orderDTO.js";
+import addLinks from "../utils/addLinks.js";
 
-const folder = "users";
 export default class userService {
-  static async getAll({ filterObj, sortObj, page = 1, limit = 15, populateObj }) {
+  constructor() {
+    this._folder = "users";
+  }
+
+  async countPages(filterObj, limit = 15) {
+    /* count all pages based on filters and items per page (limit) */
+
+    const docs = await userModel.countDocuments(filterObj);
+    return Math.ceil(docs / limit);
+  }
+
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+    /* get all users with pagination, sorting and filtering */
+
     const data = await userModel
       .find(filterObj)
       .sort(sortObj)
       .skip((page - 1) * limit)
-      .limit(limit)
-      .populate(populateObj);
+      .limit(limit);
 
     if (!data.length) {
-      throw new AppError("No documents match the current filters!", 404);
+      throw new AppError("Користувачів за таким запитом не знайдено!", 404);
     }
 
-    return data.map((item) => new UserDTO(item));
+    return data.map((item) => {
+      const user = new UserDTO(item);
+      return addLinks(user, ["avatar"]);
+    });
   }
 
-  static async getOne({ id, populateObj }) {
-    const doc = await userModel.findById(id).populate(populateObj).exec();
+  async getOne(id) {
+    /* get one user by id */
 
-    if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    const doc = await userModel.findById(id).exec();
 
-    return [new UserDTO(doc)];
+    if (!doc) throw new AppError("Користувача за таким запитом не знайдено!", 404);
+
+    return addLinks(new UserDTO(doc), ["avatar"]);
   }
 
-  static async registration({ name, lastName, email, password, device }) {
-    const candidate = await userModel.findOne({ email });
+  async testEmail(email) {
+    /* test email for uniqueness */
 
-    if (candidate)
-      throw new AppError("Користувач з таким e-mail вже зареєстрований!", 409);
+    const doc = await userModel.findOne({ email }).exec();
+
+    if (doc) throw new AppError("Користувач з таким e-mail вже зареєстрований!", 409);
+
+    return true;
+  }
+
+  async findUserByEmail(email) {
+    /* find user by email */
+
+    const doc = await userModel.findOne({ email }).exec();
+    if (!doc) throw new AppError("Користувача з таким email не знайдено!", 404);
+
+    return addLinks(new UserDTO(doc), ["avatar"]);
+  }
+
+  async addOne({ name, lastName, email, password }) {
+    /* create new user */
+
+    await this.testEmail(email);
 
     const hashPassword = await bcrypt.hash(password, 12);
     const user = await userModel.create({
@@ -53,69 +79,33 @@ export default class userService {
       password: hashPassword,
     });
 
-    const payload = new AuthDTO(user);
-    const tokens = authService.generateTokens({ ...payload });
-    await authService.saveToken(payload.id, tokens.refreshToken, device);
-
-    const mailer = new Mailer();
-    await mailer.sendMail(
-      user.email,
-      "Ваш аккаунт успішно створено!",
-      "welcomeEmail.ejs",
-      { name: user.name, link: `${process.env.CLIENT_URL}/account` }
-    );
-
-    return { user: new UserDTO(user), ...tokens };
+    return addLinks(new UserDTO(user), ["avatar"]);
   }
 
-  static async login(email, password, device) {
-    const user = await userModel.findOne({ email });
+  async login(email, password) {
+    /* login user (find by email and check password*/
 
-    if (!user) throw new AppError("Непривильний email або пароль!", 400);
+    if (!email || !password) throw new AppError("Неправильний email або пароль!", 400);
+
+    const user = await this.findUserByEmail(email);
 
     const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) throw new AppError("Непривильний email або пароль!", 400);
 
-    const payload = new AuthDTO(user);
-    const tokens = authService.generateTokens({ ...payload });
-
-    await authService.saveToken(payload.id, tokens.refreshToken, device);
-    return { user: new UserDTO(user), ...tokens };
+    return user;
   }
 
-  static async logout(refreshToken, device) {
-    const token = await authService.removeToken(refreshToken, device);
-    return token;
-  }
+  async createResetToken(email, path) {
+    /* create password reset token for user */
 
-  static async refresh(refreshToken, device) {
-    if (!refreshToken) throw new AppError("You are not log in!", 401);
+    const user = await this.findUserByEmail(email);
 
-    const userData = await authService.validateRefreshToken(refreshToken);
-    if (!userData) throw new AppError("Invalid refresh token", 400);
-
-    const tokenFromDb = await authService.findUserTokens(userData.id, refreshToken);
-    if (!tokenFromDb) throw new AppError("You are not log in!", 401);
-
-    const user = await userModel.findById(userData.id);
-    const payload = new AuthDTO(user);
-    const tokens = authService.generateTokens({ ...payload });
-
-    await authService.saveToken(payload.id, tokens.refreshToken, device);
-    return { user: new UserDTO(user), ...tokens };
-  }
-
-  static async sendResetToken(email, path) {
-    const user = await userModel.findOne({ email });
-    if (!user) throw new AppError("Користувача з таким email не знайдено!", 400);
-
+    const hours = 2;
     const plainResetToken = crypto.randomBytes(32).toString("hex");
     const hashedResetToken = crypto
       .createHash("sha256")
       .update(plainResetToken)
       .digest("hex");
-
-    const hours = 2;
 
     await userModel.findOneAndUpdate(
       { email },
@@ -125,16 +115,16 @@ export default class userService {
       }
     );
 
-    const mailer = new Mailer();
-
-    await mailer.sendMail(email, "Запит на скидання пароля", "resetPassEmail.ejs", {
+    return {
       name: user.name,
       link: `${process.env.CLIENT_URL}/reset-password/${plainResetToken}?email=${email}&next=${path}`,
       time: `${hours} години`,
-    });
+    };
   }
 
-  static async resetPassword(token, email, password) {
+  async resetPassword(token, email, password) {
+    /* reset user password by token */
+
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await userModel.findOne({ email: email, resetToken: hashedToken });
@@ -160,160 +150,83 @@ export default class userService {
       { runValidators: true, new: true }
     );
 
-    const tokensData = await authService.findUserTokens(user._id);
-
-    tokensData.refreshTokens.forEach(async (item) => {
-      await authService.removeOldTokens(user._id, item.refreshToken, item.device);
-    });
+    return addLinks(new UserDTO(user), ["avatar"]);
   }
 
-  static async addToArray(id, arrName, itemId, dataModel) {
-    const addedItem = await dataModel.findById(itemId);
-    if (!addedItem) throw new AppError("Item with this id does not exists!", 404);
+  async addToArray(id, arrName, itemId) {
+    /* add item to array in user document */
 
-    const user = await userModel.findById(id);
-    if (!user) throw new AppError("User with this id does not exists!", 404);
-
-    if (user[arrName].includes(itemId)) throw new AppError("Item already added!", 409);
+    await this.getOne(id);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
       { $push: { [arrName]: itemId } },
       { new: true }
     );
-    return [new UserDTO(updatedUser)];
+    return addLinks(new UserDTO(updatedUser), ["avatar"]);
   }
 
-  static async deleteFromArray(id, arrName, itemId) {
-    const user = await userModel.findById(id);
-    if (!user) throw new AppError("User with this id does not exists!", 404);
+  async deleteFromArray(id, arrName, itemId) {
+    /* delete item from array in user document */
 
-    if (!user[arrName].includes(itemId)) throw new AppError("item not found!", 404);
+    await this.getOne(id);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
       { $pull: { [arrName]: itemId } },
       { new: true }
     );
-    return [new UserDTO(updatedUser)];
+    return addLinks(new UserDTO(updatedUser), ["avatar"]);
   }
 
-  static async getSavedProducts(userId, page, limit = 12) {
-    const user = await userModel.findById(userId);
-    if (!user) throw new AppError("User with this id does not exists!", 404);
+  async addToCart(id, product, quantity) {
+    /* add item to cart in user document */
 
-    const data = await productModel
-      .find({ _id: { $in: user.savedProducts } })
-      .skip((page - 1) * limit)
-      .limit(limit);
-
-    if (!data.length) {
-      throw new AppError("No documents match the current filters!", 404);
-    }
-    const docs = await productModel.countDocuments({ _id: { $in: user.savedProducts } });
-
-    return [
-      { pages: Math.ceil(docs / limit) },
-      data.map((item) => new ProductDTO(item)),
-    ];
-  }
-
-  static async getSavedArticles(userId, page, limit = 12) {
-    const user = await userModel.findById(userId);
-    if (!user) throw new AppError("User with this id does not exists!", 404);
-
-    const data = await articleModel
-      .find({ _id: { $in: user.savedArticles } })
-      .skip((page - 1) * limit)
-      .limit(limit);
-
-    if (!data.length) {
-      throw new AppError("No documents match the current filters!", 404);
-    }
-    const docs = await articleModel.countDocuments({ _id: { $in: user.savedArticles } });
-
-    return [
-      { pages: Math.ceil(docs / limit) },
-      data.map((item) => new ArticleDTO(item)),
-    ];
-  }
-
-  static async getOrdersHistory(userId, page, limit = 5) {
-    const user = await userModel.findById(userId);
-    if (!user) throw new AppError("User with this id does not exists!", 404);
-
-    let data = await orderModel
-      .find({ _id: { $in: user.orders } })
-      .sort("-time")
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .populate({ path: "products.id" });
-
-    if (!data.length) {
-      throw new AppError("No documents match the current filters!", 404);
-    }
-    const docs = await orderModel.countDocuments({ _id: { $in: user.orders } });
-
-    data = data.map((order) => {
-      order.products = order.products.map((prod) => {
-        if (!prod.id?._id) prod.id = {};
-
-        return prod;
-      });
-      return order;
-    });
-
-    return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new OrderDTO(item))];
-  }
-
-  static async addToCart(id, product, quantity) {
-    const addedItem = await productModel.findById(product);
-    if (!addedItem) throw new AppError("Item with this id does not exists!", 404);
-
-    const user = await userModel.findById(id);
-    if (!user) throw new AppError("User with this id does not exists!", 404);
+    const user = await this.getOne(id);
 
     const foundItem = user.cart.find(
       (item) => item.id.toString() === product.toString()
     );
-    if (foundItem) throw new AppError("item already added!", 409);
+    if (foundItem) throw new AppError("Страву вже додано!", 409);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
       { $push: { cart: { id: product, quantity: quantity } } },
       { new: true }
     );
-    return [new UserDTO(updatedUser)];
+    return addLinks(new UserDTO(updatedUser), ["avatar"]);
   }
 
-  static async deleteFromCart(id, productId) {
-    const user = await userModel.findById(id);
+  async deleteFromCart(id, productId) {
+    /* delete item from cart in user document */
 
-    if (!user) throw new AppError("User with this id does not exist!", 404);
+    const user = await this.getOne(id);
 
     const foundItem = user.cart.find(
       (item) => item.id.toString() === productId.toString()
     );
 
-    if (!foundItem) throw new AppError("item not found", 404);
+    if (!foundItem) throw new AppError("Такої страви немає в кошику!", 404);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       id,
       { $pull: { cart: foundItem } },
       { new: true }
     );
-    return [new UserDTO(updatedUser)];
+    return addLinks(new UserDTO(updatedUser), ["avatar"]);
   }
 
-  static async updateCart(userId, itemId, quantity) {
-    const user = await userModel.findById(userId);
-    if (!user) throw new AppError("User with this id does not exist!", 404);
+  async updateCart(userId, itemId, quantity) {
+    /* update item quantity in cart in user document */
+
+    const user = await this.getOne(userId);
 
     const foundItemIndex = user.cart.findIndex(
       (item) => item.id.toString() === itemId.toString()
     );
 
-    if (foundItemIndex === -1) throw new AppError("This item does not exist!", 404);
+    if (foundItemIndex === -1)
+      throw new AppError("Такої страви не знайдено в кошику!", 404);
 
     const updatedUser = await userModel.findByIdAndUpdate(
       userId,
@@ -323,35 +236,40 @@ export default class userService {
       { runValidators: true, new: true }
     );
 
-    return [new UserDTO(updatedUser)];
+    return addLinks(new UserDTO(updatedUser), ["avatar"]);
   }
 
-  static async clearCart(userId) {
-    const user = await userModel.findById(userId);
-    if (!user) throw new AppError("User with this id does not exist!", 404);
+  async clearCart(userId) {
+    /* clear cart in user document */
+
+    await this.getOne(userId);
 
     const updatedUser = await userModel.findByIdAndUpdate(userId, { cart: [] });
 
-    return [new UserDTO(updatedUser)];
+    return addLinks(new UserDTO(updatedUser), ["avatar"]);
   }
 
-  static async updateOne(id, data, avatar) {
+  async updateOne(id, data, avatar) {
+    /* update user data by id with avatar*/
+
     const FS = new FileService();
-    const doc = await userModel.findById(id);
-    if (!doc) throw new AppError(`There aren't users with this id!`, 404);
-    const payload = `${data?.name || doc.name}-${data?.lastName || doc.lastName}`;
+
+    const prevUser = await this.getOne(id);
+    const payload = `${data?.name || prevUser.name}-${
+      data?.lastName || prevUser.lastName
+    }`;
 
     const savedAvatar = !data?.password
-      ? await FS.saveOneImage(avatar, folder, payload, 300)
+      ? await FS.saveOneImage(avatar, this._folder, payload, 300)
       : null;
 
     if (savedAvatar) data.avatar = savedAvatar;
 
     if (data?.oldPassword || data?.password) {
-      if (!data?.oldPassword) throw new AppError("Provide oldPassword!", 400);
-      if (!data?.password) throw new AppError("Provide password!", 400);
-      if (!(await bcrypt.compare(data.oldPassword, doc.password)))
-        throw new AppError("Invalid oldPassword", 400);
+      if (!data?.oldPassword) throw new AppError("Вкажіть поточний пароль!", 400);
+      if (!data?.password) throw new AppError("Вкажіть новий пароль!", 400);
+      if (!(await bcrypt.compare(data.oldPassword, prevUser.password)))
+        throw new AppError("Неправильний пароль!", 400);
 
       data.password = await bcrypt.hash(data.password, 12);
     }
@@ -362,23 +280,23 @@ export default class userService {
         new: true,
       });
 
-      if (savedAvatar) await FS.deleteFiles(doc.avatar);
+      if (savedAvatar) await FS.deleteFiles(prevUser.avatar);
 
-      return [new UserDTO(updatedDoc)];
+      addLinks(new UserDTO(updatedDoc), ["avatar"]);
     } catch (err) {
       await FS.deleteFiles(savedAvatar);
       throw err;
     }
   }
 
-  static async deleteOne(id) {
+  async deleteOne(id) {
+    /* delete user by id */
+
     const FS = new FileService();
-    const doc = await userModel.findById(id);
-
-    if (!doc) throw new AppError(`There aren't users with this id!`, 404);
-
-    await FS.deleteFiles(doc?.avatar);
+    const user = await this.getOne(id);
 
     await userModel.findByIdAndDelete(id);
+
+    await FS.deleteFiles(user?.avatar);
   }
 }

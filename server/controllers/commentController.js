@@ -1,18 +1,10 @@
-import { validationResult } from "express-validator";
-import commentService from "../services/commentService.js";
-import addLinks from "../utils/addLinks.js";
+import CommentService from "../services/commentService.js";
 import getQueryData from "../utils/getQueryData.js";
+import sendResponse from "../utils/sendResponse.js";
 
 export const addComment = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
+    const commentService = new CommentService();
 
     const newComment = {
       articleID: req.body.articleID,
@@ -22,10 +14,7 @@ export const addComment = async (req, res, next) => {
 
     const data = await commentService.addOne(newComment);
 
-    res.status(201).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 201, data: data });
   } catch (err) {
     next(err);
   }
@@ -33,49 +22,31 @@ export const addComment = async (req, res, next) => {
 
 export const getAllComments = async (req, res, next) => {
   try {
+    const commentService = new CommentService();
+
     let { filterObj } = getQueryData(req);
     const { sortObj, page, limit } = getQueryData(req);
+    // If productID is provided, get reviews for that product only
     if (req.params.articleID) {
       filterObj = { ...filterObj, articleID: req.params.articleID, isModerated: true };
     }
 
-    const data = await commentService.getAll({
-      filterObj,
-      sortObj,
-      page,
-      limit,
-      populateObj: { path: "userID", model: "User" },
-    });
+    const data = await commentService.getAll({ filterObj, sortObj, page, limit });
+    const pages = await commentService.countPages(filterObj, limit);
 
-    data[1].map((comment) => addLinks(req, comment?.userID, "avatar"));
-
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data: { pages, data } });
   } catch (err) {
     next(err);
   }
 };
 export const getComment = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const commentService = new CommentService();
+    const { id, articleID } = req.params;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
-    }
-    const data = await commentService.getOne({
-      id: req.params.id,
-      articleID: req.params?.articleID,
-    });
+    const data = await commentService.getOne({ id, articleID });
 
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data });
   } catch (err) {
     next(err);
   }
@@ -83,47 +54,40 @@ export const getComment = async (req, res, next) => {
 
 export const updateComment = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const commentService = new CommentService();
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
+    const commendId = req.params.id;
+    const userId = req.user._id;
+    const userRole = req.user.role;
+    let commentBody = { comment: req.body.comment };
+
+    if (userRole === "user") {
+      await commentService.checkUserCanChangeComment(commendId, userId);
+    } else {
+      commentBody = { ...commentBody, isModerated: req.body.isModerated };
     }
 
-    const updatedDoc = { comment: req.body.comment, isModerated: req.body.isModerated };
+    const doc = await commentService.updateOne(commendId, commentBody);
 
-    const data = await commentService.updateOne(
-      req.params.id,
-      updatedDoc,
-      req.user.role,
-      req.user._id
-    );
-    res.status(200).json({
-      status: "success",
-      data,
-    });
+    sendResponse({ res, statusCode: 200, data: doc });
   } catch (error) {
     next(error);
   }
 };
 export const deleteComment = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
+    const commentService = new CommentService();
+    const userRole = req.user.role;
+    const userId = req.user._id;
+    const commentId = req.params.id;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        status: "fail",
-        errors: errors.array(),
-      });
+    if (userRole === "user") {
+      await commentService.checkUserCanChangeComment(commentId, userId);
     }
 
-    await commentService.deleteOne(req.params.id, req.user.role, req.user._id);
-    res.status(204).json({
-      status: "success",
-      data: null,
-    });
+    await commentService.deleteOne(commentId);
+
+    sendResponse({ res, statusCode: 204 });
   } catch (error) {
     next(error);
   }

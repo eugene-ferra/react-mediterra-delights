@@ -48,10 +48,10 @@ const CustomProductTooltip = ({ active, payload, label }) => {
     return (
       <div className={styles.tooltip}>
         <p className="label">{`Назва: ${
-          payload[0]?.payload?.product?.[0]?.title || "Страву видалено"
+          payload[0]?.payload?.product?.title || "Страву видалено"
         }`}</p>
-        {payload[0]?.payload?.product?.[0]?.category && (
-          <p className="label">{`Категорія: ${payload[0]?.payload?.product?.[0]?.category}`}</p>
+        {payload[0]?.payload?.product?.category && (
+          <p className="label">{`Категорія: ${payload[0]?.payload?.product?.category}`}</p>
         )}
         <p className="label">{`Продано: ${payload[0]?.payload?.["Кількість продажів"]} шт`}</p>
       </div>
@@ -68,7 +68,7 @@ const renderCustomizedLabel = (props) => {
   return (
     <g>
       <image
-        href={value[0]?.imgCover?.jpg || errorImg}
+        href={value?.imgCover?.jpg || errorImg}
         x={x + width / 2 - width / 2} //
         y={y - radius - 50}
         width={width}

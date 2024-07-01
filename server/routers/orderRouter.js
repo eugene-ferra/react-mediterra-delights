@@ -9,14 +9,19 @@ import {
   orderValidationSchema,
   orderValidationStrictSchema,
 } from "../validations/orderValidation.js";
+import handleValidation from "../middlewares/handleValidation.js";
 
 const orderRouter = express.Router();
 
 orderRouter.use(multer({ storage: multer.memoryStorage() }).none());
 orderRouter
   .route("/")
-  .post(checkSchema(orderValidationStrictSchema), orderController.addOrder)
-  .get(protect(), orderController.getAllOrders);
+  .post(
+    checkSchema(orderValidationStrictSchema),
+    handleValidation,
+    orderController.addOrder
+  )
+  .get(orderController.getAllOrders);
 
 orderRouter.get("/options", orderController.getOptions);
 
@@ -30,6 +35,7 @@ orderRouter
     protect(),
     restrictTo("admin"),
     checkSchema(orderValidationSchema),
+    handleValidation,
     orderController.updateOrder
   );
 
@@ -38,12 +44,14 @@ orderRouter.patch(
   protect(),
   restrictTo("admin"),
   checkSchema(orderProceedValidation),
+  handleValidation,
   orderController.proceedOrder
 );
 
 orderRouter.post(
   "/create-checkout",
   checkSchema(orderValidationStrictSchema),
+  handleValidation,
   orderController.createCheckout
 );
 

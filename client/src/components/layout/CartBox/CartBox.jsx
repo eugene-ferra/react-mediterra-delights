@@ -21,8 +21,8 @@ const CartBox = () => {
     error: productError,
   } = useManyProductsByIds(cart?.map((item) => item?.id));
 
-  const totalDiscountPrice = calcTotalDiscountPrice(cart, products?.[1]);
-  const totalSum = calcTotalSum(cart, products?.[1]);
+  const totalDiscountPrice = calcTotalDiscountPrice(cart, products?.data);
+  const totalSum = calcTotalSum(cart, products?.data);
 
   return (
     <>

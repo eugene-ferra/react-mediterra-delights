@@ -46,7 +46,7 @@ const ProductManageEdit = () => {
       let fields = Object.keys(methods.getValues());
       fields.forEach((key) => methods.setValue(key, product?.[key]));
     }
-  }, [product, methods, options]);
+  }, [product, methods, options, imgCover, images]);
 
   const { changeProduct, isChanging, errors } = useChangeProduct(methods.reset);
 

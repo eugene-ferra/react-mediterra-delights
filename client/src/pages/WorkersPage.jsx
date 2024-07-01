@@ -38,11 +38,11 @@ const WorkersPage = () => {
           <Container>
             {options?.positionTypes.map((posType) => (
               <>
-                {workers?.[1]?.filter((worker) => worker.positionType == posType)
+                {workers?.data?.filter((worker) => worker.positionType == posType)
                   .length > 0 && (
                   <Catalog key={posType} type={"full"}>
                     <Title key={posType}>{posType}</Title>
-                    {workers?.[1]
+                    {workers?.data
                       ?.filter((worker) => worker.positionType == posType)
                       .map((worker) => (
                         <WorkerCard worker={worker} key={worker.id} />

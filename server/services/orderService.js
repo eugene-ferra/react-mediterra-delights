@@ -1,38 +1,33 @@
 import Stripe from "stripe";
+import mongoose from "mongoose";
 import OrderDTO from "../dto/orderDTO.js";
 import orderModel from "../models/orderModel.js";
-import productService from "./productService.js";
+import ProductService from "./productService.js";
 import AppError from "../utils/appError.js";
-import authService from "./authService.js";
-import Mailer from "./mailerService.js";
-import userModel from "../models/userModel.js";
+import addLinks from "../utils/addLinks.js";
 
 export default class orderService {
-  static async addOrder(data, userToken) {
-    let decoded;
+  async countPages(filterObj, limit = 15) {
+    /* count all pages based on filters and items per page (limit) */
 
-    if (userToken) {
-      decoded = await authService.validateAccessToken(userToken);
-      if (!decoded) throw new AppError("invalid token!");
-    }
+    const docs = await orderModel.countDocuments(filterObj);
+    return Math.ceil(docs / limit);
+  }
 
-    const addedProducts = [];
+  async addOrder(data) {
+    /* add order to db */
 
+    const productService = new ProductService();
+
+    // get products from db and calculate total sum
     data.products = await Promise.all(
       data.products.map(async (item) => {
-        const product = await productService.getOne({ id: item.id });
-        if (!product) throw new AppError("incorrect products!", 400);
-
-        addedProducts.push({
-          title: product[0].title,
-          quantity: item.quantity,
-          price: (product[0]?.discountPrice || product[0].price) * item.quantity,
-        });
+        const product = await productService.getOne(item.id, false);
 
         return {
           id: item.id,
           quantity: item.quantity,
-          price: (product[0]?.discountPrice || product[0].price) * item.quantity,
+          price: (product?.discountPrice || product.price) * item.quantity,
         };
       })
     );
@@ -53,29 +48,21 @@ export default class orderService {
     }
     data.number = new Date().valueOf();
 
-    const order = await (
-      await orderModel.create(data)
-    ).populate({ path: "products.id" });
+    const order = await orderModel.create(data);
+    await order.populate({ path: "products.id" });
 
-    if (decoded)
-      await userModel.findByIdAndUpdate(decoded.id, {
-        cart: [],
-        $push: { orders: order._id },
-      });
-
-    const mailer = new Mailer();
-
-    await mailer.sendMail(data.email, "Замовлення прийнято!", "orderEmail.ejs", {
-      name: data.name,
-      orderNum: order.number,
-      products: addedProducts,
-      total: order.totalSum,
+    const transformedItem = new OrderDTO(order);
+    transformedItem.products = transformedItem.products.map((item) => {
+      const product = addLinks(item.product, ["imgCover", "images"]);
+      return { product, quantity: item.quantity, price: item.price };
     });
 
-    return new OrderDTO(order);
+    return transformedItem;
   }
 
-  static async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+    /* get all orders with pagination, sorting and filtering */
+
     let data = await orderModel
       .find(filterObj)
       .sort(sortObj)
@@ -84,10 +71,10 @@ export default class orderService {
       .populate({ path: "products.id" });
 
     if (!data.length) {
-      throw new AppError("No documents match the current filters!", 404);
+      throw new AppError("Замовлень за таким запитом не знайдено!", 404);
     }
-    const docs = await orderModel.countDocuments(filterObj);
 
+    // add empty object if product is not found
     data = data.map((order) => {
       order.products = order.products.map((prod) => {
         if (!prod.id?._id) prod.id = {};
@@ -97,26 +84,50 @@ export default class orderService {
       return order;
     });
 
-    return [{ pages: Math.ceil(docs / limit) }, data.map((item) => new OrderDTO(item))];
+    return data.map((item) => {
+      const transformedItem = new OrderDTO(item);
+
+      transformedItem.products = transformedItem.products.map((prodItem) => {
+        const product = addLinks(prodItem.product, ["imgCover", "images"]);
+        return { product, quantity: prodItem.quantity, price: prodItem.price };
+      });
+      return transformedItem;
+    });
   }
 
-  static async getOne(id, populateObj) {
-    let doc = await orderModel.findOne({ number: id }).populate(populateObj);
+  async getOne(id) {
+    /* get one order by id or number */
 
-    if (!doc) {
-      doc = await orderModel.findById(id).populate(populateObj).exec();
-      if (!doc) throw new AppError("There aren't documents with this id!", 404);
+    let doc;
+
+    if (mongoose.isValidObjectId(id)) {
+      doc = await orderModel.findById(id).populate({ path: "products.id" }).exec();
+    } else {
+      doc = await orderModel.findOne({ number: id }).populate({ path: "products.id" });
     }
 
+    if (!doc) {
+      if (!doc) throw new AppError("Замовлень з таким номером не знайдено", 404);
+    }
+
+    // add empty object if product is not found
     doc.products = doc.products.map((prod) => {
       if (!prod.id?._id) prod.id = {};
       return prod;
     });
 
-    return [new OrderDTO(doc)];
+    const transformedItem = new OrderDTO(doc);
+    transformedItem.products = transformedItem.products.map((item) => {
+      const product = addLinks(item.product, ["imgCover", "images"]);
+      return { product, quantity: item.quantity, price: item.price };
+    });
+
+    return transformedItem;
   }
 
-  static getOptions() {
+  getOptions() {
+    /* get all possible options for order */
+
     const options = {
       deliveryType: orderModel.schema.path("deliveryType").enumValues,
       pickupLocation: orderModel.schema.path("pickupLocation").enumValues,
@@ -132,17 +143,23 @@ export default class orderService {
     return options;
   }
 
-  static async updateOne(id, data) {
+  async updateOne(id, data) {
+    /* update order by id */
+
+    await this.getOne(id);
+
+    const productService = new ProductService();
+
+    // get products from db and calculate total sum
     if (data?.products) {
       data.products = await Promise.all(
         data.products.map(async (item) => {
-          const product = await productService.getOne({ id: item.id });
-          if (!product) throw new AppError("incorrect products!", 400);
+          const product = await productService.getOne(item.id, false);
 
           return {
-            id: item.id || "",
+            id: item.id,
             quantity: item.quantity,
-            price: product[0]?.discountPrice || product[0].price * item.quantity,
+            price: (product?.discountPrice || product.price) * item.quantity,
           };
         })
       );
@@ -167,12 +184,26 @@ export default class orderService {
       new: true,
     });
 
-    if (!order) throw new AppError("There aren't documents with this id!", 404);
+    // add empty object if product is not found
+    order.products = order.products.map((prod) => {
+      if (!prod.id?._id) prod.id = {};
+      return prod;
+    });
 
-    return [new OrderDTO(order)];
+    const transformedItem = new OrderDTO(order);
+    transformedItem.products = transformedItem.products.map((item) => {
+      const product = addLinks(item.product, ["imgCover", "images"]);
+      return { product, quantity: item.quantity, price: item.price };
+    });
+
+    return transformedItem;
   }
 
-  static async proceedOrder(id, status, isPayed) {
+  async proceedOrder(id, status, isPayed) {
+    /* proceed order by id */
+
+    await this.getOne(id);
+
     const order = await orderModel
       .findByIdAndUpdate(id, { status, isPayed }, { runValidators: true, new: true })
       .populate({ path: "products.id" });
@@ -182,22 +213,30 @@ export default class orderService {
       return prod;
     });
 
-    return [new OrderDTO(order)];
+    const transformedItem = new OrderDTO(order);
+    transformedItem.products = transformedItem.products.map((item) => {
+      const product = addLinks(item.product, ["imgCover", "images"]);
+      return { product, quantity: item.quantity, price: item.price };
+    });
+
+    return transformedItem;
   }
 
-  static async createCheckout(orderData, userToken) {
-    const newOrder = await this.addOrder(orderData, userToken);
+  async createCheckout(orderDTO) {
+    /* create checkout session for order */
 
-    const orderItems = orderData.products.map(async (item) => {
-      const product = await productService.getOne({ id: item.id });
+    const productService = new ProductService();
+
+    const orderItems = orderDTO.products.map(async (item) => {
+      const product = await productService.getOne(item.product.id);
 
       return {
         price_data: {
           currency: "uah",
-          unit_amount: (product[0]?.discountPrice || product[0].price) * 100,
+          unit_amount: (product?.discountPrice || product.price) * 100,
           product_data: {
-            name: product[0].title,
-            description: product[0]?.description,
+            name: product.title,
+            description: product?.description,
           },
         },
         quantity: item.quantity,
@@ -207,10 +246,10 @@ export default class orderService {
     const stripe = new Stripe(process.env.STRIPE_SECRET);
 
     const session = await stripe.checkout.sessions.create({
-      client_reference_id: `${newOrder.number}`,
+      client_reference_id: `${orderDTO.number}`,
       payment_method_types: ["card"],
-      success_url: `${process.env.CLIENT_URL}/order/success/${newOrder.number}`,
-      customer_email: orderData.email,
+      success_url: `${process.env.CLIENT_URL}/order/success/${orderDTO.number}`,
+      customer_email: orderDTO.email,
       line_items: await Promise.all(orderItems),
       mode: "payment",
       locale: "ru",
@@ -219,7 +258,9 @@ export default class orderService {
     return session;
   }
 
-  static async proceedHook(body, sign) {
+  async proceedHook(body, sign) {
+    /* proceed stripe webhook */
+
     let stripeEvent;
     try {
       stripeEvent = Stripe.webhooks.constructEvent(
@@ -240,7 +281,9 @@ export default class orderService {
     }
   }
 
-  static async getStatsByYear(year) {
+  async getStatsByYear(year) {
+    /* get sales stats by year */
+
     let incomeStats = await orderModel.aggregate([
       {
         $match: {
@@ -269,7 +312,7 @@ export default class orderService {
       },
     ]);
 
-    const topSalers = await orderModel.aggregate([
+    let topSalers = await orderModel.aggregate([
       {
         $match: {
           $expr: {
@@ -324,11 +367,20 @@ export default class orderService {
     }
 
     incomeStats = incomeStats.sort((a, b) => a.month - b.month);
+    topSalers = topSalers.map((item) => {
+      const obj = {
+        product: addLinks(item.product[0], ["imgCover", "images"]),
+        quantity: item.quantity,
+      };
+      return obj;
+    });
 
     return { incomeStats, topSalers };
   }
 
-  static async getStatsByMonth(year, month) {
+  async getStatsByMonth(year, month) {
+    /* get sales stats by month */
+
     let incomeStats = await orderModel.aggregate([
       {
         $match: {
@@ -362,7 +414,7 @@ export default class orderService {
 
     const lastDayOfMonth = 32 - new Date(year, month - 1, 32).getDate();
 
-    const topSalers = await orderModel.aggregate([
+    let topSalers = await orderModel.aggregate([
       {
         $match: {
           $expr: {
@@ -421,6 +473,13 @@ export default class orderService {
     }
 
     incomeStats = incomeStats.sort((a, b) => a.day - b.day);
+    topSalers = topSalers.map((item) => {
+      const obj = {
+        product: addLinks(item.product[0], ["imgCover", "images"]),
+        quantity: item.quantity,
+      };
+      return obj;
+    });
 
     return { incomeStats, topSalers };
   }

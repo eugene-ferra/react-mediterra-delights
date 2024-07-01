@@ -10,13 +10,12 @@ const Review = ({ review }) => {
       <div className={styles.userData}>
         <Picture
           className={styles.avatar}
-          formats={review?.userID?.avatar}
-          alt={review?.userID?.name}
+          formats={review?.user?.avatar}
+          alt={review?.user?.name}
           defaultImg={defaultUser}
         />
         <Text style={{ textTransform: "capitalize" }}>
-          {review?.userID?.name || "Видалений"}{" "}
-          {review?.userID?.lastName || "Користувач"}
+          {review?.user?.name || "Видалений"} {review?.user?.lastName || "Користувач"}
         </Text>
       </div>
 
