@@ -218,7 +218,7 @@ const OrderBox = () => {
             <div className={styles.reciept}>
               <Title type={"small"}>Ваше замовлення</Title>
               <div className={styles.recieptItems}>
-                {products?.[1]?.map((item) => (
+                {products?.data?.map((item) => (
                   <OrderItem
                     key={item?.id}
                     title={item?.title}

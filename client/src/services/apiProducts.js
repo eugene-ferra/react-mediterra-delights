@@ -23,3 +23,7 @@ export const getOneProduct = async (id) => {
 export const getProductImages = async (id) => {
   return await api.get(`/api/files/products/${id}`);
 };
+
+export const getProductsReviews = async (id, page, limit) => {
+  return await api.get(`/api/products/${id}/reviews?page=${page}&limit=${limit}`);
+};

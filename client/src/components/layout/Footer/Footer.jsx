@@ -11,7 +11,15 @@ const Footer = () => {
         <Logo />
         <Navbar />
         <Text className={styles.copyright} type={"small"} align={"center"}>
-          © 2023 Ukraine Delights. Усі права захищені.
+          © {new Date().getFullYear()} Ukraine Delights. Усі права захищені.
+          <br />
+          Дизайн та розробка:
+          <a href="https://t.me/eugene_ferra">
+            {" "}
+            <b style={{ textDecoration: "underline" }}>
+              Eugene Kushnir - fullstack web-developer
+            </b>
+          </a>
         </Text>
       </Container>
     </footer>

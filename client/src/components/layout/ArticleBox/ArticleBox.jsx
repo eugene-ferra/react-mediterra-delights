@@ -170,7 +170,7 @@ const ArticleBox = ({ slug }) => {
               isLoading={moreLoading}
               error={moreError}
               top={<BlockHeader title={"Схожі статті"} />}
-              items={more?.[1]?.map((item) => (
+              items={more?.data?.map((item) => (
                 <Article article={item} key={item?.id} />
               ))}
             />

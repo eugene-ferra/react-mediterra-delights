@@ -24,8 +24,6 @@ const handleMulterError = (err) =>
 
 const sendError = (err, req, res) => {
   if (err.isOperational) {
-    console.error("ERROR (operational)", err);
-
     res.status(err.statusCode).json({
       status: "error",
       message: err.message,

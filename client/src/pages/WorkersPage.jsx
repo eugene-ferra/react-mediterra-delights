@@ -36,12 +36,23 @@ const WorkersPage = () => {
 
         {!isLoading && workers && (
           <Container>
-            {options?.positionTypes.map((posType) => (
+            {options?.positionTypes.map((posType, i) => (
               <>
+                {posType &&
+                  workers?.data?.filter((worker) => worker.positionType == posType)
+                    .length > 0 && (
+                    <Title type={"global"} key={`${posType}-${i}`}>
+                      {posType}
+                    </Title>
+                  )}
+
                 {workers?.data?.filter((worker) => worker.positionType == posType)
                   .length > 0 && (
-                  <Catalog key={posType} type={"full"}>
-                    <Title key={posType}>{posType}</Title>
+                  <Catalog
+                    key={`catalog-${posType}-${i}`}
+                    type={"tiny"}
+                    style={{ gap: "40px 0px" }}
+                  >
                     {workers?.data
                       ?.filter((worker) => worker.positionType == posType)
                       .map((worker) => (

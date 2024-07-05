@@ -40,9 +40,26 @@
       }
     }
   }
-  &Full {
+  &Tiny {
+    gap: 40px 10px;
     @extend .catalog;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    @include mixins.laptop {
+      grid-template-columns: 1fr 1fr;
+    }
+    @include mixins.tablet {
+      grid-template-columns: 1fr 1fr;
+    }
+    @include mixins.mobile {
+      grid-template-columns: 1fr;
+    }
+    @include mixins.smallMobile {
+      justify-content: center;
+      grid-template-columns: 1fr;
+      & > div {
+        justify-content: center;
+      }
+    }
   }
   &NoItems {
     @include mixins.flexRow(0, center, center);

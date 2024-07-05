@@ -87,6 +87,7 @@ const Product = ({ product, isSaved, onUserError }) => {
 
         <Button
           type={"small"}
+          disabled={isAddingToCart || isDeletingFromCart}
           className={styles.button}
           onClick={
             isInCart(product?.id)
@@ -94,8 +95,13 @@ const Product = ({ product, isSaved, onUserError }) => {
               : () => addToCart({ id: product?.id, quantity: 1 })
           }
         >
-          {(isAddingToCart || isDeletingFromCart) && <Loader type={"small"} />}
-          {isInCart(product?.id) ? "Видалити з кошика" : "До кошика"}
+          {isAddingToCart || isDeletingFromCart ? (
+            <Loader type={"small"} />
+          ) : isInCart(product?.id) ? (
+            "Видалити з кошика"
+          ) : (
+            "До кошика"
+          )}
         </Button>
       </div>
     </div>

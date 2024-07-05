@@ -24,40 +24,44 @@ const ReviewManage = () => {
     <>
       <Title>Нові відгуки:</Title>
 
-      <ManageItem
-        isLoading={isLoading}
-        isError={isError}
-        error={<ErrorMassage status={error?.status} />}
-        columns={["Оцінка", "Відгук", ""]}
-        rowsData={reviews?.data?.map((item, i) => [
-          <Stars rating={item?.rating} key={i} />,
-          <Text key={i} style={{ minWidth: "300px" }}>
-            {item?.review}
-          </Text>,
-          <BtnBlock key={i}>
-            <Button
-              type={"success"}
-              onClick={() => publishReview(item?.id)}
-              disabled={isDeleting || isPublishing}
-            >
-              Опублікувати
-            </Button>
-            <Button
-              onClick={() => deleteReview(item?.id)}
-              disabled={isDeleting || isPublishing}
-            >
-              Видалити
-            </Button>
-          </BtnBlock>,
-        ])}
-      >
-        <Pagination
-          totalCount={reviews?.[0]?.pages}
-          siblingCount={2}
-          currPage={searchParams.get("page") || 1}
-          onLink={setSearchParams}
-        />
-      </ManageItem>
+      {!reviews?.data.length && <Text>Нових відгуків поки що немає!</Text>}
+
+      {reviews && reviews?.data?.length > 0 && (
+        <ManageItem
+          isLoading={isLoading}
+          isError={isError}
+          error={<ErrorMassage status={error?.status} />}
+          columns={["Оцінка", "Відгук", ""]}
+          rowsData={reviews?.data?.map((item, i) => [
+            <Stars rating={item?.rating} key={i} />,
+            <Text key={i} style={{ minWidth: "300px" }}>
+              {item?.review}
+            </Text>,
+            <BtnBlock key={i}>
+              <Button
+                type={"success"}
+                onClick={() => publishReview(item?.id)}
+                disabled={isDeleting || isPublishing}
+              >
+                Опублікувати
+              </Button>
+              <Button
+                onClick={() => deleteReview(item?.id)}
+                disabled={isDeleting || isPublishing}
+              >
+                Видалити
+              </Button>
+            </BtnBlock>,
+          ])}
+        >
+          <Pagination
+            totalCount={reviews?.pages}
+            siblingCount={2}
+            currPage={searchParams.get("page") || 1}
+            onLink={setSearchParams}
+          />
+        </ManageItem>
+      )}
     </>
   );
 };

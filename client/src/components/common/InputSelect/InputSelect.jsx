@@ -45,7 +45,7 @@ const SelectComponent = ({
     control: (styles, { isFocused, isSelected }) => ({
       ...styles,
       backgroundColor: "transparent",
-      borderWidth: "2px",
+      borderWidth: "1px",
       borderRadius: 0,
       outlineWidth: 0,
       padding: "2px 5px 2px 5px ",

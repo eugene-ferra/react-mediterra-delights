@@ -8,9 +8,15 @@
   width: 100%;
 }
 
+.date {
+  margin-left: auto;
+  @include mixins.tinyText();
+}
+
 .userData {
   @include mixins.flexRow(10px, flex-start, center);
   text-transform: capitalize;
+  width: 100%;
 }
 
 .avatar {

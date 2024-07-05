@@ -49,7 +49,9 @@
 }
 
 .button {
+  flex-grow: 1;
   border-radius: calc(var(--radius) - 10px);
+  width: max-content;
 }
 
 .toSaved {

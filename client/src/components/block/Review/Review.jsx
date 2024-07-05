@@ -3,6 +3,7 @@ import defaultUser from "../../../assets/defaultUser.svg";
 import Text from "../../common/Text/Text";
 import Stars from "../../common/Stars/Stars";
 import styles from "./review.module.scss";
+import { prettyTime } from "../../../utils/prettyTime";
 
 const Review = ({ review }) => {
   return (
@@ -16,6 +17,14 @@ const Review = ({ review }) => {
         />
         <Text style={{ textTransform: "capitalize" }}>
           {review?.user?.name || "Видалений"} {review?.user?.lastName || "Користувач"}
+        </Text>
+
+        <Text className={styles.date}>
+          {prettyTime(review?.createdAt, {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+          })}
         </Text>
       </div>
 

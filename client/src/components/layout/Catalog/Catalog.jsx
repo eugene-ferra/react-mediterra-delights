@@ -1,14 +1,14 @@
 import styles from "./Catalog.module.scss";
 
-const Catalog = ({ children, type }) => {
+const Catalog = ({ children, type, style }) => {
   let classType;
 
   switch (type) {
     case "small":
       classType = styles.catalogSmall;
       break;
-    case "full":
-      classType = styles.catalogFull;
+    case "tiny":
+      classType = styles.catalogTiny;
       break;
     case "no-items":
       classType = styles.catalogNoItems;
@@ -18,7 +18,11 @@ const Catalog = ({ children, type }) => {
       classType = styles.catalog;
   }
 
-  return <div className={classType}>{children}</div>;
+  return (
+    <div className={classType} style={style}>
+      {children}
+    </div>
+  );
 };
 
 export default Catalog;

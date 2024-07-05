@@ -68,7 +68,7 @@ const WorkersManageAdd = () => {
               title={"Категорія робітника*"}
               placeholder={"Категорія"}
               valuesArr={options?.positionTypes}
-              errorMessage={errors?.positionTypes}
+              errorMessage={errors?.positionType}
               name={"positionType"}
               disabled={isAdding}
             />

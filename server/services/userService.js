@@ -18,7 +18,7 @@ export default class userService {
     return Math.ceil(docs / limit);
   }
 
-  async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }, completeUrl = true) {
     /* get all users with pagination, sorting and filtering */
 
     const data = await userModel
@@ -31,19 +31,22 @@ export default class userService {
       throw new AppError("Користувачів за таким запитом не знайдено!", 404);
     }
 
+    if (!completeUrl) return data.map((item) => new UserDTO(item));
+
     return data.map((item) => {
       const user = new UserDTO(item);
       return addLinks(user, ["avatar"]);
     });
   }
 
-  async getOne(id) {
+  async getOne(id, completeUrl = true) {
     /* get one user by id */
 
     const doc = await userModel.findById(id).exec();
 
     if (!doc) throw new AppError("Користувача за таким запитом не знайдено!", 404);
 
+    if (!completeUrl) return new UserDTO(doc);
     return addLinks(new UserDTO(doc), ["avatar"]);
   }
 
@@ -57,16 +60,17 @@ export default class userService {
     return true;
   }
 
-  async findUserByEmail(email) {
+  async findUserByEmail(email, completeUrl = true) {
     /* find user by email */
 
     const doc = await userModel.findOne({ email }).exec();
     if (!doc) throw new AppError("Користувача з таким email не знайдено!", 404);
 
+    if (!completeUrl) return new UserDTO(doc);
     return addLinks(new UserDTO(doc), ["avatar"]);
   }
 
-  async addOne({ name, lastName, email, password }) {
+  async addOne({ name, lastName, email, password }, completeUrl = true) {
     /* create new user */
 
     await this.testEmail(email);
@@ -79,6 +83,7 @@ export default class userService {
       password: hashPassword,
     });
 
+    if (!completeUrl) return new UserDTO(user);
     return addLinks(new UserDTO(user), ["avatar"]);
   }
 
@@ -117,7 +122,9 @@ export default class userService {
 
     return {
       name: user.name,
-      link: `${process.env.CLIENT_URL}/reset-password/${plainResetToken}?email=${email}&next=${path}`,
+      link: `${
+        process.env.CLIENT_URL
+      }/reset-password/${plainResetToken}?email=${email}&next=${path || "/"}`,
       time: `${hours} години`,
     };
   }
@@ -249,12 +256,12 @@ export default class userService {
     return addLinks(new UserDTO(updatedUser), ["avatar"]);
   }
 
-  async updateOne(id, data, avatar) {
+  async updateOne(id, data, avatar, completeUrl = true) {
     /* update user data by id with avatar*/
 
     const FS = new FileService();
 
-    const prevUser = await this.getOne(id);
+    const prevUser = await this.getOne(id, false);
     const payload = `${data?.name || prevUser.name}-${
       data?.lastName || prevUser.lastName
     }`;
@@ -282,7 +289,8 @@ export default class userService {
 
       if (savedAvatar) await FS.deleteFiles(prevUser.avatar);
 
-      addLinks(new UserDTO(updatedDoc), ["avatar"]);
+      if (!completeUrl) return new UserDTO(updatedDoc);
+      return addLinks(new UserDTO(updatedDoc), ["avatar"]);
     } catch (err) {
       await FS.deleteFiles(savedAvatar);
       throw err;
@@ -293,7 +301,7 @@ export default class userService {
     /* delete user by id */
 
     const FS = new FileService();
-    const user = await this.getOne(id);
+    const user = await this.getOne(id, false);
 
     await userModel.findByIdAndDelete(id);
 

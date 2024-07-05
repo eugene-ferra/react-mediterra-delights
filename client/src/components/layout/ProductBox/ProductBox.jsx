@@ -6,7 +6,6 @@ import { usePostReview } from "./usePostReview";
 import { useSavedProduct } from "../../../hooks/useSavedProduct";
 import { useCart } from "../../../hooks/useCart";
 import { useProducts } from "../../../hooks/useProducts";
-import { useReviews } from "../../../hooks/useReviews";
 import Container from "../Container/Container";
 import { useProduct } from "../../../hooks/useProduct";
 import Title from "../../common/Title/Title";
@@ -33,6 +32,7 @@ import Product from "../../block/Product/Product";
 import loginImg from "../../../assets/login.svg";
 import styles from "./ProductBox.module.scss";
 import { prepareData } from "../../../utils/prepareData";
+import { useProductReviews } from "./useProductReviews";
 
 const ProductBox = ({ slug }) => {
   const navigate = useNavigate();
@@ -51,12 +51,9 @@ const ProductBox = ({ slug }) => {
 
   const [page, setPage] = useState({ page: 1 });
 
-  const { reviews, isLoading: isReviewsLoading } = useReviews(
-    product && `isModerated=true&productID=${product?.id}&page=${page.page}&limit=5`
-  );
-
-  const { reviews: userReview } = useReviews(
-    product && user && `productID=${product?.id}&user=${user?.id}`
+  const { reviews, isLoading: isReviewsLoading } = useProductReviews(
+    product?.id,
+    page.page
   );
 
   const {
@@ -211,7 +208,7 @@ const ProductBox = ({ slug }) => {
                 <div className={styles.reviewsHeader}>
                   <Title type={"small"}>Відгуки</Title>
 
-                  {user && !userReview && (
+                  {user && !reviews?.userReview && (
                     <Button onClick={() => setIsModalOpen(true)}>Написати відгук</Button>
                   )}
                   {!user && (
@@ -226,24 +223,32 @@ const ProductBox = ({ slug }) => {
                       {reviews?.data?.map((review) => (
                         <Review review={review} key={review.id} />
                       ))}
-                      <Pagination
-                        totalCount={reviews?.pages}
-                        currPage={page.page}
-                        onLink={setPage}
-                      />
+
+                      {reviews?.pages > 1 && (
+                        <Pagination
+                          totalCount={reviews?.pages}
+                          currPage={page.page}
+                          onLink={setPage}
+                        />
+                      )}
                     </>
                   )}
 
-                  {!reviews && !isReviewsLoading && !userReview && (
-                    <Text align={"center"}>
-                      Відгуків ще немає. Будьте першим, хто залише відгук на цей продукт!
-                    </Text>
-                  )}
-                  {!reviews && !isReviewsLoading && userReview && (
-                    <Text align={"center"}>
-                      Ваш відгук знаходиться на модерації. Дякуємо!
-                    </Text>
-                  )}
+                  {!reviews?.data.length &&
+                    !isReviewsLoading &&
+                    !reviews?.userReview && (
+                      <Text align={"center"}>
+                        Відгуків ще немає. Будьте першим, хто залише відгук на цей
+                        продукт!
+                      </Text>
+                    )}
+                  {!isReviewsLoading &&
+                    reviews?.userReview &&
+                    !reviews.userReview.isModerated && (
+                      <Text align={"center"}>
+                        Ваш відгук знаходиться на модерації. Дякуємо!
+                      </Text>
+                    )}
                 </div>
               </div>
             </div>
@@ -255,7 +260,7 @@ const ProductBox = ({ slug }) => {
             isLoading={categoryLoading}
             error={categoryError}
             top={<BlockHeader title={"Схожі страви"} />}
-            items={categoryProducts?.[1]?.map((item) => (
+            items={categoryProducts?.data?.map((item) => (
               <Product
                 product={item}
                 key={item?.id}

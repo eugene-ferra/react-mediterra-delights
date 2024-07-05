@@ -155,7 +155,6 @@ const App = () => {
     <CartProvider>
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
           <RouterProvider router={router} />
         </QueryClientProvider>
       </ThemeProvider>

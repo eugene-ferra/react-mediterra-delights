@@ -18,7 +18,7 @@ export default class workerService {
     return Math.ceil(docs / limit);
   }
 
-  async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }, completeUrl = true) {
     /* get all workers with pagination, sorting and filtering */
 
     const data = await WorkerModel.find(filterObj)
@@ -30,23 +30,26 @@ export default class workerService {
       throw new AppError("Правівників за таким запитом не знайдено!", 404);
     }
 
+    if (!completeUrl) return data.map((item) => new WorkerDTO(item));
+
     return data.map((item) => {
       const workerDTO = new WorkerDTO(item);
       return addLinks(workerDTO, ["photo"]);
     });
   }
 
-  async getOne(id) {
+  async getOne(id, completeUrl = true) {
     /* get one worker by id or slug */
 
     const doc = await WorkerModel.findById(id).exec();
 
     if (!doc) throw new AppError("Такого працівника не знайдено!", 404);
 
+    if (!completeUrl) return new WorkerDTO(doc);
     return addLinks(new WorkerDTO(doc), ["photo"]);
   }
 
-  async addOne(textData, photo) {
+  async addOne(textData, photo, completeUrl = true) {
     /* add one worker with photo*/
 
     const FS = new FileService();
@@ -58,6 +61,8 @@ export default class workerService {
 
     try {
       const doc = await WorkerModel.create(textData);
+
+      if (!completeUrl) return new WorkerDTO(doc);
       return addLinks(new WorkerDTO(doc), ["photo"]);
     } catch (err) {
       await FS.deleteFiles(savedPhoto);
@@ -65,10 +70,10 @@ export default class workerService {
     }
   }
 
-  async updateOne(id, data, photo) {
+  async updateOne(id, data, photo, completeUrl = true) {
     /* update one worker by id with photo */
 
-    const doc = await this.getOne(id);
+    const doc = await this.getOne(id, false);
     const FS = new FileService();
 
     const oldPhoto = JSON.parse(JSON.stringify(doc.photo));
@@ -91,6 +96,7 @@ export default class workerService {
         new: true,
       });
 
+      if (!completeUrl) return new WorkerDTO(updatedDoc);
       return addLinks(new WorkerDTO(updatedDoc), ["photo"]);
     } catch (err) {
       await FS.deleteFiles(savedPhoto);
@@ -102,7 +108,7 @@ export default class workerService {
     /* delete one worker by id with photo */
 
     const FS = new FileService();
-    const doc = await this.getOne(id);
+    const doc = await this.getOne(id, false);
 
     const photo = JSON.parse(JSON.stringify(doc.photo));
 

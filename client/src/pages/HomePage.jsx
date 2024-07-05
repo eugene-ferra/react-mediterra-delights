@@ -102,7 +102,7 @@ const HomePage = () => {
               linkText={"Всі страви"}
             />
           }
-          items={popular?.[1]?.map((item) => (
+          items={popular?.data?.map((item) => (
             <Product
               product={item}
               key={item?.id}
@@ -115,7 +115,7 @@ const HomePage = () => {
           isLoading={newsLoading}
           error={newsError}
           top={<BlockHeader title={"Новинки"} />}
-          items={news?.[1]?.map((item) => (
+          items={news?.data?.map((item) => (
             <Product
               product={item}
               key={item?.id}
@@ -134,7 +134,7 @@ const HomePage = () => {
               linkText={"Всі супи"}
             />
           }
-          items={soups?.[1]?.map((item) => (
+          items={soups?.data?.map((item) => (
             <Product
               product={item}
               key={item?.id}
@@ -153,7 +153,7 @@ const HomePage = () => {
               linkText={"Всі м'ясні страви"}
             />
           }
-          items={meat?.[1]?.map((item) => (
+          items={meat?.data?.map((item) => (
             <Product
               product={item}
               key={item?.id}
@@ -166,7 +166,7 @@ const HomePage = () => {
           isLoading={veganLoading}
           error={veganError}
           top={<BlockHeader title={"Для веганів"} />}
-          items={vegan?.[1]?.map((item) => (
+          items={vegan?.data?.map((item) => (
             <Product
               product={item}
               key={item?.id}

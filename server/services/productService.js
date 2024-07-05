@@ -46,9 +46,16 @@ export default class productService {
 
   async getOne(id, completeUrl = true) {
     /* get one product by id or slug */
+
     let doc;
     if (mongoose.isValidObjectId(id)) {
-      doc = await productModel.findById(id).exec();
+      // bug with mongoose, sometimes random string can be valid id
+      try {
+        doc = await productModel.findById(id).exec();
+        if (!doc) throw new Error();
+      } catch {
+        doc = await productModel.findOne({ slug: id }).exec();
+      }
     } else {
       doc = await productModel.findOne({ slug: id }).exec();
     }

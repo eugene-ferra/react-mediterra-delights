@@ -46,7 +46,7 @@ export default class reviewService {
       .populate({ path: "userID", model: "User" })
       .exec();
 
-    if (doc.length === 0) throw new AppError("Даний відгук не знайдено!", 404);
+    if (!doc) throw new AppError("Даний відгук не знайдено!", 404);
 
     const transformedItem = new ReviewDTO(doc);
     transformedItem.user = addLinks(transformedItem.user, "avatar");

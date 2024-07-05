@@ -1,4 +1,5 @@
 import ReviewService from "../services/reviewService.js";
+import AuthService from "../services/authService.js";
 import getQueryData from "../utils/getQueryData.js";
 import getReviewData from "../utils/getReviewData.js";
 import sendResponse from "../utils/sendResponse.js";
@@ -10,7 +11,7 @@ export const addReview = async (req, res, next) => {
 
     const doc = await reviewService.addOne(reviewBody);
 
-    sendResponse(res, 201, doc);
+    sendResponse({ res, statusCode: 201, data: doc });
   } catch (error) {
     next(error);
   }
@@ -19,18 +20,39 @@ export const addReview = async (req, res, next) => {
 export const getAllReviews = async (req, res, next) => {
   try {
     const reviewService = new ReviewService();
+    const authService = new AuthService();
 
     let { filterObj } = getQueryData(req);
     const { sortObj, page, limit } = getQueryData(req);
+    let userReview = null;
 
     // If productID is provided, get reviews for that product only
     if (req.params.productID) {
       filterObj = { ...filterObj, productID: req.params.productID, isModerated: true };
     }
-    const data = await reviewService.getAll({ filterObj, sortObj, page, limit });
+
+    let data;
+    try {
+      data = await reviewService.getAll({ filterObj, sortObj, page, limit });
+    } catch (error) {
+      data = [];
+    }
+
     const pages = await reviewService.countPages(filterObj, limit);
 
-    sendResponse({ res, statusCode: 200, data: { pages, data } });
+    if (req.cookies.access) {
+      const decoded = await authService.validateAccessToken(req.cookies.access);
+
+      const userReviews = await reviewService.getAll({
+        filterObj: { userID: decoded.id },
+      });
+
+      userReview =
+        // eslint-disable-next-line eqeqeq
+        userReviews.find((review) => review.productID == filterObj.productID) || null;
+    }
+
+    sendResponse({ res, statusCode: 200, data: { pages, data, userReview } });
   } catch (err) {
     next(err);
   }

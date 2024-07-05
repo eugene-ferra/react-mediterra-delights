@@ -54,8 +54,17 @@ export const registerValidationSchema = {
       if: body("name").exists(),
       options: [/^[-'\p{L}]*$/u],
       errorMessage: "Будь-ласка, вкажіть коректне ім'я!",
+      isLength: {
+        options: {
+          min: 3,
+          max: 20,
+        },
+        errorMessage: "Ім'я має бути від 3 до 20 символів!",
+      },
+      trim: true,
     },
     isLength: {
+      if: body("name").exists(),
       options: {
         min: 3,
         max: 20,

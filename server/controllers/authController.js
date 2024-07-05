@@ -156,7 +156,7 @@ export const resetPassword = async (req, res, next) => {
       await authService.removeOldTokens(user._id, item.refreshToken, item.device);
     });
 
-    sendResponse({ res, statusCode: 200, data: null });
+    sendResponse({ res, statusCode: 200 });
   } catch (error) {
     next(error);
   }

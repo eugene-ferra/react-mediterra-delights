@@ -42,7 +42,7 @@ export default class articleService {
     return Math.ceil(docs / limit);
   }
 
-  async getAll({ filterObj, sortObj, page = 1, limit = 15 }) {
+  async getAll({ filterObj, sortObj, page = 1, limit = 15 }, completeUrl = true) {
     /* get all articles with pagination, sorting and filtering */
     const data = await articleModel
       .find(filterObj)
@@ -54,12 +54,15 @@ export default class articleService {
       throw new AppError("Статей за таким запитом не знайдено!", 404);
     }
 
+    if (!completeUrl)
+      return data.map((item) => new ArticleDTO(this._addLinksToMarkup(item)));
+
     return data.map((item) =>
       addLinks(new ArticleDTO(this._addLinksToMarkup(item)), ["imgCover"])
     );
   }
 
-  async getAndAddViews({ id, ip, userAgent }) {
+  async getAndAddViews({ id, ip, userAgent }, completeUrl = true) {
     let article;
     if (mongoose.isValidObjectId(id)) {
       article = await articleModel.findById(id).exec();
@@ -86,10 +89,12 @@ export default class articleService {
       );
     }
 
+    if (!completeUrl) return new ArticleDTO(this._addLinksToMarkup(article));
+
     return addLinks(new ArticleDTO(this._addLinksToMarkup(article)), ["imgCover"]);
   }
 
-  async getOne(id) {
+  async getOne(id, completeUrl = true) {
     /* get one article by id or slug */
 
     let doc;
@@ -101,10 +106,12 @@ export default class articleService {
 
     if (!doc) throw new AppError("Такої статті не знайдено!", 404);
 
+    if (!completeUrl) return new ArticleDTO(this._addLinksToMarkup(doc));
+
     return addLinks(new ArticleDTO(this._addLinksToMarkup(doc)), ["imgCover"]);
   }
 
-  async addOne(data, imgCover) {
+  async addOne(data, imgCover, completeUrl = true) {
     /* add one article to the database with image */
 
     const FS = new FileService();
@@ -124,6 +131,8 @@ export default class articleService {
 
     try {
       const doc = await articleModel.create(data);
+      if (!completeUrl) return new ArticleDTO(this._addLinksToMarkup(doc));
+
       return addLinks(new ArticleDTO(this._addLinksToMarkup(doc)), ["imgCover"]);
     } catch (err) {
       await FS.deleteFiles(savedCover);
@@ -131,14 +140,14 @@ export default class articleService {
     }
   }
 
-  async updateOne(id, data, imgCover) {
+  async updateOne(id, data, imgCover, completeUrl = true) {
     /* update one article by id with image */
 
     const FS = new FileService();
     let savedCover = null;
     let linksToDelete = [];
 
-    const doc = await this.getOne(id);
+    const doc = await this.getOne(id, false);
 
     // Check if the title has changed and if the slug is unique
     if (data.title !== doc.title && data.title) {
@@ -201,6 +210,9 @@ export default class articleService {
         new: true,
       });
       await FS.deleteFiles(linksToDelete);
+
+      if (!completeUrl) return new ArticleDTO(this._addLinksToMarkup(updatedDoc));
+
       return addLinks(new ArticleDTO(this._addLinksToMarkup(updatedDoc)), ["imgCover"]);
     } catch (err) {
       if (savedCover) await FS.deleteFiles(savedCover);
@@ -213,7 +225,7 @@ export default class articleService {
     /* delete one article by id with images */
 
     const FS = new FileService();
-    const doc = await this.getOne(id);
+    const doc = await this.getOne(id, false);
     const $ = cheerio.load(doc.markup);
 
     // Get all links from the markup
@@ -232,7 +244,7 @@ export default class articleService {
     await FS.deleteFiles(doc.imgCover);
   }
 
-  static getOptions() {
+  getOptions() {
     /* get all possible options for articles */
 
     const options = {

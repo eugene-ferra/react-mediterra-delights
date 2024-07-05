@@ -9,6 +9,7 @@ import OrderFullBlock from "../components/block/OrderFullBlock/OrderFullBlock";
 import SubmitSearch from "../components/layout/SubmitSearch/SubmitSearch";
 import PageLoader from "../components/layout/PageLoader/PageLoader";
 import ErrorMassage from "../components/common/ErrorMassage/ErrorMassage";
+import Text from "../components/common/Text/Text";
 
 const CheckOrderPage = () => {
   const [number, setNumber] = useState(null);
@@ -26,9 +27,14 @@ const CheckOrderPage = () => {
             isLoading={isLoading}
             inputTitle={"Введіть номер замовлення*"}
           >
-            {order && !isLoading && <OrderFullBlock order={order?.[0]} />}
+            {order && !isLoading && <OrderFullBlock order={order} />}
             {isLoading && <PageLoader />}
-            {!order && isError && <ErrorMassage status={error?.status} />}
+            {!order && number && isError && <ErrorMassage status={error?.status} />}
+            {!order && !number && (
+              <Text align={"center"}>
+                Для відображення інформації по замовленню введіть його номер вище!
+              </Text>
+            )}
           </SubmitSearch>
         </Container>
       </MainLayout>

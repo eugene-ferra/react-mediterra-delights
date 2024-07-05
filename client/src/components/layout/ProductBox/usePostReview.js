@@ -11,8 +11,9 @@ export const usePostReview = (resetForm) => {
 
   const mutation = useMutation({
     mutationFn: (data) => postReview(data),
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Відгук успішно додано. Він буде опублікований після модерації!");
+      queryClient.refetchQueries({ queryKey: ["product", data.productID] });
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
       resetForm();
     },

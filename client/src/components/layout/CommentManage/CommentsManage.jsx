@@ -23,39 +23,45 @@ const CommentManage = () => {
     <>
       <Title>Нові коментарі:</Title>
 
-      <ManageItem
-        isLoading={isLoading}
-        isError={isError}
-        error={<ErrorMassage status={error?.status} />}
-        columns={["Відгук", ""]}
-        rowsData={comments?.[1]?.map((item, i) => [
-          <Text key={i} style={{ minWidth: "300px" }}>
-            {item?.comment}
-          </Text>,
-          <BtnBlock key={i}>
-            <Button
-              type={"success"}
-              onClick={() => publishComment(item?.id)}
-              disabled={isDeleting || isPublishing}
-            >
-              Опублікувати
-            </Button>
-            <Button
-              onClick={() => deleteComment(item?.id)}
-              disabled={isDeleting || isPublishing}
-            >
-              Видалити
-            </Button>
-          </BtnBlock>,
-        ])}
-      >
-        <Pagination
-          totalCount={comments?.[0]?.pages}
-          siblingCount={2}
-          currPage={searchParams.get("page") || 1}
-          onLink={setSearchParams}
-        />
-      </ManageItem>
+      {error?.status == 404 && !comments?.data && (
+        <Text>Нових коментарів поки що немає!</Text>
+      )}
+
+      {comments?.data && !error && (
+        <ManageItem
+          isLoading={isLoading}
+          isError={isError}
+          error={<ErrorMassage status={error?.status} />}
+          columns={["Відгук", ""]}
+          rowsData={comments?.data?.map((item, i) => [
+            <Text key={i} style={{ minWidth: "300px" }}>
+              {item?.comment}
+            </Text>,
+            <BtnBlock key={i}>
+              <Button
+                type={"success"}
+                onClick={() => publishComment(item?.id)}
+                disabled={isDeleting || isPublishing}
+              >
+                Опублікувати
+              </Button>
+              <Button
+                onClick={() => deleteComment(item?.id)}
+                disabled={isDeleting || isPublishing}
+              >
+                Видалити
+              </Button>
+            </BtnBlock>,
+          ])}
+        >
+          <Pagination
+            totalCount={comments?.pages}
+            siblingCount={2}
+            currPage={searchParams.get("page") || 1}
+            onLink={setSearchParams}
+          />
+        </ManageItem>
+      )}
     </>
   );
 };
