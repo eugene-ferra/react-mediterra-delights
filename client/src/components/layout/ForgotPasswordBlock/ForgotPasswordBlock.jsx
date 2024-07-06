@@ -4,7 +4,7 @@ import { useForgotPassword } from "./useForgotPassword";
 import Picture from "../../common/Picture/Picture";
 import Form from "../Form/Form";
 import MainLayout from "../MainLayout/MainLayout";
-import forgotPassImg from "../../../assets/forgotPassword.png";
+import ForgotPassImg from "../../../assets/ForgotPassword.png";
 import Input from "../../common/Input/Input";
 import Title from "../../common/Title/Title";
 import Text from "../../common/Text/Text";
@@ -30,7 +30,7 @@ const ForgotPasswordBlock = () => {
         <div className={styles.imgInner}>
           <Picture
             className={styles.img}
-            formats={{ jpg: forgotPassImg }}
+            formats={{ jpg: ForgotPassImg }}
             alt={"Забули пароль?"}
           />
         </div>

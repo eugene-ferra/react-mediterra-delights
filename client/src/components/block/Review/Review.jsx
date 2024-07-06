@@ -2,7 +2,7 @@ import Picture from "../../common/Picture/Picture";
 import defaultUser from "../../../assets/defaultUser.svg";
 import Text from "../../common/Text/Text";
 import Stars from "../../common/Stars/Stars";
-import styles from "./review.module.scss";
+import styles from "./Review.module.scss";
 import { prettyTime } from "../../../utils/prettyTime";
 
 const Review = ({ review }) => {

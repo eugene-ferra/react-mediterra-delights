@@ -261,9 +261,10 @@ export default class orderService {
   async proceedHook(body, sign) {
     /* proceed stripe webhook */
 
+    const stripe = new Stripe(process.env.STRIPE_SECRET);
     let stripeEvent;
     try {
-      stripeEvent = Stripe.webhooks.constructEvent(
+      stripeEvent = stripe.webhooks.constructEvent(
         body,
         sign,
         process.env.STRIPE_WEBHOOK_SECRET
