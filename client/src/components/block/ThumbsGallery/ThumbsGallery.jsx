@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import PrevIcon from "../../svg/PrevIcon";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Controller, Keyboard, Navigation, Thumbs } from "swiper/modules";
@@ -8,43 +8,38 @@ import styles from "./ThumbsGallery.module.scss";
 
 const ThumbsGallery = ({ images, alt }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState();
-  const [firstSwiper] = useState();
-  const [secondSwiper] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
   const swiper1Ref = useRef(null);
-  const swiper2Ref = useRef();
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  const swiper2Ref = useRef(null);
 
-  useLayoutEffect(() => {
-    if (swiper1Ref.current !== null) {
-      swiper1Ref.current.controller.control = swiper2Ref.current;
-    }
+  // console.log(swiper1Ref.current.swiper.activeIndex);
+
+  const handlePrev = useCallback(() => {
+    if (!swiper1Ref.current) return;
+    swiper1Ref.current.swiper.slidePrev();
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (!swiper1Ref.current) return;
+    swiper1Ref.current.swiper.slideNext();
   }, []);
 
   return (
     <>
       <div>
         <div className={styles.top}>
-          <button ref={prevRef} className={styles.buttonPrev}>
+          <button
+            className={styles.buttonPrev}
+            onClick={handlePrev}
+            disabled={swiper1Ref?.current?.swiper.activeIndex == 0}
+          >
             <PrevIcon />
           </button>
           <Swiper
+            ref={swiper1Ref}
             zoom={true}
-            onInit={(swiper) => {
-              swiper.params.navigation.prevEl = prevRef.current;
-              swiper.params.navigation.nextEl = nextRef.current;
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
             onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
             className={styles.slider}
-            onSwiper={(swiper) => {
-              if (swiper1Ref.current !== null) {
-                swiper1Ref.current = swiper;
-              }
-            }}
-            controller={{ control: secondSwiper }}
             spaceBetween={10}
             slidesPerView={1}
             keyboard={{
@@ -62,13 +57,17 @@ const ThumbsGallery = ({ images, alt }) => {
               </SwiperSlide>
             ))}
           </Swiper>
-          <button ref={nextRef} className={styles.buttonNext}>
+          <button
+            className={styles.buttonNext}
+            onClick={handleNext}
+            disabled={swiper1Ref?.current?.swiper.activeIndex == images.length - 1}
+          >
             <NextIcon />
           </button>
         </div>
         <Swiper
+          ref={swiper2Ref}
           className={styles.thumbs}
-          controller={{ control: firstSwiper }}
           spaceBetween={10}
           slidesPerView={4}
           watchSlidesProgress

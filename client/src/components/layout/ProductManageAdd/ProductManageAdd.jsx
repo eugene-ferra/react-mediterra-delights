@@ -12,7 +12,6 @@ import TextArea from "../../common/TextArea/TextArea";
 import CheckBox from "../../common/CheckBox/CheckBox";
 import FieldSet from "../FieldSet/FieldSet";
 import Loader from "../../common/Loader/Loader";
-import { useEffect } from "react";
 
 const ProductManageAdd = () => {
   const { options } = useProductsOptions();
@@ -167,7 +166,7 @@ const ProductManageAdd = () => {
             />
           </FieldSet>
 
-          <Button disabled={isAdding}>{isAdding ? <Loader /> : "Cтворити"}</Button>
+          <Button disabled={isAdding}>{isAdding && <Loader />} Cтворити</Button>
         </Form>
       </FormProvider>
     </>

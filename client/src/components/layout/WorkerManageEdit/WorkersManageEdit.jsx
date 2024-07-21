@@ -150,7 +150,7 @@ const WorkersManageEdit = () => {
             </FieldSet>
 
             <Button disabled={isChanging || isDeleting}>
-              {isChanging ? <Loader /> : "Редагувати"}
+              {isChanging && <Loader />} Редагувати
             </Button>
           </Form>
 

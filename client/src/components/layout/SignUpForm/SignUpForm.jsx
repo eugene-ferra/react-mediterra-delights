@@ -72,7 +72,7 @@ const SignUpForm = () => {
           onChange={(event) => setValue("password", event.target.value)}
         />
         <Button disabled={isLoading} style={{ width: "100%" }}>
-          {isLoading ? <Loader /> : "Реєстрація"}
+          {isLoading && <Loader />} Реєстрація
         </Button>
         <Text type="small" align={"center"}>
           Вже маєте аккаунт? <Link to={`/login?next=${pathname}`}>Увійти в аккаунт</Link>

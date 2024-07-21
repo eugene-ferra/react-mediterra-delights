@@ -17,6 +17,7 @@ import Title from "../../common/Title/Title";
 import Text from "../../common/Text/Text";
 import BtnBlock from "../BtnBlock/BtnBlock";
 import styles from "./AccountMain.module.scss";
+import Loader from "../../common/Loader/Loader";
 
 const AccountMain = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -110,7 +111,10 @@ const AccountMain = () => {
               register={methods.register("email")}
             />
           </FieldSet>
-          <Button disabled={isLoading}>Зберегти</Button>
+          <Button disabled={isLoading}>
+            {isLoading && <Loader type={"small"} />}
+            Зберегти
+          </Button>
         </Form>
       </FormProvider>
 
@@ -144,7 +148,16 @@ const AccountMain = () => {
               isShow={isConfirmPassShow}
             />
           </FieldSet>
-          <Button disabled={isLoading}>Змінити пароль</Button>
+          <Button disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader type={"small"} />
+                Зміна паролю...
+              </>
+            ) : (
+              "Змінити пароль"
+            )}
+          </Button>
         </Form>
       </FormProvider>
 

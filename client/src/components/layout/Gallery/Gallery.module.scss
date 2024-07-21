@@ -6,13 +6,18 @@
 }
 
 .slider {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   padding: 30px 4px 10px !important;
+  position: relative;
 }
 
 .slide {
   height: auto !important;
   display: flex !important;
+  width: 300px;
+  @include mixins.smallMobile {
+    width: 290px;
+  }
   justify-content: center !important;
   & > * {
     width: 100%;

@@ -266,7 +266,7 @@ export default class userService {
       data?.lastName || prevUser.lastName
     }`;
 
-    const savedAvatar = !data?.password
+    const savedAvatar = avatar
       ? await FS.saveOneImage(avatar, this._folder, payload, 300)
       : null;
 

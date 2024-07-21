@@ -8,7 +8,7 @@
 }
 
 .mainContent {
-  @include mixins.flexRow(25px, flex-start, center, nowrap);
+  @include mixins.flexRow(15px, center, center, nowrap);
   padding: 14px 10px;
   @include mixins.tablet {
     padding: 6px 10px;
@@ -19,7 +19,7 @@
 }
 
 .navbar {
-  margin: 0 auto 0 50px;
+  margin: 0px auto 0px 0px;
   &Mobile {
     @include mixins.flexColumn(10px, center, center);
   }

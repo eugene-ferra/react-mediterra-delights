@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import PrevIcon from "../../svg/PrevIcon";
 import { Keyboard, Navigation } from "swiper/modules";
@@ -10,8 +10,17 @@ import "swiper/css";
 import styles from "./Gallery.module.scss";
 
 const Gallery = ({ items, isLoading, error, top, breakpoints, height }) => {
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  let sliderRef = useRef(null);
+
+  const handlePrev = useCallback(() => {
+    if (!sliderRef.current) return;
+    sliderRef.current.swiper.slidePrev();
+  }, []);
+
+  const handleNext = useCallback(() => {
+    if (!sliderRef.current) return;
+    sliderRef.current.swiper.slideNext();
+  }, []);
 
   return (
     <Container>
@@ -25,44 +34,39 @@ const Gallery = ({ items, isLoading, error, top, breakpoints, height }) => {
         <div className={styles.inner}>
           {top}
           <Swiper
+            ref={sliderRef}
             keyboard={{ enabled: true }}
             spaceBetween={10}
-            slidesPerView={5}
             grabCursor={true}
+            pagination={{ clickable: true }}
             modules={[Navigation, Keyboard]}
             className={styles.slider}
             style={{ height: height }}
             breakpoints={
               breakpoints || {
                 320: {
-                  slidesPerView: 1,
+                  slidesPerView: 1.1,
                 },
                 450: {
-                  slidesPerView: 2,
+                  slidesPerView: 1.5,
                 },
                 576: {
-                  slidesPerView: 2,
+                  slidesPerView: 2.2,
                 },
                 768: {
-                  slidesPerView: 3,
+                  slidesPerView: 3.1,
                 },
                 992: {
-                  slidesPerView: 3,
+                  slidesPerView: 3.2,
                 },
                 1200: {
-                  slidesPerView: 4,
+                  slidesPerView: 4.2,
                 },
                 1440: {
-                  slidesPerView: 5,
+                  slidesPerView: 5.2,
                 },
               }
             }
-            onInit={(swiper) => {
-              swiper.params.navigation.prevEl = prevRef.current;
-              swiper.params.navigation.nextEl = nextRef.current;
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
           >
             {items?.map((item, i) => (
               <SwiperSlide key={i} className={styles.slide}>
@@ -72,10 +76,10 @@ const Gallery = ({ items, isLoading, error, top, breakpoints, height }) => {
           </Swiper>
 
           <div className={styles.pagination}>
-            <button ref={prevRef} className={styles.buttonPrev}>
+            <button className={styles.buttonPrev} onClick={handlePrev}>
               <PrevIcon />
             </button>
-            <button ref={nextRef} className={styles.buttonNext}>
+            <button className={styles.buttonNext} onClick={handleNext}>
               <NextIcon />
             </button>
           </div>

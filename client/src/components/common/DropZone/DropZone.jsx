@@ -138,10 +138,14 @@ const Drop = ({
             ? null
             : files.map((file, index) => (
                 <div key={`${file?.name}-${file?.preview}`}>
-                  <div className={styles.previewImage}>
+                  <div
+                    className={
+                      file?.preview ? styles.previewImage : styles.previewImageFail
+                    }
+                  >
                     <img
                       src={file?.preview}
-                      alt={`Preview ${index + 1}`}
+                      alt={`Схоже, такої картинки не існує...`}
                       onLoad={() => {
                         URL.revokeObjectURL(file?.preview);
                       }}

@@ -73,7 +73,7 @@ const ArticleManageAdd = () => {
           imgName={() => methods.getValues()?.title}
         />
 
-        <Button disabled={isLoading}>{isLoading ? <Loader /> : "Cтворити"}</Button>
+        <Button disabled={isLoading}>{isLoading && <Loader />} Cтворити</Button>
       </Form>
     </FormProvider>
   );

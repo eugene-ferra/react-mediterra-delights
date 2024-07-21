@@ -1,8 +1,8 @@
 @use "../../../scss/mixins.scss" as mixins;
 
 .button {
-  @include mixins.basicBold;
-  padding: 10px 20px;
+  @include mixins.basicText;
+  padding: 9px 18px;
   background-color: var(--accent-color);
   color: var(--primary-stable-color);
   border: none;

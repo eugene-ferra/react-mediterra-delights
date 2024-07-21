@@ -106,7 +106,7 @@ const WorkersManageAdd = () => {
             />
           </FieldSet>
 
-          <Button disabled={isAdding}>{isAdding ? <Loader /> : "Cтворити"}</Button>
+          <Button disabled={isAdding}>{isAdding && <Loader />} Cтворити</Button>
         </Form>
       </FormProvider>
     </>

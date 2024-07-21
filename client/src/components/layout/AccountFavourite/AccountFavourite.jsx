@@ -41,7 +41,7 @@ const AccountFavourite = () => {
           />
         </>
       )}
-      {!isProductsLoading && products?.data?.length == 0 && (
+      {!isProductsLoading && !products?.data && (
         <>
           <Title type="small">Ви ще не додали жодного товару в улюблені</Title>
           <Button asTag="Link" to="/products">

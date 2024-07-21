@@ -27,7 +27,12 @@ const WorkersManage = () => {
             <Picture
               formats={item.photo}
               alt={`${item.lastName} ${item.name}`}
-              style={{ width: "120px", maxHeight: "120px", objectFit: "cover" }}
+              style={{
+                width: "120px",
+                maxHeight: "120px",
+                objectFit: "cover",
+                minWidth: "60px",
+              }}
             />
           </Link>,
           <Link to={`${item.id}`} key={`${item.name}-${i}`}>

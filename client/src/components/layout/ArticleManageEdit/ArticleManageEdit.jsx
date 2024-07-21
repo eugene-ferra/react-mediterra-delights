@@ -110,7 +110,7 @@ const ArticleManageEdit = () => {
             />
 
             <Button disabled={isChanging || isDeleting}>
-              {isChanging ? <Loader /> : "Оновити"}
+              {isChanging && <Loader />} Оновити
             </Button>
           </Form>
 

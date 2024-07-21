@@ -53,7 +53,7 @@ const LoginForm = () => {
         {errors?.all ? <Text type={"small"}>{errors?.all}</Text> : null}
 
         <Button disabled={isLoading} style={{ width: "100%" }}>
-          {isLoading ? <Loader /> : "Увійти"}
+          {isLoading && <Loader />} Увійти
         </Button>
         <Text type="small" align={"center"}>
           Забули пароль?{" "}

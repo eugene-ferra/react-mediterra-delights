@@ -41,7 +41,7 @@ const ResetPasswordBlock = () => {
             errorMessage={errors?.password}
           />
           <Button disabled={isLoading} className={styles.btn}>
-            {isLoading ? <Loader /> : "Зберегти і перейти до входу"}
+            {isLoading && <Loader />} Зберегти і перейти до входу
           </Button>
         </Form>
       </div>

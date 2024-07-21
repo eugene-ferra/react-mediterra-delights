@@ -22,7 +22,7 @@ const AccountSaved = () => {
 
       {isArticlesLoading && <PageLoader />}
 
-      {!isArticlesLoading && articles && (
+      {!isArticlesLoading && articles?.data && (
         <>
           <Catalog type={"small"}>
             {articles?.data?.map((item) => (
@@ -38,7 +38,7 @@ const AccountSaved = () => {
         </>
       )}
 
-      {!isArticlesLoading && articles?.data?.length == 0 && (
+      {!isArticlesLoading && !articles?.data && (
         <>
           <Title type={"small"}>Ви ще не зберегли жодної статті</Title>
           <Button asTag={"Link"} to={"/articles"}>

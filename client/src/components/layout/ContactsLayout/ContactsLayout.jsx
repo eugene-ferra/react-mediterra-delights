@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import L from "leaflet";
 import { Link } from "react-router-dom";
 import { useOrderOptions } from "../OrderBox/useOrderOptions";
 import PageLoader from "../PageLoader/PageLoader";
@@ -7,6 +8,7 @@ import Text from "../../common/Text/Text";
 import Container from "../Container/Container";
 import "leaflet/dist/leaflet.css";
 import styles from "./ContactsLayout.module.scss";
+import marker from "../../../assets/marker.svg";
 
 const ContactsLayout = () => {
   const { options, isLoading } = useOrderOptions();
@@ -79,6 +81,7 @@ const ContactsLayout = () => {
               <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
               {options?.shopGeo?.map((item, i) => (
                 <Marker
+                  icon={new L.icon({ iconUrl: marker, iconSize: [50, 50] })}
                   position={item}
                   key={options?.pickupLocation?.[i]}
                   eventHandlers={{

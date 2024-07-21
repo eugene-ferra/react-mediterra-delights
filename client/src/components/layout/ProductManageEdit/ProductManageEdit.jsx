@@ -205,7 +205,7 @@ const ProductManageEdit = () => {
             </FieldSet>
 
             <Button disabled={isChanging || isDeleting}>
-              {isChanging ? <Loader /> : "Зберегти"}
+              {isChanging && <Loader />} Зберегти
             </Button>
           </Form>
 

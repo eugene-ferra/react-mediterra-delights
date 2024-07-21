@@ -210,7 +210,7 @@ const OrderBox = () => {
                 </FieldSet>
 
                 <Button disabled={isCreating}>
-                  {isCreating ? <Loader /> : "Підтверджую замовлення"}
+                  {isCreating && <Loader />} Підтверджую замовлення
                 </Button>
               </Form>
             </FormProvider>

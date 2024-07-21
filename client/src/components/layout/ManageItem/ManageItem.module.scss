@@ -49,11 +49,12 @@
 }
 
 .cell {
+  min-height: 0px;
   a {
     display: block;
     height: 100%;
+    padding: 5px;
   }
-  padding: 5px;
   border-right: 2px solid var(--secondary-light-color);
   text-align: center;
   color: var(--secondary-color);

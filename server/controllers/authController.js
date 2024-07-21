@@ -28,6 +28,7 @@ export const signup = async (req, res, next) => {
     res.cookie("refresh", tokens.refreshToken, {
       httpOnly: true,
       secure: !!req.secure,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("access", tokens.accessToken, {
@@ -58,6 +59,7 @@ export const login = async (req, res, next) => {
     res.cookie("refresh", tokens.refreshToken, {
       httpOnly: true,
       secure: !!req.secure,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     res.cookie("access", tokens.accessToken, {
       httpOnly: true,
@@ -106,6 +108,7 @@ export const refresh = async (req, res, next) => {
     res.cookie("refresh", tokens.refreshToken, {
       httpOnly: true,
       secure: !!req.secure,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     res.cookie("access", tokens.accessToken, {
       httpOnly: true,

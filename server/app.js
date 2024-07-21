@@ -1,6 +1,5 @@
 import express from "express";
 import helmet from "helmet";
-import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import ExpressMongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
@@ -30,15 +29,6 @@ app.use(morgan("dev"));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
-  })
-);
-
-app.use(
-  "/api",
-  rateLimit({
-    max: 30000,
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    message: "Too many requests from this IP, please try again in an hour!",
   })
 );
 

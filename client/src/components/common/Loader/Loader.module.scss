@@ -46,8 +46,14 @@
   }
   &Small {
     @extend .loaderBody;
-    min-width: 10px;
-    min-height: 10px;
+    min-height: auto;
+    min-width: auto;
+    height: 8px;
+    width: 8px;
+    div {
+      border: 3px solid var(--primary-stable-color);
+      border-top-color: transparent;
+    }
   }
   &Accent {
     @extend .loaderBody;

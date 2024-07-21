@@ -13,6 +13,8 @@ export const useUpdateUser = () => {
     mutationFn: (data) => updateMe(data),
     onSuccess: () => {
       toast.success("Персональну інформацію успішно оновлено!");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["user", "avatar"] });
       queryClient.refetchQueries({ queryKey: ["user"] });
       queryClient.refetchQueries({ queryKey: ["user", "avatar"] });
       queryClient.invalidateQueries({ queryKey: ["product"] });

@@ -50,7 +50,7 @@ const ForgotPasswordBlock = () => {
               disabled={isLoading}
             />
             <Button disabled={isLoading} className={styles.btn}>
-              {isLoading ? <Loader /> : "Відновити доступ"}
+              {isLoading && <Loader />} Відновити доступ
             </Button>
           </Form>
         </div>

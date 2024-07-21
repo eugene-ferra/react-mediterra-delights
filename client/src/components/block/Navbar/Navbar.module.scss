@@ -3,7 +3,8 @@
 .navbar {
   @include mixins.flexRow(10px 20px, center, center, wrap);
   a {
-    @include mixins.basicBold;
+    @include mixins.smallText;
+    font-weight: 500;
     transition: var(--transition);
     color: var(--primary-stable-color);
     border-bottom: 2px solid transparent;
